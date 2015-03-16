@@ -1,15 +1,12 @@
 <?php
 
+
 //////////////////////////////////////////////////////////////
-// SETUP
-// setup to connect to the postgis database
+// CONNECTION
+// connection to the postgis database
 //////////////////////////////////////////////////////////////
 
-$settings_host = 'localhost';
-$settings_port = '5432';
-$settings_dbname = 'vtm_dev';
-$settings_user = 'postgres';
-$settings_pass = 'postgres';
+require('config.php');
 
 $pdo = new PDO(sprintf('pgsql:host=%s;port=%s;dbname=%s;user=%s;password=%s',$settings_host,$settings_port,$settings_dbname,$settings_user,$settings_pass));
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
