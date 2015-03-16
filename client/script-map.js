@@ -29,6 +29,14 @@ MapObject.init = function(){
 	MapObject.date = (hash['date']?hash['date']:2015);
 	MapObject.ignoreTypes = (hash['ignoreTypes']?hash['ignoreTypes']:[]);
 
+	// create the checkboxes for types that are ignored, since they won't be returned by the query...
+	$.each(MapObject.ignoreTypes, function(i,item){
+	    if( $.inArray(item, MapObject.featureTypes)==-1 ){
+	        MapObject.featureTypes.push( item );
+	        $('.leaflet-control-layers-list').append('<label><input type="checkbox" class="leaflet-control-layers-selector" name="leaflet-overlay-layers" onclick="MapObject.toggleType(event,\''+item+'\')"><span> '+item+'</span></label>');
+	    }		
+	});
+
 
 	/* INITIAL LOAD */
 
