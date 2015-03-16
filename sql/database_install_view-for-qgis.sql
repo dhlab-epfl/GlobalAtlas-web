@@ -7,6 +7,7 @@ SELECT 	ev.id,
 		ev.value,
 		ev.geovalue,
 		ev.date,
+		ev.interpolation,
 		ev.entity_id,
 		ev.source_id,
 		ev.source_description,
@@ -27,8 +28,8 @@ $$
 
       IF TG_OP='INSERT' THEN
 
-      	INSERT INTO vtm.events( description, key, value, geovalue, date, entity_id, source_id, source_description	)
-      	VALUES ( NEW.description, NEW.key, NEW.value, NEW.geovalue, NEW.date, NEW.entity_id, NEW.source_id, NEW.source_description);
+      	INSERT INTO vtm.events( description, key, value, geovalue, date, interpolation, entity_id, source_id, source_description	)
+      	VALUES ( NEW.description, NEW.key, NEW.value, NEW.geovalue, NEW.date, NEW.interpolation, NEW.entity_id, NEW.source_id, NEW.source_description);
 	      RETURN NEW;
 
 
@@ -41,6 +42,7 @@ $$
 	      	value=NEW.value,
 	      	geovalue=NEW.geovalue,
 	      	date=NEW.date,
+	      	interpolation=NEW.interpolation,
 	      	entity_id=NEW.entity_id,
 	      	source_id=NEW.source_id,
 	      	source_description=NEW.source_description
