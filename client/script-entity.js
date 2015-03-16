@@ -11,7 +11,7 @@ EntityObject.init = function(){
 
 }
 
-MapObject.setHash = function(){
+EntityObject.setHash = function(){
 	hash.loadedEntity = EntityObject.loadedEntity;
 	setHash();
 }
