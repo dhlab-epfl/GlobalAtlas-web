@@ -7,7 +7,7 @@
 
 $settings_host = 'localhost';
 $settings_port = '5432';
-$settings_dbname = 'vtm';
+$settings_dbname = 'vtm_dev';
 $settings_user = 'postgres';
 $settings_pass = 'postgres';
 
