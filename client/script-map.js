@@ -25,7 +25,7 @@ MapObject.init = function(){
 	/* GET THE HASH */
 
 	MapObject.map.setZoom( hash['zoom']?hash['zoom']:15 );
-	MapObject.map.setView( L.latLng( hash['lat']?hash['lat']:45.44, hash['lng']?hash['lng']:12.33));
+	MapObject.map.setView( L.latLng( hash['lat']?hash['lat']:45.44, hash['lon']?hash['lon']:12.33));
 	MapObject.date = (hash['date']?hash['date']:2015);
 	MapObject.ignoreTypes = (hash['ignoreTypes']?hash['ignoreTypes']:[]);
 
