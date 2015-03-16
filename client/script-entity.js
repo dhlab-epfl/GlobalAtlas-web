@@ -2,12 +2,13 @@
 
 EntityObject.loadedEntity = null;
 
-
 EntityObject.init = function(){
 
 	/* GET THE HASH */
 
 	EntityObject.loadedEntity = (hash['loadedEntity']?hash['loadedEntity']:null);
+
+    $('#inspector #hidebox').click(EntityObject.closeInspector);
 
 }
 
@@ -18,9 +19,11 @@ EntityObject.setHash = function(){
 
 
 
-function closeInspector(){
+EntityObject.closeInspector = function(e){
+    e.stopPropagation();
     EntityObject.loadedEntity=null;
     $('#inspector').hide();
+    return false;
 }
 
 EntityObject.loadEntity = function(newEntity){
