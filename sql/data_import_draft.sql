@@ -73,65 +73,65 @@ FROM 	"data_draft_idl"."xiisec_un_vol copy" as source;
 /* EVENTS (geom)               */
 /*******************************/
 
-INSERT INTO vtm.events(entity_id, property_id, geovalue, date, source_id)
+INSERT INTO vtm.events(entity_id, property_type_id, geovalue, date, source_id)
 SELECT 	(SELECT id FROM vtm.entities WHERE name=('1360_isl_entity_'||source.id) LIMIT 1) as entity_id,
-		0 as property_id,
+		0 as property_type_id,
 		ST_CollectionExtract(ST_MakeValid(ST_Transform(source.geom,4326)),3) as geovalue,
 		1360 as date,
 		(SELECT id FROM vtm.sources WHERE name='Isabella di Lenardo') as source_id
 FROM 	"data_draft_idl"."1360_isl" as source;
 
-INSERT INTO vtm.events(entity_id, property_id, geovalue, date, source_id)
+INSERT INTO vtm.events(entity_id, property_type_id, geovalue, date, source_id)
 SELECT 	(SELECT id FROM vtm.entities WHERE name=('xiisec_isl_entity_'||source.id) LIMIT 1) as entity_id,
-		0 as property_id,
+		0 as property_type_id,
 		ST_CollectionExtract(ST_MakeValid(ST_Transform(source.geom,4326)),3) as geovalue,
 		1150 as date,
 		(SELECT id FROM vtm.sources WHERE name='Isabella di Lenardo') as source_id
 FROM 	"data_draft_idl"."xiisec_isl" as source;
 
-INSERT INTO vtm.events(entity_id, property_id, geovalue, date, source_id)
+INSERT INTO vtm.events(entity_id, property_type_id, geovalue, date, source_id)
 SELECT 	(SELECT id FROM vtm.entities WHERE name=('1360_can_entity_'||source.id) LIMIT 1) as entity_id,
-		0 as property_id,
+		0 as property_type_id,
 		ST_CollectionExtract(ST_MakeValid(ST_Transform(source.geom,4326)),3) as geovalue,
 		1360 as date,
 		(SELECT id FROM vtm.sources WHERE name='Isabella di Lenardo') as source_id
 FROM 	"data_draft_idl"."1360_can" as source;
 
-INSERT INTO vtm.events(entity_id, property_id, geovalue, date, source_id)
+INSERT INTO vtm.events(entity_id, property_type_id, geovalue, date, source_id)
 SELECT 	(SELECT id FROM vtm.entities WHERE name=('xiisec_can_entity_'||source.id) LIMIT 1) as entity_id,
-		0 as property_id,
+		0 as property_type_id,
 		ST_CollectionExtract(ST_MakeValid(ST_Transform(source.geom,4326)),3) as geovalue,
 		1150 as date,
 		(SELECT id FROM vtm.sources WHERE name='Isabella di Lenardo') as source_id
 FROM 	"data_draft_idl"."xiisec_can" as source;
 
-INSERT INTO vtm.events(entity_id, property_id, geovalue, date, source_id)
+INSERT INTO vtm.events(entity_id, property_type_id, geovalue, date, source_id)
 SELECT 	(SELECT id FROM vtm.entities WHERE name=('1808_un_vol copy_entity_'||source.id) LIMIT 1) as entity_id,
-		0 as property_id,
+		0 as property_type_id,
 		ST_CollectionExtract(ST_MakeValid(ST_Transform(source.geom,4326)),3) as geovalue,
 		1808 as date,
 		(SELECT id FROM vtm.sources WHERE name='Isabella di Lenardo') as source_id
 FROM 	"data_draft_idl"."1808_un_vol copy" as source;
 
-INSERT INTO vtm.events(entity_id, property_id, geovalue, date, source_id)
+INSERT INTO vtm.events(entity_id, property_type_id, geovalue, date, source_id)
 SELECT 	(SELECT id FROM vtm.entities WHERE name=('1360_un_vol copy_entity_'||source.id) LIMIT 1) as entity_id,
-		0 as property_id,
+		0 as property_type_id,
 		ST_CollectionExtract(ST_MakeValid(ST_Transform(source.geom,4326)),3) as geovalue,
 		1360 as date,
 		(SELECT id FROM vtm.sources WHERE name='Isabella di Lenardo') as source_id
 FROM 	"data_draft_idl"."1360_un_vol copy" as source;
 
-INSERT INTO vtm.events(entity_id, property_id, geovalue, date, source_id)
+INSERT INTO vtm.events(entity_id, property_type_id, geovalue, date, source_id)
 SELECT 	(SELECT id FROM vtm.entities WHERE name=('13th_un_vol copy_entity_'||source.id) LIMIT 1) as entity_id,
-		0 as property_id,
+		0 as property_type_id,
 		ST_CollectionExtract(ST_MakeValid(ST_Transform(source.geom,4326)),3) as geovalue,
 		1250 as date,
 		(SELECT id FROM vtm.sources WHERE name='Isabella di Lenardo') as source_id
 FROM 	"data_draft_idl"."13th_un_vol copy" as source;
 
-INSERT INTO vtm.events(entity_id, property_id, geovalue, date, source_id)
+INSERT INTO vtm.events(entity_id, property_type_id, geovalue, date, source_id)
 SELECT 	(SELECT id FROM vtm.entities WHERE name=('xiisec_un_vol copy_entity_'||source.id) LIMIT 1) as entity_id,
-		0 as property_id,
+		0 as property_type_id,
 		ST_CollectionExtract(ST_MakeValid(ST_Transform(source.geom,4326)),3) as geovalue,
 		1150 as date,
 		(SELECT id FROM vtm.sources WHERE name='Isabella di Lenardo') as source_id
@@ -150,9 +150,9 @@ FROM 	"data_draft_idl"."xiisec_un_vol copy" as source;
 UPDATE vtm.events as e1
 SET entity_id = e2.entity_id
 FROM vtm.events as e2
-WHERE 	e1.property_id=0
+WHERE 	e1.property_type_id=0
 		AND
-		e2.property_id=0
+		e2.property_type_id=0
 		AND
 		e1.id<e2.id
 		AND
@@ -168,9 +168,9 @@ WHERE 	e1.property_id=0
 UPDATE vtm.events as e1
 SET entity_id = e2.entity_id
 FROM vtm.events as e2
-WHERE 	e1.property_id = 0
+WHERE 	e1.property_type_id = 0
 		AND 	
-	 	e2.property_id = 0
+	 	e2.property_type_id = 0
 		AND
 		e1.id<e2.id
 		AND
