@@ -24,7 +24,7 @@ INSERT INTO vtm.entities (name, type_id)
 SELECT 	'un_vol_entity_'||id as name,
 		(SELECT id FROM vtm.entity_types WHERE name='building') as type_id
 FROM 	"data_external"."un_vol" as source
-WHERE 	ST_Intersects(ST_Transform(source.geom,4326), ST_MakeEnvelope(12.3328,45.4365,12.3401,45.4401, 4326));
+WHERE 	ST_Intersects(source.geom, ST_Transform(ST_MakeEnvelope(12.3328,45.4365,12.3401,45.4401, 4326),3004));
 
 
 /*******************************/
@@ -38,7 +38,7 @@ SELECT 	(SELECT id FROM vtm.entities WHERE name=('un_vol_entity_'||source.id) LI
 		2015 as date,
 		(SELECT id FROM vtm.sources WHERE name='UN_VOL') as source_id
 FROM 	"data_external"."un_vol" as source
-WHERE 	ST_Intersects(ST_Transform(source.geom,4326), ST_MakeEnvelope(12.3328,45.4365,12.3401,45.4401, 4326));
+WHERE 	ST_Intersects(source.geom, ST_Transform(ST_MakeEnvelope(12.3328,45.4365,12.3401,45.4401, 4326),3004));
 
 
 
@@ -55,4 +55,4 @@ SELECT 	(SELECT id FROM vtm.entities WHERE name=('un_vol_entity_'||source.id) LI
 		2015 as date,
 		(SELECT id FROM vtm.sources WHERE name='UN_VOL') as source_id
 FROM 	"data_external"."un_vol" as source
-WHERE 	ST_Intersects(ST_Transform(source.geom,4326), ST_MakeEnvelope(12.3328,45.4365,12.3401,45.4401, 4326));
+WHERE 	ST_Intersects(source.geom, ST_Transform(ST_MakeEnvelope(12.3328,45.4365,12.3401,45.4401, 4326),3004));
