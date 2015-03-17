@@ -31,7 +31,7 @@ FROM 	"data_external"."euratlas_sovereign_states"
 /* EVENTS (geom)               */
 /*******************************/
 
-INSERT INTO vtm.events(entity_id, property_type_id, geovalue, date, source_id)
+INSERT INTO vtm.properties(entity_id, property_type_id, geovalue, date, source_id)
 SELECT 	(SELECT id FROM vtm.entities WHERE name=source.long_name LIMIT 1) as entity_id,
 		0 as property_type_id,
 		ST_Transform(source.geom,4326) as geovalue,
@@ -50,8 +50,8 @@ FROM 	"data_external"."euratlas_sovereign_states" as source
 INSERT INTO vtm.related_entities(a_id, b_id)
 SELECT 	evA.entity_id as a_id,
 		evB.entity_id as b_id
-FROM 	vtm.events as evA
-JOIN 	vtm.events as evB 		ON 		ST_Intersects(evA.geovalue, evB.geovalue)
+FROM 	vtm.properties as evA
+JOIN 	vtm.properties as evB 		ON 		ST_Intersects(evA.geovalue, evB.geovalue)
 JOIN 	vtm.entities as entA	ON 		evA.entity_id = entA.id
 JOIN 	vtm.entities as entB	ON 		evB.entity_id = entB.id
 WHERE   (evA.date = evB.date+100 OR evA.date = evB.date-100)

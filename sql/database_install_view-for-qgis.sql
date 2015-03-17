@@ -1,6 +1,6 @@
-DROP VIEW IF EXISTS vtm.events_for_qgis;
+DROP VIEW IF EXISTS vtm.properties_for_qgis CASCADE;
 
-CREATE VIEW vtm.events_for_qgis AS
+CREATE VIEW vtm.properties_for_qgis AS
 SELECT 	ev.id,
 		ev.description,
 		ev.property_type_id,
@@ -16,27 +16,27 @@ SELECT 	ev.id,
 		ent.name as entity_name,
 		type.name as entity_type_name,
 		prop.name as property_name
-FROM vtm.events as ev
-JOIN vtm.properties as prop ON ev.property_type_id=prop.id
+FROM vtm.properties as ev
+JOIN vtm.properties_types as prop ON ev.property_type_id=prop.id
 JOIN vtm.entities as ent ON ev.entity_id=ent.id
 JOIN vtm.entity_types as type ON ent.type_id=type.id;
 
 
-DROP FUNCTION IF EXISTS vtm.proxy_events_for_qgis();
-CREATE FUNCTION vtm.proxy_events_for_qgis() RETURNS trigger AS    
+DROP FUNCTION IF EXISTS vtm.proxy_properties_for_qgis() CASCADE;
+CREATE FUNCTION vtm.proxy_properties_for_qgis() RETURNS trigger AS    
 $$
     BEGIN
 
       IF TG_OP='INSERT' THEN
 
-      	INSERT INTO vtm.events( description, property_type_id, value, geovalue, date, interpolation, entity_id, source_id, source_description	)
+      	INSERT INTO vtm.properties( description, property_type_id, value, geovalue, date, interpolation, entity_id, source_id, source_description	)
       	VALUES ( NEW.description, NEW.property_type_id, NEW.value, NEW.geovalue, NEW.date, NEW.interpolation, NEW.entity_id, NEW.source_id, NEW.source_description);
 	      RETURN NEW;
 
 
       ELSIF TG_OP='UPDATE' THEN
 
-      	UPDATE vtm.events SET
+      	UPDATE vtm.properties SET
 	      	id=NEW.id,
 	      	description=NEW.description,
 	      	property_type_id=NEW.property_type_id,
@@ -53,7 +53,7 @@ $$
 
       ELSIF TG_OP='DELETE' THEN
 
-		DELETE FROM vtm.events WHERE id=OLD.id;
+		DELETE FROM vtm.properties WHERE id=OLD.id;
 		RETURN OLD;
 
 
@@ -63,5 +63,5 @@ $$
     END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER proxy_events_for_qgis INSTEAD OF INSERT OR UPDATE OR DELETE ON vtm.events_for_qgis FOR EACH ROW
-    EXECUTE PROCEDURE vtm.proxy_events_for_qgis();
+CREATE TRIGGER proxy_properties_for_qgis INSTEAD OF INSERT OR UPDATE OR DELETE ON vtm.properties_for_qgis FOR EACH ROW
+    EXECUTE PROCEDURE vtm.proxy_properties_for_qgis();

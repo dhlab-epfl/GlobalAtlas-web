@@ -30,7 +30,7 @@ CREATE TABLE vtm.entities
 );
 COMMENT ON TABLE vtm.entities IS 'Cette table contient les entités historiques.';
 
--- Table: vtm.events
+-- Table: vtm.properties
 DROP TABLE IF EXISTS vtm.related_entities CASCADE;
 CREATE TABLE vtm.related_entities
 (
@@ -49,9 +49,9 @@ CREATE TABLE vtm.sources
 );
 COMMENT ON TABLE vtm.sources IS 'Cette table contient les documents sources.';
 
--- Table: vtm.events
-DROP TABLE IF EXISTS vtm.events CASCADE;
-CREATE TABLE vtm.events
+-- Table: vtm.properties
+DROP TABLE IF EXISTS vtm.properties CASCADE;
+CREATE TABLE vtm.properties
 (
   id serial NOT NULL PRIMARY KEY,
   entity_id integer NOT NULL REFERENCES vtm.entities ON DELETE CASCADE,
@@ -67,15 +67,15 @@ CREATE TABLE vtm.events
   source_id integer REFERENCES vtm.sources ON DELETE SET NULL,
   source_description text
 );
-CREATE INDEX "events_spatial_index" ON "vtm"."events" USING GIST ( geovalue );
-COMMENT ON TABLE vtm.events IS 'Cette table contient les évenements qui changent les propriétés des entités.';
+CREATE INDEX "properties_spatial_index" ON "vtm"."properties" USING GIST ( geovalue );
+COMMENT ON TABLE vtm.properties IS 'Cette table contient les évenements qui changent les propriétés des entités.';
 
 
 
 /*
 TRIGGERS ET FONCTIONS pour gerer la synchro du champ geovalue.
 */
-DROP FUNCTION IF EXISTS vtm.manage_geovalue_field();
+DROP FUNCTION IF EXISTS vtm.manage_geovalue_field() CASCADE;
 CREATE FUNCTION vtm.manage_geovalue_field() RETURNS trigger AS    
 $$
     BEGIN
@@ -113,14 +113,14 @@ $$
     END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER events_i BEFORE INSERT OR UPDATE OF "property_type_id","geovalue","value" ON vtm.events FOR EACH ROW
+CREATE TRIGGER properties_i BEFORE INSERT OR UPDATE OF "property_type_id","geovalue","value" ON vtm.properties FOR EACH ROW
     EXECUTE PROCEDURE vtm.manage_geovalue_field();
 
 /*
 TRIGGERS ET FONCTIONS pour créer une entity si entity_id n'est pas fourni
 */
 
-DROP FUNCTION IF EXISTS vtm.autogenerate_entity();
+DROP FUNCTION IF EXISTS vtm.autogenerate_entity() CASCADE;
 CREATE FUNCTION vtm.autogenerate_entity() RETURNS trigger AS    
 $$
     DECLARE
@@ -135,7 +135,7 @@ $$
 $$ LANGUAGE plpgsql;
 
 
-CREATE TRIGGER events_bi BEFORE INSERT OR UPDATE OF entity_id ON vtm.events FOR EACH ROW
+CREATE TRIGGER properties_bi BEFORE INSERT OR UPDATE OF entity_id ON vtm.properties FOR EACH ROW
     EXECUTE PROCEDURE vtm.autogenerate_entity();
 
 
@@ -143,8 +143,8 @@ CREATE TRIGGER events_bi BEFORE INSERT OR UPDATE OF entity_id ON vtm.events FOR 
 TRIGGERS ET FONCTIONS pour recalculer les dates lorsque des evenements sont ajoutés ou supprimés.
 */
 
-DROP FUNCTION IF EXISTS vtm.events_reset_computed_dates();
-CREATE FUNCTION vtm.events_reset_computed_dates() RETURNS trigger AS    
+DROP FUNCTION IF EXISTS vtm.properties_reset_computed_dates();
+CREATE FUNCTION vtm.properties_reset_computed_dates() RETURNS trigger AS    
 $$
     BEGIN
 
@@ -169,7 +169,7 @@ DROP FUNCTION IF EXISTS vtm.query_reset_computed_dates(current_entity_id int, cu
 CREATE FUNCTION vtm.query_reset_computed_dates(current_entity_id int, current_property_type_id integer) RETURNS VOID AS
 $$
     BEGIN
-      UPDATE vtm.events as d
+      UPDATE vtm.properties as d
       SET   computed_date_start = CASE
                                     WHEN sub.prev_date IS NULL THEN
                                       CASE
@@ -282,7 +282,7 @@ $$
                   MIN(interpolation) as interpolation,
                   lag(MIN(interpolation), 1, NULL) OVER (ORDER BY date) as prev_interpolation,
                   lead(MIN(interpolation), 1, NULL) OVER (ORDER BY date) as next_interpolation
-          FROM vtm.events
+          FROM vtm.properties
           WHERE (entity_id=current_entity_id OR entity_id IN (SELECT b_id FROM vtm.related_entities WHERE a_id=current_entity_id)) AND (current_property_type_id IS NULL OR property_type_id=current_property_type_id)
           GROUP BY date, property_type_id
           ORDER BY date ASC
@@ -292,8 +292,8 @@ $$
 $$ LANGUAGE plpgsql;
 
 
-CREATE TRIGGER reset_date_for_events AFTER INSERT OR UPDATE OF "date","property_type_id","entity_id" OR DELETE ON vtm.events FOR EACH ROW
-    EXECUTE PROCEDURE vtm.events_reset_computed_dates();
+CREATE TRIGGER reset_date_for_properties AFTER INSERT OR UPDATE OF "date","property_type_id","entity_id" OR DELETE ON vtm.properties FOR EACH ROW
+    EXECUTE PROCEDURE vtm.properties_reset_computed_dates();
 
 
 /*
