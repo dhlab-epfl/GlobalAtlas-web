@@ -1,7 +1,13 @@
 DROP TYPE IF EXISTS vtm.interpolation_type CASCADE;
 CREATE TYPE vtm.interpolation_type AS ENUM ('start','default','end');
 
--- Table: vtm.entities
+DROP TABLE IF EXISTS vtm.properties CASCADE;
+CREATE TABLE vtm.properties
+(
+  id serial NOT NULL PRIMARY KEY,
+  name text UNIQUE
+);
+INSERT INTO vtm.properties(id,name) VALUES (0,'geom');
 
 DROP TABLE IF EXISTS vtm.entity_types CASCADE;
 CREATE TABLE vtm.entity_types
@@ -50,7 +56,7 @@ CREATE TABLE vtm.events
   id serial NOT NULL PRIMARY KEY,
   entity_id integer NOT NULL REFERENCES vtm.entities ON DELETE CASCADE,
   description text,
-  key text NOT NULL,
+  property_id integer NOT NULL REFERENCES vtm.properties ON DELETE CASCADE,
   value text,
   geovalue geometry(Geometry,4326),
   date integer,
@@ -75,10 +81,10 @@ $$
     BEGIN
       IF TG_OP='INSERT' THEN
         IF NEW.geovalue IS NOT NULL THEN
-          IF NEW.key IS NOT NULL AND NEW.key != 'geom' THEN
+          IF NEW.property_id IS NOT NULL AND NEW.property_id != 0 THEN
             RAISE EXCEPTION 'Key must be ''geom'' or NULL if a geovalue is provided !';
           END IF;
-          NEW.key = 'geom';
+          NEW.property_id = 0;
           NEW.value = ST_AsText(NEW.geovalue);
           --NEW.computed_size = GREATEST(ST_XMax(NEW.geovalue)-ST_XMin(NEW.geovalue),ST_YMax(NEW.geovalue)-ST_YMin(NEW.geovalue));
         END IF;
@@ -86,15 +92,15 @@ $$
 
       ELSIF TG_OP='UPDATE' THEN
 
-        IF NEW.key = 'geom' AND NEW.value != OLD.value AND (NEW.geovalue=OLD.geovalue OR (NEW.geovalue IS NULL AND OLD.geovalue IS NULL)) THEN
+        IF NEW.property_id = 0 AND NEW.value != OLD.value AND (NEW.geovalue=OLD.geovalue OR (NEW.geovalue IS NULL AND OLD.geovalue IS NULL)) THEN
           NEW.geovalue = ST_GeometryFromText(NEW.value, 4326);
         END IF;
 
         IF NEW.geovalue IS NOT NULL THEN
-          IF NEW.key IS NOT NULL AND NEW.key != 'geom' THEN
+          IF NEW.property_id IS NOT NULL AND NEW.property_id != 0 THEN
             RAISE EXCEPTION 'Key must be ''geom'' or NULL if a geovalue is provided !';
           END IF;
-          NEW.key = 'geom';
+          NEW.property_id = 0;
           NEW.value = ST_AsText(NEW.geovalue);
           --NEW.computed_size = GREATEST(ST_XMax(NEW.geovalue)-ST_XMin(NEW.geovalue),ST_YMax(NEW.geovalue)-ST_YMin(NEW.geovalue));
         END IF;
@@ -107,7 +113,7 @@ $$
     END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER events_i BEFORE INSERT OR UPDATE OF "key","geovalue","value" ON vtm.events FOR EACH ROW
+CREATE TRIGGER events_i BEFORE INSERT OR UPDATE OF "property_id","geovalue","value" ON vtm.events FOR EACH ROW
     EXECUTE PROCEDURE vtm.manage_geovalue_field();
 
 /*
@@ -143,11 +149,11 @@ $$
     BEGIN
 
       IF TG_OP='INSERT' OR TG_OP='UPDATE' THEN
-        PERFORM vtm.query_reset_computed_dates(NEW.entity_id, NEW.key);
+        PERFORM vtm.query_reset_computed_dates(NEW.entity_id, NEW.property_id);
       END IF;
       
       IF TG_OP='UPDATE' OR TG_OP='DELETE' THEN
-        PERFORM vtm.query_reset_computed_dates(OLD.entity_id, OLD.key);
+        PERFORM vtm.query_reset_computed_dates(OLD.entity_id, OLD.property_id);
       END IF;       
 
       IF TG_OP='UPDATE' OR TG_OP='INSERT' THEN
@@ -159,8 +165,8 @@ $$
     END;
 $$ LANGUAGE plpgsql;
 
-DROP FUNCTION IF EXISTS vtm.query_reset_computed_dates(current_entity_id int, current_key text);
-CREATE FUNCTION vtm.query_reset_computed_dates(current_entity_id int, current_key text) RETURNS VOID AS
+DROP FUNCTION IF EXISTS vtm.query_reset_computed_dates(current_entity_id int, current_property_id integer);
+CREATE FUNCTION vtm.query_reset_computed_dates(current_entity_id int, current_property_id integer) RETURNS VOID AS
 $$
     BEGIN
       UPDATE vtm.events as d
@@ -277,16 +283,16 @@ $$
                   lag(MIN(interpolation), 1, NULL) OVER (ORDER BY date) as prev_interpolation,
                   lead(MIN(interpolation), 1, NULL) OVER (ORDER BY date) as next_interpolation
           FROM vtm.events
-          WHERE (entity_id=current_entity_id OR entity_id IN (SELECT b_id FROM vtm.related_entities WHERE a_id=current_entity_id)) AND (current_key IS NULL OR key=current_key)
-          GROUP BY date, key
+          WHERE (entity_id=current_entity_id OR entity_id IN (SELECT b_id FROM vtm.related_entities WHERE a_id=current_entity_id)) AND (current_property_id IS NULL OR property_id=current_property_id)
+          GROUP BY date, property_id
           ORDER BY date ASC
         ) as sub
-        WHERE entity_id=current_entity_id AND (current_key IS NULL OR key=current_key) AND d.id = ANY(sub.ids);
+        WHERE entity_id=current_entity_id AND (current_property_id IS NULL OR property_id=current_property_id) AND d.id = ANY(sub.ids);
     END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE TRIGGER reset_date_for_events AFTER INSERT OR UPDATE OF "date","key","entity_id" OR DELETE ON vtm.events FOR EACH ROW
+CREATE TRIGGER reset_date_for_events AFTER INSERT OR UPDATE OF "date","property_id","entity_id" OR DELETE ON vtm.events FOR EACH ROW
     EXECUTE PROCEDURE vtm.events_reset_computed_dates();
 
 

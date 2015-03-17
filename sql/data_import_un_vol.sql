@@ -46,6 +46,8 @@ WHERE 	ST_Intersects(ST_Transform(source.geom,4326), ST_MakeEnvelope(12.3328,45.
 /* EVENTS (height              */
 /*******************************/
 
+INSERT INTO vtm.entity_types(name) VALUES ('height');
+
 INSERT INTO vtm.events(entity_id, key, value, date, source_id)
 SELECT 	(SELECT id FROM vtm.entities WHERE name=('un_vol_entity_'||source.id) LIMIT 1) as entity_id,
 		'height' as key,

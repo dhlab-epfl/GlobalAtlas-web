@@ -65,7 +65,7 @@ EntityObject.reloadData = function(){
         		var html = '';
 
 				html += '<tr>';
-				html += '	<td class="key">'+item.key+'</td>';
+				html += '	<td class="key">'+item.property_name+'</td>';
 				html += '	<td class="date"><span class="bounds">'+(item.computed_date_start?item.computed_date_start:'∞')+'&#8239;&lt;&#8239;</span>'+item.date+'<span class="bounds">&#8239;&lt;&#8239;'+(item.computed_date_end?item.computed_date_end:"∞")+'</span></td>';
 				html += '	<td class="value">'+item.value+'</td>';
 				html += '	<td class="source">['+item.source_name+']</td>';

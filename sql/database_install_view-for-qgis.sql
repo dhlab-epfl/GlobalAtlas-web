@@ -3,7 +3,7 @@ DROP VIEW IF EXISTS vtm.events_for_qgis;
 CREATE VIEW vtm.events_for_qgis AS
 SELECT 	ev.id,
 		ev.description,
-		ev.key,
+		ev.property_id,
 		ev.value,
 		ev.geovalue,
 		ev.date,
@@ -14,11 +14,12 @@ SELECT 	ev.id,
 		ev.computed_date_start,
 		ev.computed_date_end,
 		ent.name as entity_name,
-		type.name as entity_type_name
+		type.name as entity_type_name,
+		prop.name as property_name
 FROM vtm.events as ev
+JOIN vtm.properties as prop ON ev.property_id=prop.id
 JOIN vtm.entities as ent ON ev.entity_id=ent.id
 JOIN vtm.entity_types as type ON ent.type_id=type.id;
-
 
 
 DROP FUNCTION IF EXISTS vtm.proxy_events_for_qgis();
@@ -28,8 +29,8 @@ $$
 
       IF TG_OP='INSERT' THEN
 
-      	INSERT INTO vtm.events( description, key, value, geovalue, date, interpolation, entity_id, source_id, source_description	)
-      	VALUES ( NEW.description, NEW.key, NEW.value, NEW.geovalue, NEW.date, NEW.interpolation, NEW.entity_id, NEW.source_id, NEW.source_description);
+      	INSERT INTO vtm.events( description, property_id, value, geovalue, date, interpolation, entity_id, source_id, source_description	)
+      	VALUES ( NEW.description, NEW.property_id, NEW.value, NEW.geovalue, NEW.date, NEW.interpolation, NEW.entity_id, NEW.source_id, NEW.source_description);
 	      RETURN NEW;
 
 
@@ -38,7 +39,7 @@ $$
       	UPDATE vtm.events SET
 	      	id=NEW.id,
 	      	description=NEW.description,
-	      	key=NEW.key,
+	      	property_id=NEW.property_id,
 	      	value=NEW.value,
 	      	geovalue=NEW.geovalue,
 	      	date=NEW.date,

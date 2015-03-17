@@ -72,7 +72,7 @@ SELECT 	ev.id,
 FROM vtm.events as ev
 JOIN vtm.entities as ent ON ev.entity_id=ent.id
 JOIN vtm.entity_types as type ON ent.type_id=type.id
-WHERE 	key='geom' -- we only want geometrical events
+WHERE 	property_id=0 -- we only want geometrical events
 		AND
 		NOT (type.name = ANY (STRING_TO_ARRAY(:filtertype,',')) )
 		AND
@@ -128,13 +128,14 @@ EOT;
 
 		$sql = <<<EOT
 SELECT 	date,
-		key,
 		value as value,
 		computed_date_start,
 		computed_date_end,
-		src.name as source_name
+		src.name as source_name,
+		prop.name as property_name
 FROM 	vtm.events as ev
 LEFT JOIN 	vtm.sources as src ON src.id=ev.source_id
+LEFT JOIN 	vtm.properties as prop ON prop.id=ev.property_id
 WHERE 	ev.entity_id=:id
 		AND
 		(computed_date_start IS NULL OR computed_date_start<=:date) -- we only want events that have started

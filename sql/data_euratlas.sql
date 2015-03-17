@@ -31,9 +31,9 @@ FROM 	"data_external"."euratlas_sovereign_states"
 /* EVENTS (geom)               */
 /*******************************/
 
-INSERT INTO vtm.events(entity_id, key, geovalue, date, source_id)
+INSERT INTO vtm.events(entity_id, property_id, geovalue, date, source_id)
 SELECT 	(SELECT id FROM vtm.entities WHERE name=source.long_name LIMIT 1) as entity_id,
-		'geom' as key,
+		0 as property_id,
 		ST_Transform(source.geom,4326) as geovalue,
 		year::int as date,
 		(SELECT id FROM vtm.sources WHERE name='Euratlas') as source_id
