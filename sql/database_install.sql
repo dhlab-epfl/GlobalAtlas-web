@@ -165,7 +165,15 @@ $$
     BEGIN
       UPDATE vtm.events as d
       SET   computed_date_start = CASE
-                                    WHEN sub.prev_date IS NULL THEN NULL
+                                    WHEN sub.prev_date IS NULL THEN
+                                      CASE
+                                        WHEN d.interpolation = 'start' THEN
+                                          --               [C---
+                                          d.date
+                                        ELSE
+                                          --             ---C---
+                                          NULL
+                                      END
                                     ELSE
                                       CASE 
                                         WHEN sub.prev_interpolation = 'start' THEN
@@ -209,7 +217,15 @@ $$
                                       END
                                   END,
             computed_date_end =   CASE
-                                    WHEN sub.next_date IS NULL THEN NULL
+                                    WHEN sub.next_date IS NULL THEN
+                                      CASE
+                                        WHEN d.interpolation = 'end' THEN
+                                          --             ---C]
+                                          d.date
+                                        ELSE
+                                          --             ---C---
+                                          NULL
+                                      END
                                     ELSE
                                       CASE 
                                         WHEN d.interpolation = 'start' THEN
