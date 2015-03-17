@@ -83,7 +83,7 @@ MapObject.reloadData = function(){
 					console.log('MapObject: loaded '+(data.features.length)+' features');
                 },
                 error: function( jqXHR, textStatus, errorThrown ){
-                	console.log('MapObject: error getting features !');
+                	console.log('MapObject: error getting features !\n'+jqXHR.responseText);
                 }
             });
 

@@ -49,7 +49,7 @@ EntityObject.reloadData = function(){
         	$('#inspector h1').html('<span class="entity">'+data[0].name+'</span> <span class="type">('+data[0].entity_type_name+')</span>');
         },
         error: function( jqXHR, textStatus, errorThrown ){
-        	console.log('EntityObject: error getting features !');
+            console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
         }
     });
 
@@ -75,7 +75,7 @@ EntityObject.reloadData = function(){
         	});
         },
         error: function( jqXHR, textStatus, errorThrown ){
-        	console.log('EntityObject: error getting features !');
+        	console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
         }
     });
 
@@ -99,7 +99,7 @@ EntityObject.reloadData = function(){
         	});
         },
         error: function( jqXHR, textStatus, errorThrown ){
-        	console.log('EntityObject: error getting features !');
+        	console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
         }
     });
 }
