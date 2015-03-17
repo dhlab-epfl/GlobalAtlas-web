@@ -1,3 +1,5 @@
+CREATE SCHEMA IF NOT EXISTS vtm;
+
 DROP TYPE IF EXISTS vtm.interpolation_type CASCADE;
 CREATE TYPE vtm.interpolation_type AS ENUM ('start','default','end');
 
@@ -87,6 +89,8 @@ $$
           NEW.property_type_id = 0;
           NEW.value = ST_AsText(NEW.geovalue);
           --NEW.computed_size = GREATEST(ST_XMax(NEW.geovalue)-ST_XMin(NEW.geovalue),ST_YMax(NEW.geovalue)-ST_YMin(NEW.geovalue));
+        ELSIF NEW.property_type_id = 0 AND NEW.value IS NOT NULL THEN
+          NEW.geovalue = ST_GeomFromText(NEW.value, 4326);
         END IF;
         RETURN NEW;
 
@@ -103,6 +107,8 @@ $$
           NEW.property_type_id = 0;
           NEW.value = ST_AsText(NEW.geovalue);
           --NEW.computed_size = GREATEST(ST_XMax(NEW.geovalue)-ST_XMin(NEW.geovalue),ST_YMax(NEW.geovalue)-ST_YMin(NEW.geovalue));
+        ELSIF NEW.property_type_id = 0 AND NEW.value IS NOT NULL THEN
+          NEW.geovalue = ST_GeomFromText(NEW.value, 4326);
         END IF;
         RETURN NEW;
 
