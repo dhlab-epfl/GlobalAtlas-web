@@ -20,6 +20,7 @@ FROM vtm.properties as ev
 JOIN vtm.properties_types as prop ON ev.property_type_id=prop.id
 JOIN vtm.entities as ent ON ev.entity_id=ent.id
 JOIN vtm.entity_types as type ON ent.type_id=type.id;
+ALTER VIEW vtm.properties_for_qgis ALTER COLUMN id SET DEFAULT nextval('vtm.properties_id_seq'::regclass); -- we need this so that QGIS knows it must autoincrement the id on creation
 
 
 DROP FUNCTION IF EXISTS vtm.proxy_properties_for_qgis() CASCADE;
@@ -29,9 +30,9 @@ $$
 
       IF TG_OP='INSERT' THEN
 
-      	INSERT INTO vtm.properties( description, property_type_id, value, geovalue, date, interpolation, entity_id, source_id, source_description	)
-      	VALUES ( NEW.description, NEW.property_type_id, NEW.value, NEW.geovalue, NEW.date, NEW.interpolation, NEW.entity_id, NEW.source_id, NEW.source_description);
-	      RETURN NEW;
+      	INSERT INTO vtm.properties( id, description, property_type_id, value, geovalue, date, interpolation, entity_id, source_id, source_description	)
+      	VALUES ( NEW.id, NEW.description, NEW.property_type_id, NEW.value, NEW.geovalue, NEW.date, NEW.interpolation, NEW.entity_id, NEW.source_id, NEW.source_description);
+	    RETURN NEW;
 
 
       ELSIF TG_OP='UPDATE' THEN
