@@ -62,7 +62,7 @@ CREATE TABLE vtm.properties
   value text,
   geovalue geometry(Geometry,4326),
   date integer,
-  interpolation vtm.interpolation_type DEFAULT 'default',
+  interpolation vtm.interpolation_type DEFAULT 'default', --TODO : NOT NULL
   computed_date_start integer,
   computed_date_end integer,
   --computed_size real,
