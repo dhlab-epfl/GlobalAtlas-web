@@ -166,6 +166,12 @@ MapObject.styles = {
         fillOpacity: 0.2,
         fillColor: '#EDB9B9',
         color: '#945C5C'
+    },
+    'border':{
+        weight: 2,
+        opacity: 1.0,
+        dashArray: [4,4],
+        color: '#000'
     }
 };
 
