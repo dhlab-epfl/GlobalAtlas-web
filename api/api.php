@@ -76,11 +76,9 @@ SELECT 	prop.id,
 			)
 		) as geojson
 FROM vtm.properties as prop
-JOIN vtm.entities as ent ON prop.entity_id=ent.id
-JOIN vtm.entity_types as type ON ent.type_id=type.id
-WHERE 	property_type_id=0 -- we only want geometrical properties
-		AND
-		NOT (type.name = ANY (STRING_TO_ARRAY(:filtertype,',')) )
+LEFT JOIN vtm.entities as ent ON prop.entity_id=ent.id
+LEFT JOIN vtm.entity_types as type ON ent.type_id=type.id
+WHERE 	NOT (type.name = ANY (STRING_TO_ARRAY(:filtertype,',')) )
 		AND
 		(computed_date_start IS NULL OR computed_date_start<=:date) -- we only want properties that have started
 		AND
@@ -92,7 +90,7 @@ WHERE 	property_type_id=0 -- we only want geometrical properties
 		--AND
 		--(computed_size IS NULL OR (computed_size<=360.0/pow(2.0,:zoom-6.0) AND computed_size>=360.0/pow(2.0,:zoom+6.0))) -- we only get features whose size makes sense at actual zoom level
 		AND
-		ST_Intersects( ST_MakeEnvelope(:e,:s,:w,:n, 4326), geovalue ) -- we only want properties that intersect the current view'
+		ST_Intersects( ST_MakeEnvelope(:e,:s,:w,:n, 4326), geovalue ) -- we only want properties that intersect the current view, which also excludes all non-geometrical properties -- TODO : check whether a geovalue IS NULL check is more optimal
 ORDER BY type.zindex ASC
 EOT;
 		echo geojson_query($sql, $_GET, $default_params);
@@ -147,6 +145,7 @@ WHERE 	prop.entity_id=:id
 		(computed_date_start IS NULL OR computed_date_start<=:date) -- we only want properties that have started
 		AND
 		(computed_date_end IS NULL OR computed_date_end>:date) -- we only want properties that have not ended
+ORDER BY property_name
 EOT;
 		echo query($sql, $_GET, $default_params);
 		break;
