@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<database name="vtm_dev" schema="data_external" type="PostgreSQL - 9.3.5">
+   <tables>
+      <table name="edific" numRows="73300" remarks="" schema="data_external" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('data_external.edific_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="geom" nullable="true" remarks="" size="2147483647" type="geometry"/>
+         <column autoUpdated="false" digits="17" id="2" name="acc_plan" nullable="true" remarks="" size="17" type="float8"/>
+         <column autoUpdated="false" digits="17" id="3" name="acc_alt" nullable="true" remarks="" size="17" type="float8"/>
+         <column autoUpdated="false" digits="0" id="4" name="data_val" nullable="true" remarks="" size="13" type="date"/>
+         <column autoUpdated="false" digits="0" id="5" name="fonte" nullable="true" remarks="" size="2" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="6" name="edi_tipo" nullable="true" remarks="" size="2" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="7" name="edi_sotter" nullable="true" remarks="" size="2" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="8" name="edi_stato" nullable="true" remarks="" size="2" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="9" name="fascicolo" nullable="true" remarks="" size="20" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="10" name="operatore" nullable="true" remarks="" size="2" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="11" name="data_cre" nullable="true" remarks="" size="13" type="date"/>
+         <column autoUpdated="false" digits="0" id="12" name="data_mod" nullable="true" remarks="" size="13" type="date"/>
+         <column autoUpdated="false" digits="0" id="13" name="tipo_mod" nullable="true" remarks="" size="50" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="14" name="origine" nullable="true" remarks="" size="50" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="15" name="doc" nullable="true" remarks="" size="200" type="varchar"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="edific_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="edific_geom_geom_idx" unique="false">
+            <column ascending="true" name="geom"/>
+         </index>
+      </table>
+      <table name="el_can" numRows="2255" remarks="" schema="data_external" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('data_external.el_can_id_0_seq'::regclass)" digits="0" id="0" name="id_0" nullable="false" remarks="" size="10" type="serial">
+            <parent column="id_0" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" table="un_vol"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="geom" nullable="true" remarks="" size="2147483647" type="geometry"/>
+         <column autoUpdated="false" digits="0" id="2" name="id" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="3" name="data_val" nullable="true" remarks="" size="13" type="date"/>
+         <column autoUpdated="false" digits="0" id="4" name="fonte" nullable="true" remarks="" size="20" type="varchar"/>
+         <column autoUpdated="false" digits="17" id="5" name="acc_plan" nullable="true" remarks="" size="17" type="float8"/>
+         <column autoUpdated="false" digits="17" id="6" name="acc_alt" nullable="true" remarks="" size="17" type="float8"/>
+         <column autoUpdated="false" digits="0" id="7" name="elc_codden" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="8" name="elc_progr" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="9" name="data_cre" nullable="true" remarks="" size="13" type="date"/>
+         <column autoUpdated="false" digits="0" id="10" name="data_mod" nullable="true" remarks="" size="13" type="date"/>
+         <column autoUpdated="false" digits="0" id="11" name="tipo_mod" nullable="true" remarks="" size="1" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="12" name="origine" nullable="true" remarks="" size="1" type="varchar"/>
+         <primaryKey column="id_0" sequenceNumberInPK="1"/>
+         <index name="el_can_pkey" unique="true">
+            <column ascending="true" name="id_0"/>
+         </index>
+      </table>
+      <table name="euratlas_sovereign_states" numRows="1102" remarks="" schema="data_external" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('data_external.euratlas_sovereign_states_id_0_seq'::regclass)" digits="0" id="0" name="id_0" nullable="false" remarks="" size="10" type="serial">
+            <parent column="id_0" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" table="un_vol"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="geom" nullable="true" remarks="" size="2147483647" type="geometry"/>
+         <column autoUpdated="false" digits="0" id="2" name="id" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="17" id="3" name="year" nullable="true" remarks="" size="17" type="float8"/>
+         <column autoUpdated="false" digits="17" id="4" name="owner_id" nullable="true" remarks="" size="17" type="float8"/>
+         <column autoUpdated="false" digits="0" id="5" name="short_name" nullable="true" remarks="" size="80" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="6" name="long_name" nullable="true" remarks="" size="80" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="7" name="variants" nullable="true" remarks="" size="80" type="varchar"/>
+         <primaryKey column="id_0" sequenceNumberInPK="1"/>
+         <index name="euratlas_sovereign_states_pkey" unique="true">
+            <column ascending="true" name="id_0"/>
+         </index>
+      </table>
+      <table name="un_vol" numRows="110029" remarks="" schema="data_external" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('data_external.un_vol_id_0_seq'::regclass)" digits="0" id="0" name="id_0" nullable="false" remarks="" size="10" type="serial">
+            <child column="id_0" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" table="el_can"/>
+            <child column="id_0" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" table="euratlas_sovereign_states"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="geom" nullable="true" remarks="" size="2147483647" type="geometry"/>
+         <column autoUpdated="false" digits="0" id="2" name="id" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="17" id="3" name="acc_plan" nullable="true" remarks="" size="17" type="float8"/>
+         <column autoUpdated="false" digits="17" id="4" name="acc_alt" nullable="true" remarks="" size="17" type="float8"/>
+         <column autoUpdated="false" digits="0" id="5" name="data_val" nullable="true" remarks="" size="13" type="date"/>
+         <column autoUpdated="false" digits="0" id="6" name="fonte" nullable="true" remarks="" size="2" type="varchar"/>
+         <column autoUpdated="false" digits="17" id="7" name="uv_qgronda" nullable="true" remarks="" size="17" type="float8"/>
+         <column autoUpdated="false" digits="17" id="8" name="uv_qcolmo" nullable="true" remarks="" size="17" type="float8"/>
+         <column autoUpdated="false" digits="17" id="9" name="uv_h" nullable="true" remarks="" size="17" type="float8"/>
+         <column autoUpdated="false" digits="0" id="10" name="uv_tipporz" nullable="true" remarks="" size="2" type="varchar"/>
+         <column autoUpdated="false" digits="17" id="11" name="uv_hintra" nullable="true" remarks="" size="17" type="float8"/>
+         <column autoUpdated="false" digits="0" id="12" name="data_cre" nullable="true" remarks="" size="13" type="date"/>
+         <column autoUpdated="false" digits="0" id="13" name="data_mod" nullable="true" remarks="" size="13" type="date"/>
+         <column autoUpdated="false" digits="0" id="14" name="tipo_mod" nullable="true" remarks="" size="50" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="15" name="origine" nullable="true" remarks="" size="50" type="varchar"/>
+         <column autoUpdated="false" digits="17" id="16" name="q_campagna" nullable="true" remarks="" size="17" type="float8"/>
+         <column autoUpdated="false" digits="17" id="17" name="uv_hcolmo" nullable="true" remarks="" size="17" type="float8"/>
+         <primaryKey column="id_0" sequenceNumberInPK="1"/>
+         <index name="un_vol_pkey" unique="true">
+            <column ascending="true" name="id_0"/>
+         </index>
+      </table>
+   </tables>
+</database>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<database name="vtm_dev" schema="countries" type="PostgreSQL - 9.3.5">
+   <tables>
+      <table name="edge" numRows="0" remarks="Contains edge topology primitives" schema="countries" type="VIEW">
+         <column autoUpdated="false" digits="0" id="0" name="edge_id" nullable="true" remarks="Unique identifier of the edge" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="1" name="start_node" nullable="true" remarks="Unique identifier of the node at the start of the edge" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="2" name="end_node" nullable="true" remarks="Unique identifier of the node at the end of the edge" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="3" name="next_left_edge" nullable="true" remarks="Unique identifier of the next edge of the face on the left (when looking in the direction from START_NODE to END_NODE), moving counterclockwise around the face boundary" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="4" name="next_right_edge" nullable="true" remarks="Unique identifier of the next edge of the face on the right (when looking in the direction from START_NODE to END_NODE), moving counterclockwise around the face boundary" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="5" name="left_face" nullable="true" remarks="Unique identifier of the face on the left side of the edge when looking in the direction from START_NODE to END_NODE" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="6" name="right_face" nullable="true" remarks="Unique identifier of the face on the right side of the edge when looking in the direction from START_NODE to END_NODE" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="7" name="geom" nullable="true" remarks="The geometry of the edge" size="2147483647" type="geometry"/>
+      </table>
+      <table name="edge_data" remarks="" schema="countries" type="TABLE">
+         <column autoUpdated="false" defaultValue="nextval('countries.edge_data_edge_id_seq'::regclass)" digits="0" id="0" name="edge_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="abs_next_left_edge" foreignKey="next_left_edge_exists" implied="false" onDeleteCascade="false" table="edge_data"/>
+            <child column="abs_next_right_edge" foreignKey="next_right_edge_exists" implied="false" onDeleteCascade="false" table="edge_data"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="start_node" nullable="false" remarks="" size="10" type="int4">
+            <parent column="node_id" foreignKey="start_node_exists" implied="false" onDeleteCascade="false" table="node"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="end_node" nullable="false" remarks="" size="10" type="int4">
+            <parent column="node_id" foreignKey="end_node_exists" implied="false" onDeleteCascade="false" table="node"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="3" name="next_left_edge" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="4" name="abs_next_left_edge" nullable="false" remarks="" size="10" type="int4">
+            <parent column="edge_id" foreignKey="next_left_edge_exists" implied="false" onDeleteCascade="false" table="edge_data"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="5" name="next_right_edge" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="6" name="abs_next_right_edge" nullable="false" remarks="" size="10" type="int4">
+            <parent column="edge_id" foreignKey="next_right_edge_exists" implied="false" onDeleteCascade="false" table="edge_data"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="7" name="left_face" nullable="false" remarks="" size="10" type="int4">
+            <parent column="face_id" foreignKey="left_face_exists" implied="false" onDeleteCascade="false" table="face"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="8" name="right_face" nullable="false" remarks="" size="10" type="int4">
+            <parent column="face_id" foreignKey="right_face_exists" implied="false" onDeleteCascade="false" table="face"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="9" name="geom" nullable="true" remarks="" size="2147483647" type="geometry"/>
+         <primaryKey column="edge_id" sequenceNumberInPK="1"/>
+         <index name="edge_data_pkey" unique="true">
+            <column ascending="true" name="edge_id"/>
+         </index>
+         <index name="edge_end_node_idx" unique="false">
+            <column ascending="true" name="end_node"/>
+         </index>
+         <index name="edge_gist" unique="false">
+            <column ascending="true" name="geom"/>
+         </index>
+         <index name="edge_left_face_idx" unique="false">
+            <column ascending="true" name="left_face"/>
+         </index>
+         <index name="edge_right_face_idx" unique="false">
+            <column ascending="true" name="right_face"/>
+         </index>
+         <index name="edge_start_node_idx" unique="false">
+            <column ascending="true" name="start_node"/>
+         </index>
+      </table>
+      <table name="face" remarks="" schema="countries" type="TABLE">
+         <column autoUpdated="false" defaultValue="nextval('countries.face_face_id_seq'::regclass)" digits="0" id="0" name="face_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="left_face" foreignKey="left_face_exists" implied="false" onDeleteCascade="false" table="edge_data"/>
+            <child column="right_face" foreignKey="right_face_exists" implied="false" onDeleteCascade="false" table="edge_data"/>
+            <child column="containing_face" foreignKey="face_exists" implied="false" onDeleteCascade="false" table="node"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="mbr" nullable="true" remarks="" size="2147483647" type="geometry"/>
+         <primaryKey column="face_id" sequenceNumberInPK="1"/>
+         <index name="face_primary_key" unique="true">
+            <column ascending="true" name="face_id"/>
+         </index>
+         <index name="face_gist" unique="false">
+            <column ascending="true" name="mbr"/>
+         </index>
+      </table>
+      <table name="node" remarks="" schema="countries" type="TABLE">
+         <column autoUpdated="false" defaultValue="nextval('countries.node_node_id_seq'::regclass)" digits="0" id="0" name="node_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="end_node" foreignKey="end_node_exists" implied="false" onDeleteCascade="false" table="edge_data"/>
+            <child column="start_node" foreignKey="start_node_exists" implied="false" onDeleteCascade="false" table="edge_data"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="containing_face" nullable="true" remarks="" size="10" type="int4">
+            <parent column="face_id" foreignKey="face_exists" implied="false" onDeleteCascade="false" table="face"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="geom" nullable="true" remarks="" size="2147483647" type="geometry"/>
+         <primaryKey column="node_id" sequenceNumberInPK="1"/>
+         <index name="node_primary_key" unique="true">
+            <column ascending="true" name="node_id"/>
+         </index>
+         <index name="node_gist" unique="false">
+            <column ascending="true" name="geom"/>
+         </index>
+      </table>
+      <table name="relation" remarks="" schema="countries" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="topogeo_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="1" name="layer_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="2" name="element_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="3" name="element_type" nullable="false" remarks="" size="10" type="int4"/>
+         <index name="relation_layer_id_topogeo_id_element_id_element_type_key" unique="true">
+            <column ascending="true" name="layer_id"/>
+            <column ascending="true" name="topogeo_id"/>
+            <column ascending="true" name="element_id"/>
+            <column ascending="true" name="element_type"/>
+         </index>
+      </table>
+   </tables>
+</database>

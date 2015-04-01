@@ -1,0 +1,44 @@
+// dot 2.38.0 on Mac OS X 10.10.1
+// SchemaSpy rev 590
+digraph "properties_for_qgis" {
+  graph [
+    rankdir="RL"
+    bgcolor="#f7f7f7"
+    nodesep="0.18"
+    ranksep="0.46"
+    fontname="Helvetica"
+    fontsize="11"
+  ];
+  node [
+    fontname="Helvetica"
+    fontsize="11"
+    shape="plaintext"
+  ];
+  edge [
+    arrowsize="0.8"
+  ];
+  "properties_for_qgis" [
+    label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">properties_for_qgis</TD></TR>
+      <TR><TD PORT="id" COLSPAN="3" ALIGN="LEFT">id</TD></TR>
+      <TR><TD PORT="description" COLSPAN="3" ALIGN="LEFT">description</TD></TR>
+      <TR><TD PORT="property_type_id" COLSPAN="3" ALIGN="LEFT">property_type_id</TD></TR>
+      <TR><TD PORT="value" COLSPAN="3" ALIGN="LEFT">value</TD></TR>
+      <TR><TD PORT="geovalue" COLSPAN="3" ALIGN="LEFT">geovalue</TD></TR>
+      <TR><TD PORT="date" COLSPAN="3" ALIGN="LEFT">date</TD></TR>
+      <TR><TD PORT="interpolation" COLSPAN="3" ALIGN="LEFT">interpolation</TD></TR>
+      <TR><TD PORT="entity_id" COLSPAN="3" ALIGN="LEFT">entity_id</TD></TR>
+      <TR><TD PORT="source_id" COLSPAN="3" ALIGN="LEFT">source_id</TD></TR>
+      <TR><TD PORT="source_description" COLSPAN="3" ALIGN="LEFT">source_description</TD></TR>
+      <TR><TD PORT="computed_date_start" COLSPAN="3" ALIGN="LEFT">computed_date_start</TD></TR>
+      <TR><TD PORT="computed_date_end" COLSPAN="3" ALIGN="LEFT">computed_date_end</TD></TR>
+      <TR><TD PORT="entity_name" COLSPAN="3" ALIGN="LEFT">entity_name</TD></TR>
+      <TR><TD PORT="entity_type_name" COLSPAN="3" ALIGN="LEFT">entity_type_name</TD></TR>
+      <TR><TD PORT="property_name" COLSPAN="3" ALIGN="LEFT">property_name</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">view</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
+    </TABLE>>
+    URL="tables/properties_for_qgis.html"
+    tooltip="properties_for_qgis"
+  ];
+}

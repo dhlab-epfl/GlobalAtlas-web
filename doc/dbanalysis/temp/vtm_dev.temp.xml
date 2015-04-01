@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<database name="vtm_dev" schema="temp" type="PostgreSQL - 9.3.5">
+   <tables>
+      <table name="euratlas_line" remarks="" schema="temp" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="id" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="17" id="1" name="year" nullable="true" remarks="" size="17" type="float8"/>
+         <column autoUpdated="false" digits="0" id="2" name="name_a" nullable="true" remarks="" size="80" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="3" name="name_b" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="geom" nullable="true" remarks="" size="2147483647" type="geometry"/>
+      </table>
+   </tables>
+</database>
