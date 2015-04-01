@@ -153,7 +153,7 @@ MapObject.styles = {
 	    fillColor: '#F2EAD8',
 		color: '#8A857C'
 	},
-    'sovereign_state':{
+    'state':{
         weight: 1,
         opacity: 1.0,
         fillOpacity: 0.2,
