@@ -263,9 +263,9 @@ EOT;
 		ini_set('display_errors', 'on');
 
 		$default_params = [
-                        'entityID'     => 0,
+            'entityID'     => 0,
 			'name'         => '',
-                        'propertyType' => 1,
+            'propertyType' => 1,
 			'date'         => 0,
 			'value'        => '',
 			'sources'      => 'no source',
