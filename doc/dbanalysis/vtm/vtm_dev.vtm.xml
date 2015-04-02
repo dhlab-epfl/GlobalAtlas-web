@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<database name="vtm_dev" schema="vtm" type="PostgreSQL - 9.3.5">
+   <tables>
+      <table name="entities" numRows="7" remarks="Cette table contient les entités historiques." schema="vtm" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('vtm.entities_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial">
+            <child column="entity_id" foreignKey="properties_entity_id_fkey" implied="false" onDeleteCascade="true" table="properties"/>
+            <child column="a_id" foreignKey="related_entities_a_id_fkey" implied="false" onDeleteCascade="true" table="related_entities"/>
+            <child column="b_id" foreignKey="related_entities_b_id_fkey" implied="false" onDeleteCascade="true" table="related_entities"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" defaultValue="1" digits="0" id="2" name="type_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="entities_type_id_fkey" implied="false" onDeleteCascade="true" table="entity_types"/>
+         </column>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="3" name="creation_timestamp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="&quot;current_user&quot;()" digits="0" id="4" name="creation_user" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="5" name="modification_timestamp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="&quot;current_user&quot;()" digits="0" id="6" name="modification_user" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="entities_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+      </table>
+      <table name="entity_types" numRows="7" remarks="" schema="vtm" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('vtm.entity_types_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial">
+            <child column="type_id" foreignKey="entities_type_id_fkey" implied="false" onDeleteCascade="true" table="entities"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="2" name="min_zoom" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="3" name="max_zoom" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="8" id="4" name="zindex" nullable="true" remarks="" size="8" type="float4"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="5" name="creation_timestamp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="&quot;current_user&quot;()" digits="0" id="6" name="creation_user" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="7" name="modification_timestamp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="&quot;current_user&quot;()" digits="0" id="8" name="modification_user" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="entity_types_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="entity_types_name_key" unique="true">
+            <column ascending="true" name="name"/>
+         </index>
+      </table>
+      <table name="properties" numRows="14" remarks="" schema="vtm" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('vtm.properties_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="entity_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="properties_entity_id_fkey" implied="false" onDeleteCascade="true" table="entities"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="description" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="property_type_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="properties_property_type_id_fkey" implied="false" onDeleteCascade="true" table="properties_types"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="4" name="value" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="5" name="date" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" defaultValue="'default'::vtm.interpolation_type" digits="0" id="6" name="interpolation" nullable="false" remarks="" size="2147483647" type="interpolation_type"/>
+         <column autoUpdated="false" digits="0" id="7" name="computed_date_start" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="8" name="computed_date_end" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="9" name="source_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="properties_source_id_fkey" implied="false" onDeleteCascade="false" table="sources"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="10" name="source_description" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="11" name="creation_timestamp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="&quot;current_user&quot;()" digits="0" id="12" name="creation_user" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="13" name="modification_timestamp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="&quot;current_user&quot;()" digits="0" id="14" name="modification_user" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="15" name="geovalue" nullable="true" remarks="" size="2147483647" type="geometry"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="properties_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="properties_geovalue_gix" unique="false">
+            <column ascending="true" name="geovalue"/>
+         </index>
+      </table>
+      <table name="properties_for_qgis" numRows="0" remarks="" schema="vtm" type="VIEW">
+         <column autoUpdated="false" defaultValue="nextval('vtm.properties_id_seq'::regclass)" digits="0" id="0" name="id" nullable="true" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="description" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="2" name="property_type_id" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="3" name="value" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="geovalue" nullable="true" remarks="" size="2147483647" type="geometry"/>
+         <column autoUpdated="false" digits="0" id="5" name="date" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="6" name="interpolation" nullable="true" remarks="" size="2147483647" type="interpolation_type"/>
+         <column autoUpdated="false" digits="0" id="7" name="entity_id" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="8" name="source_id" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="9" name="source_description" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="10" name="computed_date_start" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="11" name="computed_date_end" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="12" name="entity_name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="13" name="entity_type_name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="14" name="property_name" nullable="true" remarks="" size="2147483647" type="text"/>
+      </table>
+      <table name="properties_types" numRows="6" remarks="" schema="vtm" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('vtm.properties_types_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial">
+            <child column="property_type_id" foreignKey="properties_property_type_id_fkey" implied="false" onDeleteCascade="true" table="properties"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="2" name="description" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="type" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="subtype" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="5" name="creation_timestamp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="&quot;current_user&quot;()" digits="0" id="6" name="creation_user" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="7" name="modification_timestamp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="&quot;current_user&quot;()" digits="0" id="8" name="modification_user" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="properties_types_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="properties_types_name_key" unique="true">
+            <column ascending="true" name="name"/>
+         </index>
+      </table>
+      <table name="related_entities" numRows="0" remarks="Cette table contient les entités liées par une relation de succession." schema="vtm" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('vtm.related_entities_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="a_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="related_entities_a_id_fkey" implied="false" onDeleteCascade="true" table="entities"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="b_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="related_entities_b_id_fkey" implied="false" onDeleteCascade="true" table="entities"/>
+         </column>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="3" name="creation_timestamp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="&quot;current_user&quot;()" digits="0" id="4" name="creation_user" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="5" name="modification_timestamp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="&quot;current_user&quot;()" digits="0" id="6" name="modification_user" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="related_entities_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+      </table>
+      <table name="sources" numRows="1" remarks="Cette table contient les documents sources." schema="vtm" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('vtm.sources_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial">
+            <child column="source_id" foreignKey="properties_source_id_fkey" implied="false" onDeleteCascade="false" table="properties"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="2" name="creation_timestamp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="&quot;current_user&quot;()" digits="0" id="3" name="creation_user" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" defaultValue="now()" digits="6" id="4" name="modification_timestamp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="&quot;current_user&quot;()" digits="0" id="5" name="modification_user" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="sources_pkey" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+         <index name="sources_name_key" unique="true">
+            <column ascending="true" name="name"/>
+         </index>
+      </table>
+   </tables>
+</database>

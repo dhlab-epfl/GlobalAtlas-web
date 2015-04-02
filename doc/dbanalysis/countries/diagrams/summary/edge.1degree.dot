@@ -1,0 +1,37 @@
+// dot 2.38.0 on Mac OS X 10.10.1
+// SchemaSpy rev 590
+digraph "edge" {
+  graph [
+    rankdir="RL"
+    bgcolor="#f7f7f7"
+    nodesep="0.18"
+    ranksep="0.46"
+    fontname="Helvetica"
+    fontsize="11"
+  ];
+  node [
+    fontname="Helvetica"
+    fontsize="11"
+    shape="plaintext"
+  ];
+  edge [
+    arrowsize="0.8"
+  ];
+  "edge" [
+    label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">edge</TD></TR>
+      <TR><TD PORT="edge_id" COLSPAN="3" ALIGN="LEFT">edge_id</TD></TR>
+      <TR><TD PORT="start_node" COLSPAN="3" ALIGN="LEFT">start_node</TD></TR>
+      <TR><TD PORT="end_node" COLSPAN="3" ALIGN="LEFT">end_node</TD></TR>
+      <TR><TD PORT="next_left_edge" COLSPAN="3" ALIGN="LEFT">next_left_edge</TD></TR>
+      <TR><TD PORT="next_right_edge" COLSPAN="3" ALIGN="LEFT">next_right_edge</TD></TR>
+      <TR><TD PORT="left_face" COLSPAN="3" ALIGN="LEFT">left_face</TD></TR>
+      <TR><TD PORT="right_face" COLSPAN="3" ALIGN="LEFT">right_face</TD></TR>
+      <TR><TD PORT="geom" COLSPAN="3" ALIGN="LEFT">geom</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">view</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
+    </TABLE>>
+    URL="tables/edge.html"
+    tooltip="edge"
+  ];
+}

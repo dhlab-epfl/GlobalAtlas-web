@@ -1,0 +1,47 @@
+// dot 2.38.0 on Mac OS X 10.10.1
+// SchemaSpy rev 590
+digraph "un_vol" {
+  graph [
+    rankdir="RL"
+    bgcolor="#f7f7f7"
+    nodesep="0.18"
+    ranksep="0.46"
+    fontname="Helvetica"
+    fontsize="11"
+  ];
+  node [
+    fontname="Helvetica"
+    fontsize="11"
+    shape="plaintext"
+  ];
+  edge [
+    arrowsize="0.8"
+  ];
+  "un_vol" [
+    label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">un_vol</TD></TR>
+      <TR><TD PORT="id_0" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">id_0</TD></TR>
+      <TR><TD PORT="geom" COLSPAN="3" ALIGN="LEFT">geom</TD></TR>
+      <TR><TD PORT="id" COLSPAN="3" ALIGN="LEFT">id</TD></TR>
+      <TR><TD PORT="acc_plan" COLSPAN="3" ALIGN="LEFT">acc_plan</TD></TR>
+      <TR><TD PORT="acc_alt" COLSPAN="3" ALIGN="LEFT">acc_alt</TD></TR>
+      <TR><TD PORT="data_val" COLSPAN="3" ALIGN="LEFT">data_val</TD></TR>
+      <TR><TD PORT="fonte" COLSPAN="3" ALIGN="LEFT">fonte</TD></TR>
+      <TR><TD PORT="uv_qgronda" COLSPAN="3" ALIGN="LEFT">uv_qgronda</TD></TR>
+      <TR><TD PORT="uv_qcolmo" COLSPAN="3" ALIGN="LEFT">uv_qcolmo</TD></TR>
+      <TR><TD PORT="uv_h" COLSPAN="3" ALIGN="LEFT">uv_h</TD></TR>
+      <TR><TD PORT="uv_tipporz" COLSPAN="3" ALIGN="LEFT">uv_tipporz</TD></TR>
+      <TR><TD PORT="uv_hintra" COLSPAN="3" ALIGN="LEFT">uv_hintra</TD></TR>
+      <TR><TD PORT="data_cre" COLSPAN="3" ALIGN="LEFT">data_cre</TD></TR>
+      <TR><TD PORT="data_mod" COLSPAN="3" ALIGN="LEFT">data_mod</TD></TR>
+      <TR><TD PORT="tipo_mod" COLSPAN="3" ALIGN="LEFT">tipo_mod</TD></TR>
+      <TR><TD PORT="origine" COLSPAN="3" ALIGN="LEFT">origine</TD></TR>
+      <TR><TD PORT="q_campagna" COLSPAN="3" ALIGN="LEFT">q_campagna</TD></TR>
+      <TR><TD PORT="uv_hcolmo" COLSPAN="3" ALIGN="LEFT">uv_hcolmo</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">110,029 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
+    </TABLE>>
+    URL="tables/un_vol.html"
+    tooltip="un_vol"
+  ];
+}
