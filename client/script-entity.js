@@ -79,27 +79,4 @@ EntityObject.reloadData = function(){
         }
     });
 
-	$.ajax({
-        type: "GET",
-        dataType: "json",
-        url: settings_api_url,
-        data: {'query': 'succession_for_entity','id': EntityObject.loadedEntity},
-        success: function(data,textStatus,jqXHR){
-        	$('#inspector').show();
-        	$('#inspector_succession').empty();
-        	$.each(data,function(i,item){
-        		var html = '';
-
-				html += '<tr>';
-				html += '	<td class="key">'+item.name+'</td>';
-				html += '	<td class="value">'+item.status+' <span class="bounds">'+item.mindate+'-'+item.maxdate+'</span></td>';
-				html += '</tr>';
-
-        		$('#inspector_succession').append(html);
-        	});
-        },
-        error: function( jqXHR, textStatus, errorThrown ){
-        	console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
-        }
-    });
 }

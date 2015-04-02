@@ -149,63 +149,7 @@ ORDER BY property_name
 EOT;
 		echo query($sql, $_GET, $default_params);
 		break;
-
-
-	/************************************************************/
-	/* SUCCESSION_FOR_ENTITY                                    */
-	/* get all succession relation for an entity                */
-	/************************************************************/
-
-	case 'succession_for_entity':
-
-		$default_params = [
-			'id' => 0 // entity_id
-		];
 		
-		$sql = <<<EOT
-WITH 	entity AS (SELECT   CASE
-								WHEN (SELECT EXISTS ( SELECT 1 FROM UNNEST(ARRAY_AGG( computed_date_start )) s(a) WHERE a IS NULL)) THEN NULL
-								ELSE MIN(computed_date_start)
-							END as mindate,
-							CASE
-								WHEN (SELECT EXISTS ( SELECT 1 FROM UNNEST(ARRAY_AGG( computed_date_end )) s(a) WHERE a IS NULL)) THEN NULL
-								ELSE MAX(computed_date_end)
-							END as maxdate
-							FROM vtm.properties
-							WHERE entity_id=:id)
-
-SELECT 	b_id,
-		name,
-		mindate,
-		maxdate,
-		CASE
-			WHEN other.maxdate<=(SELECT mindate FROM entity) THEN 'ancestor'
-			WHEN other.mindate>=(SELECT maxdate FROM entity) THEN 'sucessor'
-			ELSE 'contemporary'
-		END as status
-FROM (
-	SELECT 	b_id,
-			ent.name,
-			CASE
-				WHEN (SELECT EXISTS ( SELECT 1 FROM UNNEST(ARRAY_AGG( computed_date_start )) s(a) WHERE a IS NULL)) THEN NULL
-				ELSE MIN(computed_date_start)
-			END as mindate,
-			CASE
-				WHEN (SELECT EXISTS ( SELECT 1 FROM UNNEST(ARRAY_AGG( computed_date_end )) s(a) WHERE a IS NULL)) THEN NULL
-				ELSE MAX(computed_date_end)
-			END as maxdate
-	FROM 	vtm.related_entities as rel
-	JOIN 	vtm.entities as ent ON ent.id=rel.b_id
-	JOIN 	vtm.properties as prop ON prop.entity_id=ent.id
-	WHERE 	rel.a_id=:id
-	GROUP BY b_id, ent.name
-) as other
-ORDER BY status
-EOT;
-
-
-		echo query($sql, $_GET, $default_params);
-		break;
 }
 
 
