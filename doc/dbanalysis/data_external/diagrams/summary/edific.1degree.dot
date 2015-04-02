@@ -1,0 +1,45 @@
+// dot 2.38.0 on Mac OS X 10.10.1
+// SchemaSpy rev 590
+digraph "edific" {
+  graph [
+    rankdir="RL"
+    bgcolor="#f7f7f7"
+    nodesep="0.18"
+    ranksep="0.46"
+    fontname="Helvetica"
+    fontsize="11"
+  ];
+  node [
+    fontname="Helvetica"
+    fontsize="11"
+    shape="plaintext"
+  ];
+  edge [
+    arrowsize="0.8"
+  ];
+  "edific" [
+    label=<
+    <TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" BGCOLOR="#ffffff">
+      <TR><TD COLSPAN="3" BGCOLOR="#9bab96" ALIGN="CENTER">edific</TD></TR>
+      <TR><TD PORT="id" COLSPAN="3" BGCOLOR="#bed1b8" ALIGN="LEFT">id</TD></TR>
+      <TR><TD PORT="geom" COLSPAN="3" BGCOLOR="#f4f7da" ALIGN="LEFT">geom</TD></TR>
+      <TR><TD PORT="acc_plan" COLSPAN="3" ALIGN="LEFT">acc_plan</TD></TR>
+      <TR><TD PORT="acc_alt" COLSPAN="3" ALIGN="LEFT">acc_alt</TD></TR>
+      <TR><TD PORT="data_val" COLSPAN="3" ALIGN="LEFT">data_val</TD></TR>
+      <TR><TD PORT="fonte" COLSPAN="3" ALIGN="LEFT">fonte</TD></TR>
+      <TR><TD PORT="edi_tipo" COLSPAN="3" ALIGN="LEFT">edi_tipo</TD></TR>
+      <TR><TD PORT="edi_sotter" COLSPAN="3" ALIGN="LEFT">edi_sotter</TD></TR>
+      <TR><TD PORT="edi_stato" COLSPAN="3" ALIGN="LEFT">edi_stato</TD></TR>
+      <TR><TD PORT="fascicolo" COLSPAN="3" ALIGN="LEFT">fascicolo</TD></TR>
+      <TR><TD PORT="operatore" COLSPAN="3" ALIGN="LEFT">operatore</TD></TR>
+      <TR><TD PORT="data_cre" COLSPAN="3" ALIGN="LEFT">data_cre</TD></TR>
+      <TR><TD PORT="data_mod" COLSPAN="3" ALIGN="LEFT">data_mod</TD></TR>
+      <TR><TD PORT="tipo_mod" COLSPAN="3" ALIGN="LEFT">tipo_mod</TD></TR>
+      <TR><TD PORT="origine" COLSPAN="3" ALIGN="LEFT">origine</TD></TR>
+      <TR><TD PORT="doc" COLSPAN="3" ALIGN="LEFT">doc</TD></TR>
+      <TR><TD ALIGN="LEFT" BGCOLOR="#f7f7f7">  </TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">73,300 rows</TD><TD ALIGN="RIGHT" BGCOLOR="#f7f7f7">  </TD></TR>
+    </TABLE>>
+    URL="tables/edific.html"
+    tooltip="edific"
+  ];
+}
