@@ -12,21 +12,21 @@ div#map{
 }
 
 
-#slider-min, #slider-max, #slider-container, #slider-spinner{
+#slider-min, #slider-max, #slider-container{
 	position: absolute;
 	left:10px;
 	width: 26px;
 }
 
 
-#slider-min, #slider-max, #slider-spinner, #slider-ui .ui-slider-handle, .ui-slider{
+#slider-min, #slider-max, #slider-ui .ui-slider-handle, .ui-slider, .ui-spinner{
 	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
 	background: #fff;
 	border: none;
 	border-radius: 4px;
 }
 
-#slider-min,#slider-max, #slider-spinner{
+#slider-min,#slider-max{
 	left: 7px;
 	width: 30px;
 	height: 13px;
@@ -39,12 +39,26 @@ div#map{
 #slider-min{
 	bottom: 82px;   /*54 before*/
 }
-#slider-spinner{
+#spinner-container{
+        position: absolute;
+	left: 7px;
+	height: 15px;
 	width: 46px;
-        bottom: 54px;
+        bottom: 56px;
 }
-.ui-spinner-input{
-	margin: 0em 0px 0.2em 0em;
+.ui-spinner{
+	margin: 0px 0px 2px 0px;
+	padding: 2px;
+	width: 46px;
+	height: 13px;
+}
+#spinner-ui{
+	font-size: 12px;
+	padding: 0px;
+	margin: 0px;
+	width: 30px;
+	height: 13px;
+	vertical-align: top;
 }
 #slider-container{
 	top: 112px;
