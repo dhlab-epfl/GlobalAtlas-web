@@ -12,21 +12,21 @@ div#map{
 }
 
 
-#slider-min, #slider-max, #slider-container{
+#slider-min, #slider-max, #slider-container, #slider-spinner{
 	position: absolute;
 	left:10px;
 	width: 26px;
 }
 
 
-#slider-min, #slider-max, #slider-ui .ui-slider-handle, .ui-slider{
+#slider-min, #slider-max, #slider-spinner, #slider-ui .ui-slider-handle, .ui-slider{
 	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
 	background: #fff;
 	border: none;
 	border-radius: 4px;
 }
 
-#slider-min,#slider-max{
+#slider-min,#slider-max, #slider-spinner{
 	left: 7px;
 	width: 30px;
 	height: 13px;
@@ -37,11 +37,18 @@ div#map{
 	top:80px;
 }
 #slider-min{
-	bottom: 54px;
+	bottom: 82px;   /*54 before*/
+}
+#slider-spinner{
+	width: 46px;
+        bottom: 54px;
+}
+.ui-spinner-input{
+	margin: 0em 0px 0.2em 0em;
 }
 #slider-container{
 	top: 112px;
-	bottom: 82px;
+	bottom: 110px;
 }
 
 #slider-ui{
