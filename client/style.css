@@ -79,8 +79,14 @@ div#map{
 	font-size: 12px;
 }
 
+#create-container{
+	position: absolute;
+	top: 10px;
+	right: 10px;
+}
 
-#inspector{
+
+#inspector, .bigbox{
 	position: absolute;
 	right:10px;
 	top: 10px;
@@ -93,6 +99,51 @@ div#map{
 	border-radius: 4px;
 	overflow-y: auto;
 	padding: 10px;
+}
+
+.creator-item{
+	position: relative;
+	width: 100%;
+	margin-top: 20px;
+	background: #faa;
+	padding: 2px;
+	clear: both;
+}
+.creator-item-left{
+	position: relative;
+	width: 35%;
+	float: left;
+	font-size: 2em;
+	text-align: center
+}
+
+.creator-item-right{
+	/*position: relative;*/
+	display: table-cell;
+	width: 60%;
+	margin-right: 5%; 
+	float: right;
+	font-size: 1.2em;
+	vertical-align: middle;
+}
+
+.creator-item-right select {
+	width: 100%;
+}
+.creator-item-right .overflow {
+	height: 200px;
+}
+.creator-item-right input {
+	padding: 0.4em 1em;
+	font-size: 1em;
+}
+.creator-item-right textarea {
+	font-size: 1em;
+	width: 100%;
+}
+.creator-item-right button {
+	padding: 0.4em 1em;
+	font-size: 1em;
 }
 
 #hidebox{

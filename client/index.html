@@ -32,11 +32,13 @@
 	<script src="script-map.js"></script>
 	<script src="script-slider.js"></script>
 	<script src="script-entity.js"></script>
+	<script src="script-creator.js"></script>
 
 
 </head>
 <body> 
         <div id="map"></div>
+
 
         <!-- time slider -->
 	<input id="slider-max" value="2015"/>
@@ -48,7 +50,102 @@
 		<input id="spinner-ui" name="spinner" value="2015">
 	</div>
 
-        <!-- entity info window -->
+
+	<!-- create buton -->
+	<div id="create-container">
+		<button id="create-button">Create</button>
+	</div>
+
+
+	<!-- creator -->
+	<div id="creator" class="bigbox">
+		<h1>Creator</h1>
+		<!-- Entity -->
+		<div class="creator-item">
+			<div class="creator-item-left">Entity</div>
+			<div class="creator-item-right">
+				Hello world!
+			</div>
+			<div style="clear:both"></div> 
+		</div>
+
+		<!-- Draw -->
+		<div class="creator-item">
+			<div class="creator-item-left">Draw</div>
+			<div class="creator-item-right">
+				<form>
+					<div id="draw-radio">
+						<input type="radio" id="radio1" name="radio" checked="checked">
+							<label for="radio1">Point</label>
+						<input type="radio" id="radio2" name="radio">
+							<label for="radio2">Line</label>
+						<input type="radio" id="radio3" name="radio">
+							<label for="radio3">Area</label>
+					</div>
+				</form>
+				<div style="margin-top: 5px"></div>
+				<form action="#">
+					<select name="number" id="number">
+						<option class="point-option">City</option>
+						<option class="point-option" selected="selected">Event</option>
+						<option class="line-option">Frontier</option>
+						<option class="line-option">Street</option>
+						<option class="area-option">Building</option>
+						<option class="area-option">Island</option>
+						<option class="area-option">Lake</option>
+					</select>
+				</form>
+			</div>
+			<div style="clear:both"></div> 
+		</div>
+
+		<!-- Time -->
+		<div class="creator-item">
+			<div class="creator-item-left">Time</div>
+			<div class="creator-item-right">
+				<label for="valid-at">Valid at: </label>
+				<input type="number" id="valid-at">
+				<br>
+				Last... current ...Next
+				
+			</div>
+			<div style="clear:both"></div> 
+		</div>
+
+		<!-- Information -->
+		<div class="creator-item">
+			<div class="creator-item-left">Info</div>
+			<div class="creator-item-right">
+				<textarea class="info-input" rows="5"></textarea>
+				
+			</div>
+			<div style="clear:both"></div> 
+		</div>
+
+		<!-- Sources -->
+		<div class="creator-item">
+			<div class="creator-item-left">Sources</div>
+			<div class="creator-item-right">
+				<textarea class="info-input" rows="5"></textarea>
+				
+			</div>
+			<div style="clear:both"></div> 
+		</div>
+
+		<!-- Buttons -->
+		<div class="creator-item">
+			<div class="creator-item-left"></div>
+			<div class="creator-item-right">
+				<button id="create-cancel"/>
+				<label for="create-cancel">Cancel</label>
+				<button id="create-save">Save</button>
+			</div>
+			<div style="clear:both"></div> 
+		</div>
+	</div>
+
+
+        <!-- inspector -->
 	<div id="inspector" style="display: none">
 		<a id="hidebox">X</a>
 		<h1><span class="entity">Entity_name</span> <span class="type">(type)</span></h1>
@@ -116,6 +213,9 @@
 				<td class="value">I updated the shape</td>
 			</tr>
 		</table>
+		</br>
+		</br>
+		<button id="edit-button">Edit</button>
 		
 
 	</div>
