@@ -2,6 +2,8 @@
 
 MapObject.date = 2015;
 MapObject.map = null;
+MapObject.drawLayer = null;
+MapObject.drawControl = null;
 MapObject.jsonLayer = null;
 MapObject.featureTypes = [];
 MapObject.ignoreTypes = [];
@@ -9,6 +11,24 @@ MapObject.ignoreTypes = [];
 MapObject.init = function(){
 
 	MapObject.map = L.map('map').setView([45.44, 12.33], 13);
+
+	/*MapObject.drawLayer = new L.FeatureGroup();
+        MapObject.map.addLayer(MapObject.drawLayer);*/
+	//MapObject.drawLayer.editing.enable();
+
+	MapObject.drawControl = new L.Control.Draw({
+    		draw : {
+			position : 'topleft',
+			polygon : false,
+			polyline : false,
+			rectangle : false,
+			circle : false
+
+    		},
+    			edit : false
+		});
+	//MapObject.map.addControl(MapObject.drawControl);
+
 
 	/* ADD BACKGROUND LAYER */
 
