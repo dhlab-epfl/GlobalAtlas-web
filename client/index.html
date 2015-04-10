@@ -58,7 +58,7 @@
 
 
 	<!-- creator -->
-	<div id="creator" class="bigbox">
+	<div id="creator" class="bigbox" style="display: none">
 		<h1>Creator</h1>
 		<!-- Entity -->
 		<div class="creator-item">
@@ -75,11 +75,11 @@
 			<div class="creator-item-right">
 				<form>
 					<div id="draw-radio">
-						<input type="radio" id="radio1" name="radio" checked="checked">
+						<input type="radio" id="radio1" name="dRadio">
 							<label for="radio1">Point</label>
-						<input type="radio" id="radio2" name="radio">
+						<input type="radio" id="radio2" name="dRadio">
 							<label for="radio2">Line</label>
-						<input type="radio" id="radio3" name="radio">
+						<input type="radio" id="radio3" name="dRadio">
 							<label for="radio3">Area</label>
 					</div>
 				</form>
@@ -87,7 +87,7 @@
 				<form action="#">
 					<select name="number" id="number">
 						<option class="point-option">City</option>
-						<option class="point-option" selected="selected">Event</option>
+						<option class="point-option">Event</option>
 						<option class="line-option">Frontier</option>
 						<option class="line-option">Street</option>
 						<option class="area-option">Building</option>
