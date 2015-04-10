@@ -1,20 +1,20 @@
 
 
 SliderObject.init = function(){
-
     $( "#slider-ui" ).slider({
         orientation: "vertical",
-        min: 1000,
+        min: 0,
         max: 2015,
         slide: function( event, ui ) {
             $( ".ui-slider-handle" ).html( ui.value );
-            $( "#spinner-ui").spinner("value", ui.value);
+            $("#spinner-ui").spinner("value", ui.value);
         },
         stop: function(event, ui){
             MapObject.setDate(ui.value);
         }
     });
-    $( ".ui-slider-handle" ).html( MapObject.date );
+    $( ".ui-slider-handle" ).html(MapObject.date);
+    $( "#slider-ui" ).slider("option", "value", MapObject.date);
     MapObject.setDate( MapObject.date );
 
 	
@@ -26,24 +26,35 @@ SliderObject.init = function(){
     });
 
 
-    $( "#spinner-ui" ).spinner({
+    $("#spinner-ui").spinner({
         min: 1000,
         max: 2015,
         numberformat: "n",
         step: 1,
-	change: function(event, ui){ SliderObject.setYear(event, ui)},
-        spin:   function(event, ui){ SliderObject.setYear(event, ui)}
+	change: function(event, ui){ SliderObject.setSliderYear(ui.value)},
+        spin:   function(event, ui){ SliderObject.setSliderYear(ui.value)}
     });
 
 
 }
 
-SliderObject.setYear = function(event, ui){
-    if($("#slider-min").val() > ui.value)
-        $("#slider-min").val(ui.value);
-    else if($("#slider-max").val() < ui.value)
-        $("#slider-max").val(ui.value);
-    $( "#slider-ui" ).slider( "value", ui.value );
-    $( ".ui-slider-handle" ).html( ui.value );
-    MapObject.setDate(ui.value);
+/*
+ * set slider
+ */
+SliderObject.setSliderYear = function(y){
+    if($("#slider-min").val() > y)
+        $("#slider-min").val(y);
+    else if($("#slider-max").val() < y)
+        $("#slider-max").val(y);
+    $( "#slider-ui" ).slider( "value", y);
+    $( ".ui-slider-handle" ).html(y);
+    MapObject.setDate(y);
+}
+
+/*
+ * set slider's AND spinner's year
+ */
+SliderObject.setYear = function(y){
+    SliderObject.setSliderYear(y);
+    $("#spinner-ui").spinner("value", y);
 }

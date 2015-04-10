@@ -124,10 +124,6 @@ div#map{
 	font-size: 1.2em;
 	vertical-align: middle;
 }
-
-.creator-item-right select {
-	width: 100%;
-}
 .creator-item-right .overflow {
 	height: 200px;
 }
