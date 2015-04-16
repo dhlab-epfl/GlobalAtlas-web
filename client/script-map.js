@@ -168,9 +168,8 @@ MapObject.styles = {
         color: '#945C5C'
     },
     'border':{
-        weight: 2,
+        weight: 1,
         opacity: 1.0,
-        dashArray: [4,4],
         color: '#000'
     }
 };
