@@ -74,17 +74,26 @@ CreatorObject.init = function(){
     });
 
 
-
     //Enable drawing when clicking on one of the Draw-radios
     $("#dRadioPoint").click(function(){
+	$("#draw-radio").buttonset("disable");
+        $("#creator").hide()
+        $("#draw-box").show()
         pointDrawer.enable();
     });
     $("#dRadioLine").click(function(){
+	$("#draw-radio").buttonset("disable");
+        $("#creator").hide()
+        $("#draw-box").show()
         lineDrawer.enable();
     });
     $("#dRadioArea").click(function(){
+	$("#draw-radio").buttonset("disable");
+        $("#creator").hide()
+        $("#draw-box").show()
         polygonDrawer.enable();
     });
+
 
 
     //Time
@@ -92,6 +101,17 @@ CreatorObject.init = function(){
         SliderObject.setYear($("#valid-at").val())
     });
 
+
+
+    //The draw box shows up while drawing.
+    $("#draw-cancel").click(function(){
+
+    });
+    $("#draw-done").click(function(){
+        //similar functionality as when finishing drawing.
+        $("#draw-box").hide()
+        $("#creator").show()
+    });
 }
 
 CreatorObject.show = function(){
@@ -101,7 +121,8 @@ CreatorObject.show = function(){
     //set "valit at" value
     $("#valid-at").val($("#slider-ui").slider("option", "value"));
 
-    //uncheck radio buttons
+    //enable and uncheck radio buttons
+    $("#draw-radio").buttonset("enable");
     $("[name='dRadio']").attr("checked", false);
     $("[name='dRadio']").button("refresh");
 }
