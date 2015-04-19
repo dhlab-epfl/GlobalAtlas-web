@@ -12,10 +12,6 @@ MapObject.init = function(){
 
 	MapObject.map = L.map('map').setView([45.44, 12.33], 13);
 
-	/*MapObject.drawLayer = new L.FeatureGroup();
-        MapObject.map.addLayer(MapObject.drawLayer);*/
-	//MapObject.drawLayer.editing.enable();
-
 	MapObject.drawControl = new L.Control.Draw({
     		draw : {
 			position : 'topleft',
@@ -27,7 +23,6 @@ MapObject.init = function(){
     		},
     			edit : false
 		});
-	//MapObject.map.addControl(MapObject.drawControl);
 
 
 	/* ADD BACKGROUND LAYER */

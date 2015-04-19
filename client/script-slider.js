@@ -30,35 +30,42 @@ SliderObject.init = function(){
         numberformat: "n",
         step: 1,
 	//on change, ui is empty. on spin it works.
-	change: function(event, ui){ SliderObject.setSliderYear($("#spinner-ui").val())},
-        spin:   function(event, ui){ SliderObject.setSliderYear(ui.value)}
+	change: function(event, ui){ SliderObject.setYear($("#spinner-ui").val())},
+        spin:   function(event, ui){ SliderObject.setYear(ui.value)}
     });
 
 
 }
 
-//TODO: create variable that holds current time. change time only with function ChangeYear. 
-//--> does it prevent endless loops...?
+
 
 /*
- * set slider
+ * set slider (adapt min and max value)
  */
 SliderObject.setSliderYear = function(y){
+    //convert everything to numbers... otherwise not comparable!
+    var min = Number($("#slider-min").val())
+    var max = Number($("#slider-max").val())
+    var x   = Number(y)
 
-    if($("#slider-min").val() > y) {
-        $("#slider-min").val(y);
-    } else if($("#slider-max").val() < y) {
-        $("#slider-max").val(y);
+    if(min > x) {
+        $("#slider-min").val(x);
+        $("#slider-ui").slider("option", "min", y);
+    } else if (max < x) {
+        $("#slider-max").val(x);
+        $("#slider-ui").slider("option", "max", x);
     }
-    $( "#slider-ui" ).slider( "value", y);
-    $( ".ui-slider-handle" ).html(y);
-    MapObject.setDate(y);
+    $( "#slider-ui" ).slider( "value", x);
+    $( ".ui-slider-handle" ).html(x);
+    MapObject.setDate(x);
 }
 
 /*
- * set slider's AND spinner's year
+ * set slider's AND spinner's AND creator's year
  */
 SliderObject.setYear = function(y){
-    SliderObject.setSliderYear(y);
-    $("#spinner-ui").spinner("value", y);
+    var x = Number(y)
+    SliderObject.setSliderYear(x);
+    $("#spinner-ui").spinner("value", x);
+    $("#valid-at").val(x);
 }
