@@ -1,6 +1,7 @@
 var pointDrawer = null;
 var lineDrawer = null;
 var polygonDrawer = null;
+
 CreatorObject.init = function(){
     $("#create-button").button({
         icons: {
@@ -13,7 +14,7 @@ CreatorObject.init = function(){
     });
 
 
-
+    //render radio buttons 
     $(function() {
         $("#draw-radio").buttonset();
 
@@ -35,25 +36,52 @@ CreatorObject.init = function(){
     lineDrawer = new L.Draw.Polyline(MapObject.map, MapObject.drawControl);
     polygonDrawer = new L.Draw.Polygon(MapObject.map, MapObject.drawControl);
 
+
+    // This function is executed when a drawing is done. 
     MapObject.map.on('draw:created', function(e)  {
-    var type = e.layerType,
-        layer = e.layer;
-
-    // Do whatever you want with the layer.
-    // e.type will be the type of layer that has been drawn (polyline, marker, polygon, rectangle, circle)
-    // E.g. add it to the map
-    layer.addTo(map);
-});
+        var type = e.layerType,
+            layer = e.layer;
 
 
-    //Draw
+        //possible draw types are: polyline, marker, polygon, rectangle, circle. We currently use
+        //marker, polyline and polygon...
+        //TODO: - create string for sending it to DB
+        //      - disable radio buttons, etc...
+        switch(type){
+            case 'marker': 
+                //do sth
+                break;
+
+            case 'polyline': 
+                //do sth
+                break;
+
+            case 'polygon': 
+                //do sth
+        }
+
+
+	//TODO: this somehow doesn't work...
+	MapObject.map.addLayer(layer);
+        //layer.addTo(map);
+    });
+
+    // when an existing drawing is edited...
+    MapObject.map.on('draw:edited', function(e){
+	alert("editing.")
+        $("#draw-radio").prop("disabled", true);
+        $("[name='dRadio']").button("refresh");
+    });
+
+
+
+    //Enable drawing when clicking on one of the Draw-radios
     $("#dRadioPoint").click(function(){
         pointDrawer.enable();
     });
     $("#dRadioLine").click(function(){
         lineDrawer.enable();
     });
-
     $("#dRadioArea").click(function(){
         polygonDrawer.enable();
     });
