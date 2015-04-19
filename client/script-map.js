@@ -12,10 +12,6 @@ MapObject.init = function(){
 
 	MapObject.map = L.map('map').setView([45.44, 12.33], 13);
 
-	/*MapObject.drawLayer = new L.FeatureGroup();
-        MapObject.map.addLayer(MapObject.drawLayer);*/
-	//MapObject.drawLayer.editing.enable();
-
 	MapObject.drawControl = new L.Control.Draw({
     		draw : {
 			position : 'topleft',
@@ -27,7 +23,6 @@ MapObject.init = function(){
     		},
     			edit : false
 		});
-	//MapObject.map.addControl(MapObject.drawControl);
 
 
 	/* ADD BACKGROUND LAYER */
@@ -173,7 +168,7 @@ MapObject.styles = {
 	    fillColor: '#F2EAD8',
 		color: '#8A857C'
 	},
-    'sovereign_state':{
+    'state':{
         weight: 1,
         opacity: 1.0,
         fillOpacity: 0.2,
@@ -186,6 +181,11 @@ MapObject.styles = {
         fillOpacity: 0.2,
         fillColor: '#EDB9B9',
         color: '#945C5C'
+    },
+    'border':{
+        weight: 1,
+        opacity: 1.0,
+        color: '#000'
     }
 };
 

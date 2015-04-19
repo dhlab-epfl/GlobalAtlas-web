@@ -1,8 +1,12 @@
 var pointDrawer = null;
 var lineDrawer = null;
 var polygonDrawer = null;
+var currLayer = null;
+var currDrawing = null;
 
 CreatorObject.init = function(){
+    
+    //Create button
     $("#create-button").button({
         icons: {
             primary: "ui-icon-plusthick"
@@ -14,21 +18,16 @@ CreatorObject.init = function(){
     });
 
 
+
     //render radio buttons 
-    $(function() {
-        $("#draw-radio").buttonset();
+    $("#draw-radio").buttonset();
 
-        $("#number")
-          .selectmenu()
-          .selectmenu("option", "width", "100%")
-          .selectmenu( "menuWidget" )
-            .addClass( "overflow" );
+    $("#type-select")
+      .selectmenu()
+      .selectmenu("option", "width", "100%")
+      .selectmenu( "menuWidget" )
+        .addClass( "overflow" );
 
-        $("#create-cancel").click(function(){
-            CreatorObject.hide();
-        });
-
-    });
 
 
     /* init drawing */
@@ -36,45 +35,47 @@ CreatorObject.init = function(){
     lineDrawer = new L.Draw.Polyline(MapObject.map, MapObject.drawControl);
     polygonDrawer = new L.Draw.Polygon(MapObject.map, MapObject.drawControl);
 
+    //when starting drawing
+    MapObject.map.on('draw:drawstart', function(e) {
+        currLayer = e.layer
+    });
 
-    // This function is executed when a drawing is done. 
-    MapObject.map.on('draw:created', function(e)  {
+
+
+    //executed when a drawing is done...
+    //      - create string for sending it to DB
+    //      - disable radio buttons
+    MapObject.map.on('draw:created', function(e) {
         var type = e.layerType,
             layer = e.layer;
 
-
-        //possible draw types are: polyline, marker, polygon, rectangle, circle. We currently use
-        //marker, polyline and polygon...
-        //TODO: - create string for sending it to DB
-        //      - disable radio buttons, etc...
-        switch(type){
-            case 'marker': 
-                //do sth
-                break;
-
-            case 'polyline': 
-                //do sth
-                break;
-
-            case 'polygon': 
-                //do sth
-        }
+        //get the drawing's correct format 
+        currDrawing = formatDrawingInput(layer, type);
 
 
-	//TODO: this somehow doesn't work...
+        //go back to creator and disable the radio buttons
+        $("#draw-box").hide()
+        $("#creator").show()
+        $("#draw-radio").buttonset("disable");
+
+
+	//TODO: SAVE DRAWING TEMPORARILY...
 	MapObject.map.addLayer(layer);
-        //layer.addTo(map);
     });
 
+
+
     // when an existing drawing is edited...
-    MapObject.map.on('draw:edited', function(e){
+    /*MapObject.map.on('draw:edited', function(e){
 	alert("editing.")
         $("#draw-radio").prop("disabled", true);
         $("[name='dRadio']").button("refresh");
-    });
+    });*/
+
 
 
     //Enable drawing when clicking on one of the Draw-radios
+    //TODO: showing/hiding options in select doesn't work yet!
     $("#dRadioPoint").click(function(){
 	$("#draw-radio").buttonset("disable");
         $("#creator").hide()
@@ -88,7 +89,6 @@ CreatorObject.init = function(){
         lineDrawer.enable();
     });
     $("#dRadioArea").click(function(){
-	$("#draw-radio").buttonset("disable");
         $("#creator").hide()
         $("#draw-box").show()
         polygonDrawer.enable();
@@ -96,23 +96,49 @@ CreatorObject.init = function(){
 
 
 
-    //Time
+    //Time: set timeslider's time when this input changes.
     $("#valid-at").change(function() {
         SliderObject.setYear($("#valid-at").val())
     });
 
 
 
-    //The draw box shows up while drawing.
-    $("#draw-cancel").click(function(){
-
+    //Create button
+    $("#create-cancel").click(function(){
+        //TODO: delete made drawing
+        CreatorObject.hide();
     });
-    $("#draw-done").click(function(){
-        //similar functionality as when finishing drawing.
+
+    //Save button
+    $("#create-save").click(function(){
+        CreatorObject.hide();
+    });
+
+
+
+
+    //DRAW BOX
+
+    //Cancel: - hide drawbox, show creator 
+    //        - disable drawer.
+    $("#draw-cancel").click(function(){
         $("#draw-box").hide()
         $("#creator").show()
+        CreatorObject.disableDrawer()
+        //TODO: DISABLE DRAWING
+    });
+    //when drawing is saved: - hide drawbox, show creator
+    //                       - disable drawer.
+    //                       - disable radio buttons
+    $("#draw-done").click(function(){
+        $("#draw-box").hide()
+        $("#creator").show()
+	$("#draw-radio").buttonset("disable");
+        CreatorObject.disableDrawer()
+        //TODO save current drawing somehow...
     });
 }
+
 
 CreatorObject.show = function(){
     $("#creator").show();
@@ -125,11 +151,61 @@ CreatorObject.show = function(){
     $("#draw-radio").buttonset("enable");
     $("[name='dRadio']").attr("checked", false);
     $("[name='dRadio']").button("refresh");
+
+    //empty textareas
+    $(".info-input").val("");
 }
 
+
+
 CreatorObject.hide = function(){
-    /*TODO confirm message */
+    //TODO confirm message
     $("#creator").hide();
     $("#create-button").show();
 
+}
+
+
+
+CreatorObject.disableDrawer = function(){
+        pointDrawer.disable();
+        lineDrawer.disable();
+        polygonDrawer.disable();
+}
+
+
+
+// returns geometric shape in correct format
+formatDrawingInput = function(layer, type){
+    currDrawing = "";
+
+    if(type == 'marker'){
+        currDrawing = layer.getLatLng().toString()
+    } else {
+        var points = layer.getLatLngs();
+        for(i = 0; i < points.length; i++){
+            currDrawing = currDrawing.concat("," + points[i].toString())
+        }
+    }
+    
+    //set correct coordinate format
+    currDrawing = currDrawing.replace(/,/g, '')
+    currDrawing = currDrawing.replace(/\)/g, '')
+    currDrawing = currDrawing.replace(/LatLng\(/g, ',')
+    currDrawing = currDrawing.substring(1, currDrawing.length-1);
+
+    //set correct geometric type
+    switch(type){
+        case 'marker':
+            //TODO: is this really the correct format (There aren't any points yet in the DB)
+            currDrawing = "POINT(" + currDrawing + ")";
+            break;
+        case 'polyline':
+            currDrawing = "LINESTRING(" + currDrawing + ")";
+            break;
+        case 'polygon':
+            currDrawing = "MULTIPOLYGON(((" + currDrawing + ")))";
+    }
+
+    return currDrawing;
 }
