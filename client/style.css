@@ -144,9 +144,9 @@ div#map{
 .editing {
 	position: absolute;
 	right:10px;
-	top: 200px;
+	top: 10px;
 	width: 30%;
-	min-width: 200px;
+	min-width: 10px;
 	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
 	background: #fff;
 	border: none;
