@@ -1,9 +1,7 @@
-
-
 SliderObject.init = function(){
     $( "#slider-ui" ).slider({
         orientation: "vertical",
-        min: 0,
+        min: 1000,
         max: 2015,
         slide: function( event, ui ) {
             $( ".ui-slider-handle" ).html( ui.value );
@@ -27,25 +25,31 @@ SliderObject.init = function(){
 
 
     $("#spinner-ui").spinner({
-        min: 1000,
+        min: 0,
         max: 2015,
         numberformat: "n",
         step: 1,
-	change: function(event, ui){ SliderObject.setSliderYear(ui.value)},
+	//on change, ui is empty. on spin it works.
+	change: function(event, ui){ SliderObject.setSliderYear($("#spinner-ui").val())},
         spin:   function(event, ui){ SliderObject.setSliderYear(ui.value)}
     });
 
 
 }
 
+//TODO: create variable that holds current time. change time only with function ChangeYear. 
+//--> does it prevent endless loops...?
+
 /*
  * set slider
  */
 SliderObject.setSliderYear = function(y){
-    if($("#slider-min").val() > y)
+
+    if($("#slider-min").val() > y) {
         $("#slider-min").val(y);
-    else if($("#slider-max").val() < y)
+    } else if($("#slider-max").val() < y) {
         $("#slider-max").val(y);
+    }
     $( "#slider-ui" ).slider( "value", y);
     $( ".ui-slider-handle" ).html(y);
     MapObject.setDate(y);
