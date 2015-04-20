@@ -1,4 +1,4 @@
-SliderObject.init = function(){
+SliderObject.init = function(){	
     $( "#slider-ui" ).slider({
         orientation: "vertical",
         min: 1000,
