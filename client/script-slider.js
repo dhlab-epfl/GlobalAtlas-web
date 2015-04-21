@@ -5,10 +5,10 @@ SliderObject.init = function(){
         max: 2015,
         slide: function( event, ui ) {
             $( ".ui-slider-handle" ).html( ui.value );
-            $("#spinner-ui").spinner("value", ui.value);
         },
         stop: function(event, ui){
             MapObject.setDate(ui.value);
+            SliderObject.setYear(ui.value);
         }
     });
     $( ".ui-slider-handle" ).html(MapObject.date);
@@ -31,6 +31,7 @@ SliderObject.init = function(){
         step: 1,
 	//on change, ui is empty. on spin it works.
 	change: function(event, ui){ SliderObject.setYear($("#spinner-ui").val())},
+        //on spin, ui.value is the currently selected year.
         spin:   function(event, ui){ SliderObject.setYear(ui.value)}
     });
 
