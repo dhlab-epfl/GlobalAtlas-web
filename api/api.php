@@ -287,6 +287,7 @@ WITH update_e AS (
          WHERE id = :propertyID
      RETURNING source_id)
  
+		break;
 
 UPDATE vtm.sources
    SET name = :sources
@@ -298,5 +299,33 @@ EOT;
 
 		flush(); ob_flush();
 	break;
+
+	/************************************************************/
+	/* NEXT_GEOMETRY_FOR_ENTITY                                 */
+	/* find the next set of geometries for the entity at hand 	*/
+	/************************************************************/
+
+	case 'next_geometry_for_entity':
+		$default_params = [
+			'id' => 0, //entity_id
+			'date' => 2015,
+		];
+		$sql = <<<EOT
+SELECT
+  prop.date
+FROM
+  vtm.properties as prop   ,
+  vtm.properties_types as proptype
+WHERE
+  prop.entity_id = :id
+  AND  prop.date > :date
+  AND  proptype.name = 'geom'
+  AND  proptype.id = prop.property_type_id
+ORDER BY
+  prop.date
+LIMIT 1
+EOT;
+		echo query($sql, $_GET, $default_params);
+		break;
 }
 

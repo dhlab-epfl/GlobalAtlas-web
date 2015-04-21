@@ -34,6 +34,24 @@ EntityObject.init = function(){
         $('#inspector').hide();
     });
 
+    $('#inspector #next_geom').click(EntityObject.nextGeom);
+    $('#inspector #succ_rel').click(EntityObject.showSuccRel);
+
+}
+
+EntityObject.nextGeom = function(){
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: settings_api_url,
+        data: {'query': 'next_geometry_for_entity','id': EntityObject.loadedEntity,'date': MapObject.date},
+        success: function(data,textStatus,jqXHR){
+            MapObject.setDate(data[0].date)
+        },
+        error: function( jqXHR, textStatus, errorThrown ){
+            console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
+        }
+    })
 }
 
 EntityObject.setHash = function(){
