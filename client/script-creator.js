@@ -1,8 +1,8 @@
-var pointDrawer = null;
-var lineDrawer = null;
-var polygonDrawer = null;
-var currLayer = null;
-var currDrawing = null;
+CreatorObject.pointDrawer   = null;
+CreatorObject.lineDrawer    = null;
+CreatorObject.polygonDrawer = null;
+CreatorObject.currLayer     = null;
+CreatorObject.currDrawing   = "";
 
 CreatorObject.init = function(){
     
@@ -31,13 +31,14 @@ CreatorObject.init = function(){
 
 
     /* init drawing */
-    pointDrawer = new L.Draw.Marker(MapObject.map, MapObject.drawControl);
-    lineDrawer = new L.Draw.Polyline(MapObject.map, MapObject.drawControl);
-    polygonDrawer = new L.Draw.Polygon(MapObject.map, MapObject.drawControl);
+    CreatorObject.pointDrawer = new L.Draw.Marker(MapObject.map, MapObject.drawControl);
+    CreatorObject.lineDrawer = new L.Draw.Polyline(MapObject.map, MapObject.drawControl);
+    CreatorObject.polygonDrawer = new L.Draw.Polygon(MapObject.map, MapObject.drawControl);
 
     //when starting drawing
+    //TODO can we erase this?
     MapObject.map.on('draw:drawstart', function(e) {
-        currLayer = e.layer
+        CreatorObject.currLayer = e.layer
     });
 
 
@@ -50,7 +51,7 @@ CreatorObject.init = function(){
             layer = e.layer;
 
         //get the drawing's correct format 
-        currDrawing = formatDrawingInput(layer, type);
+        CreatorObject.currDrawing = formatDrawingInput(layer, type);
 
 
         //go back to creator and disable the radio buttons
@@ -66,11 +67,11 @@ CreatorObject.init = function(){
 
 
     // when an existing drawing is edited...
-    /*MapObject.map.on('draw:edited', function(e){
+    MapObject.map.on('draw:edited', function(e){
 	alert("editing.")
         $("#draw-radio").prop("disabled", true);
         $("[name='dRadio']").button("refresh");
-    });*/
+    });
 
 
 
@@ -80,18 +81,18 @@ CreatorObject.init = function(){
 	$("#draw-radio").buttonset("disable");
         $("#creator").hide()
         $("#draw-box").show()
-        pointDrawer.enable();
+        CreatorObject.pointDrawer.enable();
     });
     $("#dRadioLine").click(function(){
 	$("#draw-radio").buttonset("disable");
         $("#creator").hide()
         $("#draw-box").show()
-        lineDrawer.enable();
+        CreatorObject.lineDrawer.enable();
     });
     $("#dRadioArea").click(function(){
         $("#creator").hide()
         $("#draw-box").show()
-        polygonDrawer.enable();
+        CreatorObject.polygonDrawer.enable();
     });
 
 
@@ -111,6 +112,7 @@ CreatorObject.init = function(){
 
     //Save button
     $("#create-save").click(function(){
+        CreatorObject.saveNewEntity();
         CreatorObject.hide();
     });
 
@@ -125,7 +127,6 @@ CreatorObject.init = function(){
         $("#draw-box").hide()
         $("#creator").show()
         CreatorObject.disableDrawer()
-        //TODO: DISABLE DRAWING
     });
     //when drawing is saved: - hide drawbox, show creator
     //                       - disable drawer.
@@ -140,6 +141,7 @@ CreatorObject.init = function(){
 }
 
 
+// show creator and reset all its fields. 
 CreatorObject.show = function(){
     $("#creator").show();
     $("#create-button").hide();
@@ -153,7 +155,8 @@ CreatorObject.show = function(){
     $("[name='dRadio']").button("refresh");
 
     //empty textareas
-    $(".info-input").val("");
+    $(".input-text").val("");
+    $("#entityName").val("");
 }
 
 
@@ -168,9 +171,9 @@ CreatorObject.hide = function(){
 
 
 CreatorObject.disableDrawer = function(){
-        pointDrawer.disable();
-        lineDrawer.disable();
-        polygonDrawer.disable();
+        CreatorObject.pointDrawer.disable();
+        CreatorObject.lineDrawer.disable();
+        CreatorObject.polygonDrawer.disable();
 }
 
 
@@ -201,11 +204,43 @@ formatDrawingInput = function(layer, type){
             currDrawing = "POINT(" + currDrawing + ")";
             break;
         case 'polyline':
-            currDrawing = "LINESTRING(" + currDrawing + ")";
+            currDrawing = "MULTILINESTRING((" + currDrawing + "))";
             break;
         case 'polygon':
-            currDrawing = "MULTIPOLYGON(((" + currDrawing + ")))";
+            currDrawing = "POLYGON((" + currDrawing + "))";
     }
 
     return currDrawing;
+}
+
+
+
+//insert data in DB and reload map...
+CreatorObject.saveNewEntity = function(){
+
+    console.log('CreatorObject: savaing new entity...');
+
+    var query       = 'create_new_entity';
+    var entityName  = $("#entityName").val();
+    var shape       = CreatorObject.currDrawing;
+    var year        = Number($("#valid-at").val());
+    var description = $("#info-input").val();
+    var sources     = $("#source-input").val()
+
+	$.ajax({
+                type: "GET",
+                dataType: "json",
+                url: settings_api_url,
+                data: {'query': query,'name': entityName,'value': shape,'date': year,'info':info,'sources':sources},
+
+                success: function(data,textStatus,jqXHR){
+					console.log('CreatorObject: saved '+ entityName);
+					MapObject.reloadData();
+                },
+                error: function( jqXHR, textStatus, errorThrown ){
+                	console.log('CreatorObject: error saving new entity!\n' + jqXHR.responseText);
+                }
+            });
+
+
 }
