@@ -164,7 +164,6 @@ ini_set('display_errors', 'on');
 
 
 		$sql = <<<EOT
-BEGIN TRANSACTION;
 WITH entity AS (
 	INSERT INTO vtm.entities(name, type_id) 
              VALUES (:name, 1)
@@ -187,7 +186,6 @@ INSERT INTO vtm.properties(entity_id,
              :value, 
              (SELECT id FROM source))
 
-END TRANSACTION
 EOT;
 		echo query($sql, $_GET, $default_params);
 

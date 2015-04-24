@@ -179,6 +179,8 @@ CreatorObject.disableDrawer = function(){
 
 
 // returns geometric shape in correct format
+// each single coordinate has to be inverted. Leaflet draw returns them (Lat, Long) but we need 
+// them as (Long, Lat)
 formatDrawingInput = function(layer, type){
     currDrawing = "";
 
@@ -195,6 +197,18 @@ formatDrawingInput = function(layer, type){
     currDrawing = currDrawing.replace(/,/g, '')
     currDrawing = currDrawing.replace(/\)/g, '')
     currDrawing = currDrawing.replace(/LatLng\(/g, ',')
+    currDrawing = currDrawing.substring(1, currDrawing.length-1);
+    
+    //invert the coordinates from (Lat, Long) to (Long, Lat)
+    coordinates = currDrawing.split(",");
+    currDrawing = "";
+    for(i in coordinates) {
+        latLng = coordinates[i].split(" ");
+        currDrawing += "," + latLng[1] + " " + latLng[0];
+    }
+
+
+    //remove last comma
     currDrawing = currDrawing.substring(1, currDrawing.length-1);
 
     //set correct geometric type
@@ -231,7 +245,7 @@ CreatorObject.saveNewEntity = function(){
                 type: "GET",
                 dataType: "json",
                 url: settings_api_url,
-                data: {'query': query,'name': entityName,'value': shape,'date': year,'info':info,'sources':sources},
+                data: {'query': query,'name': entityName,'value': shape,'date': year,'description':description,'sources':sources},
 
                 success: function(data,textStatus,jqXHR){
 					console.log('CreatorObject: saved '+ entityName);
