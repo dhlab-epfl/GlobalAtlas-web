@@ -75,14 +75,6 @@ CreatorObject.init = function(){
 
 
 
-    // when an existing drawing is edited...
-    MapObject.map.on('draw:edited', function(e){
-        $("#draw-radio").prop("disabled", true);
-        $("[name='dRadio']").button("refresh");
-    });
-
-
-
     //Enable drawing when clicking on one of the Draw-radios
     //TODO: showing/hiding options in select doesn't work yet!
     $("#dRadioPoint").click(function(){

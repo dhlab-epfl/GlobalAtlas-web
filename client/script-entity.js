@@ -1,9 +1,9 @@
 
 
-EntityObject.loadedEntity = null;
-EntityObject.currName     = '';
-EntityObject.currType     = '';
-EntityObject.currData     = {};
+EntityObject.loadedEntity   = null;
+EntityObject.currName       = '';
+EntityObject.currType       = '';
+EntityObject.currProperties = {};
 
 
 EntityObject.init = function(){
@@ -27,7 +27,7 @@ EntityObject.init = function(){
         EditorObject.load(EntityObject.loadedEntity,
                           EntityObject.currName, 
                           EntityObject.currType, 
-                          EntityObject.currData);
+                          EntityObject.currProperties);
 
         //TODO: really...?
         EntityObject.loadedEntity=null;
@@ -87,7 +87,7 @@ EntityObject.reloadData = function(){
         url: settings_api_url,
         data: {'query': 'properties_for_entity','id': EntityObject.loadedEntity,'date': MapObject.date},
         success: function(data,textStatus,jqXHR){
-		EntityObject.currData = data;
+		EntityObject.currProperties = data;
 
         	$('#inspector').show();
         	$('#inspector_properties').empty();
