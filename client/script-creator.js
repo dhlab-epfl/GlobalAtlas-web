@@ -224,7 +224,7 @@ formatDrawingInput = function(layer, type){
             currDrawing = "POINT(" + currDrawing + ")";
             break;
         case 'polyline':
-            currDrawing = "MULTILINESTRING((" + currDrawing + "))";
+            currDrawing = "LINESTRING(" + currDrawing + ")";
             break;
         case 'polygon':
             currDrawing = "POLYGON((" + currDrawing + firstPoint + "))";

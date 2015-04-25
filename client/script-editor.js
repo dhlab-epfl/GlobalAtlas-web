@@ -1,7 +1,7 @@
 EditorObject.pointDrawer   = null;
 EditorObject.lineDrawer    = null;
 EditorObject.polygonDrawer = null;
-EditorObject.currLayer     = null;
+EditorObject.drawLayer     = null;
 EditorObject.currDrawing   = "";
 EditorObject.properties    = null;
 
@@ -34,13 +34,6 @@ EditorObject.init = function(){
     EditorObject.lineDrawer = new L.Draw.Polyline(MapObject.map, MapObject.drawControl);
     EditorObject.polygonDrawer = new L.Draw.Polygon(MapObject.map, MapObject.drawControl);
 
-
-
-    //when starting drawing
-    //TODO can we erase this?
-    MapObject.map.on('draw:drawstart', function(e) {
-        EditorObject.currLayer = e.layer
-    });
 
 
     MapObject.map.on('draw:drawstop', function(e) {
@@ -189,6 +182,9 @@ EditorObject.load = function(eID, eName, eType, properties){
     $('#editor-properties').append($("<option />")
                                    .val(properties.length)
                                    .text("Create new property"));
+
+
+    
     
 }
 
@@ -213,7 +209,7 @@ EditorObject.disableDrawer = function(){
 // returns geometric shape in correct format
 // each single coordinate has to be inverted. Leaflet draw returns them (Lat, Long) but we need 
 // them as (Long, Lat)
-formatDrawingInput = function(layer, type){
+/*formatDrawingInput = function(layer, type){
     currDrawing = "";
 
     if(type == 'marker'){
@@ -263,7 +259,7 @@ console.log(i + ": " + firstPoint);
     }
 
     return currDrawing;
-}
+}*/
 
 
 
@@ -285,6 +281,40 @@ EditorObject.setProperty = function(i){
         $("#editor-info-input").val("");
         $("#editor-source-input").val(EditorObject.properties[i].source_name)
 
+        //load the shape as a leaflet object and set it editable
+	//split at ( or ((
+        var typeValue = EditorObject.properties[i].value.split(/[\(]+/);
+        //extract coordinates (they are separated by ,)
+        var points = typeValue[1].replace(")", "").split(",");
+        var newPoints = [];
+        //in polygons the last coordinate == the first. leaflet doesn't like this.
+        var length = points.length
+        if(typeValue[0] == "POLYGON") length--;
+
+        //leaflet coordinates are (lat, long) and not (long, lat)...
+        for(i = 0; i < length; i++){
+            lngLat = points[i].split(" ");
+            newPoints[i] = [Number(lngLat[1]), Number(lngLat[0])];
+        }
+
+        //create draw layer and make it editable.
+        switch(typeValue[0]){
+            case "POINT": 
+console.log(newPoints[0])
+                EditorObject.drawLayer = L.marker(newPoints[0]).addTo(MapObject.map);
+                break;
+
+            case "LINESTRING": 
+                EditorObject.drawLayer = L.polyline(newPoints).addTo(MapObject.map);
+                break;
+
+            case "POLYGON":
+                EditorObject.drawLayer = L.polygon(newPoints).addTo(MapObject.map);
+                break;
+ 
+        }
+console.log("enabling editing...")
+        EditorObject.drawLayer.editing.enable();
     }
 
 }
