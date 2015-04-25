@@ -1,6 +1,10 @@
 
 
 EntityObject.loadedEntity = null;
+EntityObject.currName     = '';
+EntityObject.currType     = '';
+EntityObject.currData     = {};
+
 
 EntityObject.init = function(){
 
@@ -9,6 +13,26 @@ EntityObject.init = function(){
 	EntityObject.loadedEntity = (hash['loadedEntity']?hash['loadedEntity']:null);
 
     $('#inspector #hidebox').click(EntityObject.closeInspector);
+
+
+
+    //Create edit button
+    $("#edit-button").button({
+        icons: {
+            primary: "ui-icon-pencil"
+        }
+	
+    })
+    .click(function() {
+        EditorObject.load(EntityObject.loadedEntity,
+                          EntityObject.currName, 
+                          EntityObject.currType, 
+                          EntityObject.currData);
+
+        //TODO: really...?
+        EntityObject.loadedEntity=null;
+        $('#inspector').hide();
+    });
 
 }
 
@@ -39,26 +63,32 @@ EntityObject.reloadData = function(){
 		return;
 	}
 
+	//Get entity's name and type
 	$.ajax({
         type: "GET",
         dataType: "json",
         url: settings_api_url,
         data: {'query': 'entity','id': EntityObject.loadedEntity},
         success: function(data,textStatus,jqXHR){
+		EntityObject.currName = data[0].name;
+		EntityObject.currType = data[0].entity_type_name;
         	$('#inspector').show();
         	$('#inspector h1').html('<span class="entity">'+data[0].name+'</span> <span class="type">('+data[0].entity_type_name+')</span>');
         },
         error: function( jqXHR, textStatus, errorThrown ){
             console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
-        }
+        } 
     });
 
+	//get properties, valid at, shape, source
 	$.ajax({
         type: "GET",
         dataType: "json",
         url: settings_api_url,
         data: {'query': 'properties_for_entity','id': EntityObject.loadedEntity,'date': MapObject.date},
         success: function(data,textStatus,jqXHR){
+		EntityObject.currData = data;
+
         	$('#inspector').show();
         	$('#inspector_properties').empty();
         	$.each(data,function(i,item){
@@ -103,3 +133,5 @@ EntityObject.reloadData = function(){
         }
     });
 }
+
+

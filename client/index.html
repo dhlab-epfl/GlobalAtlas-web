@@ -36,6 +36,7 @@
 	<script src="script-slider.js"></script>
 	<script src="script-entity.js"></script>
 	<script src="script-creator.js"></script>
+	<script src="script-editor.js"></script>
 
 
 </head>
@@ -54,10 +55,16 @@
 	</div>
 
 
+
+
+
 	<!-- create buton -->
 	<div id="create-container">
 		<button id="create-button">Create</button>
 	</div>
+
+
+
 
 
 	<!-- creator -->
@@ -170,8 +177,107 @@
         </div>
 
 
+
+
+
 	<!-- Editor -->
-	<!-- TODO download leaflet.draw stuff!-->
+	<div id="editor" class="bigbox" style="display: none">
+		<h1>Editor</h1>
+		<!-- Entity -->
+		<div class="creator-item">
+			<div class="creator-item-left">Entity</div>
+			<div class="creator-item-right">
+				<input id="editor-entityName" type="text" placeholder="Enter entity name">
+			</div>
+			<div style="clear:both"></div> 
+		</div>
+
+		<!-- Draw -->
+		<div class="creator-item">
+			<div class="creator-item-left">Draw</div>
+			<div class="creator-item-right">
+				<form>
+					<div id="editor-draw-radio">
+						<input type="radio" id="editor-dRadioPoint" name="dRadio">
+							<label for="editor-dRadioPoint">Point</label>
+						<input type="radio" id="editor-dRadioLine" name="dRadio">
+							<label for="editor-dRadioLine">Line</label>
+						<input type="radio" id="editor-dRadioArea" name="dRadio">
+							<label for="editor-dRadioArea">Area</label>
+					</div>
+				</form>
+				<div style="margin-top: 5px"></div>
+				<form action="#">
+					<select name="type" id="editor-type-select">
+						<option class="point-option">City</option>
+						<option class="point-option">Event</option>
+						<option class="line-option">Frontier</option>
+						<option class="line-option">Street</option>
+						<option class="area-option">Building</option>
+						<option class="area-option">Island</option>
+						<option class="area-option">Lake</option>
+					</select>
+				</form>
+			</div>
+			<div style="clear:both"></div> 
+		</div>
+
+		<!--TODO Time -->
+		<div class="creator-item">
+			<div class="creator-item-left">Time</div>
+			<div class="creator-item-right">
+				<label for="valid-at">Valid at: </label>
+				<input type="number" id="editor-valid-at">
+				<br>
+				Last... current ...Next
+				
+			</div>
+			<div style="clear:both"></div> 
+		</div>
+
+		<!-- Information -->
+		<div class="creator-item">
+			<div class="creator-item-left">Info</div>
+			<div class="creator-item-right">
+				<textarea id = "editor-info-input"
+				          class="input-text" 
+				          rows="5" 
+				          placeholder="Enter information about this property.">
+				</textarea>
+				
+			</div>
+			<div style="clear:both"></div> 
+		</div>
+
+		<!-- Sources -->
+		<div class="creator-item">
+			<div class="creator-item-left">Sources</div>
+			<div class="creator-item-right">
+				<textarea id = "editor-source-input"
+				          class="input-text" 
+				          rows="5"
+				          placeholder="What are your sources?">
+				</textarea>
+				
+			</div>
+			<div style="clear:both"></div> 
+		</div>
+
+		<!-- Buttons -->
+		<div class="creator-item">
+			<div class="creator-item-left"></div>
+			<div class="creator-item-right">
+				<button id="editor-create-cancel"/>
+				<label for="editor-create-cancel">Cancel</label>
+				<button id="editor-create-save"/>
+				<label for="editor-create-save">Save</label>
+			</div>
+			<div style="clear:both"></div> 
+		</div>
+	</div>
+
+
+
 
 
         <!-- inspector -->
@@ -244,7 +350,10 @@
 		</table>
 		</br>
 		</br>
-		<button id="edit-button">Edit</button>
+
+
+		<button id="edit-button"/>
+		<label for="edit-button">Edit</label>
 		
 
 	</div>
