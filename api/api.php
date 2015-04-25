@@ -309,7 +309,9 @@ EOT;
 		$default_params = [
 			'id' => 0, //entity_id
 			'date' => 2015,
+			'direction' => 1 // either 1 (future) or -1 (to go into the past)
 		];
+
 		$sql = <<<EOT
 SELECT
   prop.date
@@ -318,11 +320,11 @@ FROM
   vtm.properties_types as proptype
 WHERE
   prop.entity_id = :id
-  AND  prop.date > :date
+  AND  :direction * prop.date > :direction * :date
   AND  proptype.name = 'geom'
   AND  proptype.id = prop.property_type_id
 ORDER BY
-  prop.date
+  :direction * prop.date
 LIMIT 1
 EOT;
 		echo query($sql, $_GET, $default_params);

@@ -12,9 +12,12 @@ EntityObject.init = function(){
 
 	EntityObject.loadedEntity = (hash['loadedEntity']?hash['loadedEntity']:null);
 
-    $('#inspector #hidebox').click(EntityObject.closeInspector);
+    EntityObject.populateSucc
+
 
     $('#inspector').resizable({handles: 'w'});
+
+    $('#inspector #hidebox').click(EntityObject.closeInspector);
 
     //Create edit button
     $("#edit-button").button({
@@ -33,20 +36,22 @@ EntityObject.init = function(){
         EntityObject.loadedEntity=null;
         $('#inspector').hide();
     });
-
-    $('#inspector #next_geom').click(EntityObject.nextGeom);
+    
+    $('#inspector #next_geom').click(function() { EntityObject.nextGeom(1) });
+    $('#inspector #prev_geom').click(function() { EntityObject.nextGeom(-1) });
     $('#inspector #succ_rel').click(EntityObject.showSuccRel);
 
 }
 
-EntityObject.nextGeom = function(){
+EntityObject.nextGeom = function(dir){
     $.ajax({
         type: "GET",
         dataType: "json",
         url: settings_api_url,
-        data: {'query': 'next_geometry_for_entity','id': EntityObject.loadedEntity,'date': MapObject.date},
+        data: {'query': 'next_geometry_for_entity','id': EntityObject.loadedEntity,'date': MapObject.date,'direction': dir},
         success: function(data,textStatus,jqXHR){
-            MapObject.setDate(data[0].date)
+            if (data[0] != undefined) { MapObject.setDate(data[0].date) }
+            else { alert("No further connected geometry found."); }  
         },
         error: function( jqXHR, textStatus, errorThrown ){
             console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
