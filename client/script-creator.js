@@ -43,6 +43,14 @@ CreatorObject.init = function(){
 
 
 
+    MapObject.map.on('draw:drawstop', function(e) {
+        $("#draw-box").hide()
+        $("#creator").show()
+        CreatorObject.disableDrawer()
+    });
+
+
+
     //executed when a drawing is done...
     //      - create string for sending it to DB
     //      - disable radio buttons
@@ -78,13 +86,11 @@ CreatorObject.init = function(){
     //Enable drawing when clicking on one of the Draw-radios
     //TODO: showing/hiding options in select doesn't work yet!
     $("#dRadioPoint").click(function(){
-	$("#draw-radio").buttonset("disable");
         $("#creator").hide()
         $("#draw-box").show()
         CreatorObject.pointDrawer.enable();
     });
     $("#dRadioLine").click(function(){
-	$("#draw-radio").buttonset("disable");
         $("#creator").hide()
         $("#draw-box").show()
         CreatorObject.lineDrawer.enable();
@@ -112,8 +118,12 @@ CreatorObject.init = function(){
 
     //Save button
     $("#create-save").click(function(){
-        CreatorObject.saveNewEntity();
-        CreatorObject.hide();
+        if($('#entityName').val() == '') {
+            alert("Please name your new entity.");
+        } else {
+            CreatorObject.saveNewEntity();
+            CreatorObject.hide();
+        }
     });
 
 
@@ -128,6 +138,7 @@ CreatorObject.init = function(){
         $("#creator").show()
         CreatorObject.disableDrawer()
     });
+
     //when drawing is saved: - hide drawbox, show creator
     //                       - disable drawer.
     //                       - disable radio buttons
