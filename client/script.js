@@ -1,7 +1,8 @@
-var MapObject = {};
-var EntityObject = {};
-var SliderObject = {};
+var MapObject     = {};
+var EntityObject  = {};
+var SliderObject  = {};
 var CreatorObject = {};
+var EditorObject  = {}
 
 var settings_api_url = '../api/api.php';
 
@@ -15,6 +16,7 @@ $(function(){
     SliderObject.init();
     EntityObject.init();
     CreatorObject.init();
+    EditorObject.init();
 });
 
 function setHash(key, value){

@@ -1,28 +1,16 @@
-CreatorObject.pointDrawer   = null;
-CreatorObject.lineDrawer    = null;
-CreatorObject.polygonDrawer = null;
-CreatorObject.currLayer     = null;
-CreatorObject.currDrawing   = "";
+EditorObject.pointDrawer   = null;
+EditorObject.lineDrawer    = null;
+EditorObject.polygonDrawer = null;
+EditorObject.currLayer     = null;
+EditorObject.currDrawing   = "";
 
-CreatorObject.init = function(){
-    
-    //Create button
-    $("#create-button").button({
-        icons: {
-            primary: "ui-icon-plusthick"
-        }
-	
-    })
-    .click(function() {
-        CreatorObject.show();
-    });
+EditorObject.init = function(){
 
 
+    //render radio buttons TODO 
+    $("#editor-draw-radio").buttonset();
 
-    //render radio buttons 
-    $("#draw-radio").buttonset();
-
-    $("#type-select")
+    $("#editor-type-select")
       .selectmenu()
       .selectmenu("option", "width", "100%")
       .selectmenu( "menuWidget" )
@@ -31,23 +19,22 @@ CreatorObject.init = function(){
 
 
     /* init drawing */
-    CreatorObject.pointDrawer = new L.Draw.Marker(MapObject.map, MapObject.drawControl);
-    CreatorObject.lineDrawer = new L.Draw.Polyline(MapObject.map, MapObject.drawControl);
-    CreatorObject.polygonDrawer = new L.Draw.Polygon(MapObject.map, MapObject.drawControl);
+    EditorObject.pointDrawer = new L.Draw.Marker(MapObject.map, MapObject.drawControl);
+    EditorObject.lineDrawer = new L.Draw.Polyline(MapObject.map, MapObject.drawControl);
+    EditorObject.polygonDrawer = new L.Draw.Polygon(MapObject.map, MapObject.drawControl);
 
     //when starting drawing
     //TODO can we erase this?
     MapObject.map.on('draw:drawstart', function(e) {
-        CreatorObject.currLayer = e.layer
+        EditorObject.currLayer = e.layer
     });
 
 
 
-    //same as clicking on 'cancel' button while drawing.
     MapObject.map.on('draw:drawstop', function(e) {
         $("#draw-box").hide()
-        $("#creator").show()
-        CreatorObject.disableDrawer()
+        $("#editor").show()
+        EditorObject.disableDrawer()
     });
 
 
@@ -60,13 +47,13 @@ CreatorObject.init = function(){
             layer = e.layer;
 
         //get the drawing's correct format 
-        CreatorObject.currDrawing = formatDrawingInput(layer, type);
+        EditorObject.currDrawing = formatDrawingInput(layer, type);
 
 
-        //go back to creator and disable the radio buttons
+        //go back to Editor and disable the radio buttons
         $("#draw-box").hide()
-        $("#creator").show()
-        $("#draw-radio").buttonset("disable");
+        $("#editor").show()
+        $("#editor-draw-radio").buttonset("disable");
 
 
 	//TODO: SAVE DRAWING TEMPORARILY...
@@ -77,7 +64,7 @@ CreatorObject.init = function(){
 
     // when an existing drawing is edited...
     MapObject.map.on('draw:edited', function(e){
-        $("#draw-radio").prop("disabled", true);
+        $("#editor-draw-radio").prop("disabled", true);
         $("[name='dRadio']").button("refresh");
     });
 
@@ -85,44 +72,44 @@ CreatorObject.init = function(){
 
     //Enable drawing when clicking on one of the Draw-radios
     //TODO: showing/hiding options in select doesn't work yet!
-    $("#dRadioPoint").click(function(){
-        $("#creator").hide()
+    $("#editor-dRadioPoint").click(function(){
+        $("#editor").hide()
         $("#draw-box").show()
-        CreatorObject.pointDrawer.enable();
+        EditorObject.pointDrawer.enable();
     });
-    $("#dRadioLine").click(function(){
-        $("#creator").hide()
+    $("#editor-dRadioLine").click(function(){
+        $("#editor").hide()
         $("#draw-box").show()
-        CreatorObject.lineDrawer.enable();
+        EditorObject.lineDrawer.enable();
     });
-    $("#dRadioArea").click(function(){
-        $("#creator").hide()
+    $("#editor-dRadioArea").click(function(){
+        $("#editor").hide()
         $("#draw-box").show()
-        CreatorObject.polygonDrawer.enable();
+        EditorObject.polygonDrawer.enable();
     });
 
 
 
     //Time: set timeslider's time when this input changes.
-    $("#valid-at").change(function() {
-        SliderObject.setYear($("#valid-at").val())
+    $("#editor-valid-at").change(function() {
+        SliderObject.setYear($("#editor-valid-at").val())
     });
 
 
 
     //Create button
-    $("#create-cancel").click(function(){
+    $("#editor-create-cancel").click(function(){
         //TODO: delete made drawing
-        CreatorObject.hide();
+        EditorObject.hide();
     });
 
     //Save button
-    $("#create-save").click(function(){
-        if($('#entityName').val() == '') {
+    $("#editor-create-save").click(function(){
+        if($('#editor-entityName').val() == '') {
             alert("Please name your new entity.");
         } else {
-            CreatorObject.saveNewEntity();
-            CreatorObject.hide();
+            EditorObject.saveNewEntity();
+            EditorObject.hide();
         }
     });
 
@@ -131,60 +118,67 @@ CreatorObject.init = function(){
 
     //DRAW BOX
 
-    //Cancel: - hide drawbox, show creator 
+    //Cancel: - hide drawbox, show Editor 
     //        - disable drawer.
     $("#draw-cancel").click(function(){
         $("#draw-box").hide()
-        $("#creator").show()
-        CreatorObject.disableDrawer()
+        $("#editor").show()
+        EditorObject.disableDrawer()
     });
 
-    //when drawing is saved: - hide drawbox, show creator
+    //when drawing is saved: - hide drawbox, show Editor
     //                       - disable drawer.
     //                       - disable radio buttons
     $("#draw-done").click(function(){
         $("#draw-box").hide()
-        $("#creator").show()
-	$("#draw-radio").buttonset("disable");
-        CreatorObject.disableDrawer()
+        $("#editor").show()
+	$("#editor-draw-radio").buttonset("disable");
+        EditorObject.disableDrawer()
         //TODO save current drawing somehow...
     });
 }
 
 
-// show creator and reset all its fields. 
-CreatorObject.show = function(){
-    $("#creator").show();
-    $("#create-button").hide();
+// show Editor and reset all its fields. 
+EditorObject.show = function(){
+    $("#editor").show();
 
     //set "valit at" value
-    $("#valid-at").val($("#slider-ui").slider("option", "value"));
+    $("#editor-valid-at").val($("#slider-ui").slider("option", "value"));
 
     //enable and uncheck radio buttons
-    $("#draw-radio").buttonset("enable");
+    $("#editor-draw-radio").buttonset("enable");
     $("[name='dRadio']").attr("checked", false);
     $("[name='dRadio']").button("refresh");
 
     //empty textareas
     $(".input-text").val("");
-    $("#entityName").val("");
+    $("#editor-entityName").val("");
+}
+
+
+// load a new editor (called in script-entity)
+EditorObject.load = function(eID, eName, eType, data){
+    alert(eName + ", " + eType);
+    EditorObject.show();
+    $('#editor-entityName').val(eName);
+    
 }
 
 
 
-CreatorObject.hide = function(){
-    //TODO confirm message
-    $("#creator").hide();
-    $("#create-button").show();
+EditorObject.hide = function(){
+    //TODO should it go back to inspector or totally exit?
+    $("#editor").hide();
 
 }
 
 
 
-CreatorObject.disableDrawer = function(){
-        CreatorObject.pointDrawer.disable();
-        CreatorObject.lineDrawer.disable();
-        CreatorObject.polygonDrawer.disable();
+EditorObject.disableDrawer = function(){
+        EditorObject.pointDrawer.disable();
+        EditorObject.lineDrawer.disable();
+        EditorObject.polygonDrawer.disable();
 }
 
 
@@ -220,7 +214,9 @@ formatDrawingInput = function(layer, type){
         
         //For polygons the ring needs to be closed...
         if(i == 0) firstPoint = currDrawing;
+console.log(i + ": " + firstPoint);
     }
+
 
     //remove last comma
     currDrawing = currDrawing.substring(1, currDrawing.length-1);
@@ -236,6 +232,7 @@ formatDrawingInput = function(layer, type){
             break;
         case 'polygon':
             currDrawing = "POLYGON((" + currDrawing + firstPoint + "))";
+            console.log(currDrawing);
     }
 
     return currDrawing;
@@ -244,16 +241,16 @@ formatDrawingInput = function(layer, type){
 
 
 //insert data in DB and reload map...
-CreatorObject.saveNewEntity = function(){
+EditorObject.saveNewEntity = function(){
 
-    console.log('CreatorObject: savaing new entity...');
+    console.log('EditorObject: savaing new entity...');
 
     var query       = 'create_new_entity';
-    var entityName  = $("#entityName").val();
-    var shape       = CreatorObject.currDrawing;
-    var year        = Number($("#valid-at").val());
-    var description = $("#info-input").val();
-    var sources     = $("#source-input").val()
+    var entityName  = $("#editor-entityName").val();
+    var shape       = EditorObject.currDrawing;
+    var year        = Number($("#editor-valid-at").val());
+    var description = $("#editor-info-input").val();
+    var sources     = $("#editor-source-input").val()
 
 	$.ajax({
                 type: "GET",
@@ -262,11 +259,11 @@ CreatorObject.saveNewEntity = function(){
                 data: {'query': query,'name': entityName,'value': shape,'date': year,'description':description,'sources':sources},
 
                 success: function(data,textStatus,jqXHR){
-					console.log('CreatorObject: saved '+ entityName);
+					console.log('EditorObject: saved '+ entityName);
 					MapObject.reloadData();
                 },
                 error: function( jqXHR, textStatus, errorThrown ){
-                	console.log('CreatorObject: error saving new entity!\n' + jqXHR.responseText);
+                	console.log('EditorObject: error saving new entity!\n' + jqXHR.responseText);
                 }
             });
 
