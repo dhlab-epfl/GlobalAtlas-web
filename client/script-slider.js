@@ -62,11 +62,12 @@ SliderObject.setSliderYear = function(y){
 }
 
 /*
- * set slider's AND spinner's AND creator's year
+ * set slider's AND spinner's AND creator's year AND editor's year
  */
 SliderObject.setYear = function(y){
     var x = Number(y)
     SliderObject.setSliderYear(x);
     $("#spinner-ui").spinner("value", x);
     $("#valid-at").val(x);
+    $("#editor-valid-at").val(x);
 }

@@ -94,6 +94,15 @@ EditorObject.init = function(){
 
 
 
+    //Enable editing when clicking on edit button.
+    $("#editor-edit-button").click(function(){
+        EditorObject.drawLayer.editing.enable();
+        $("#editor").hide()
+        $("#edit-box").show()
+    });
+
+
+
     //Time: set timeslider's time when this input changes.
     $("#editor-valid-at").change(function() {
         SliderObject.setYear($("#editor-valid-at").val())
@@ -101,10 +110,11 @@ EditorObject.init = function(){
 
 
 
-    //Create button
+    //cancel button
     $("#editor-create-cancel").click(function(){
         //TODO: delete made drawing
         EditorObject.hide();
+        MapObject.map.removeLayer(EditorObject.drawLayer)
     });
 
     //Save button
@@ -114,18 +124,39 @@ EditorObject.init = function(){
         } else {
             EditorObject.saveNewEntity();
             EditorObject.hide();
+            MapObject.map.removeLayer(EditorObject.drawLayer)
         }
     });
 
 
 
 
-    //DRAW BOX
+    //EDIT BOX
+    //Cancel: - hide editbox, show Editor 
+    //        - rollback changes.
+    $("#editor-edit-cancel").click(function(){
+        $("#edit-box").hide()
+        $("#editor").show()
+        EditorObject.drawLayer.editing.disable();
+    });
 
+    //when editing is saved: - hide editbox, show Editor
+    //                       - disable editing.
+    //                       - disable properties select menu
+    $("#editor-edit-done").click(function(){
+        $("#edit-box").hide()
+        $("#editor").show()
+	$("#editor-properties").selectmenu("disable");
+        EditorObject.drawLayer.editing.disable();
+    });
+
+
+
+    //DRAW BOX
     //Cancel: - hide drawbox, show Editor 
     //        - disable drawer.
-    $("#draw-cancel").click(function(){
-        $("#draw-box").hide()
+    $("#editor-draw-cancel").click(function(){
+        $("#editor-draw-box").hide()
         $("#editor").show()
         EditorObject.disableDrawer()
     });
@@ -133,12 +164,13 @@ EditorObject.init = function(){
     //when drawing is saved: - hide drawbox, show Editor
     //                       - disable drawer.
     //                       - disable radio buttons
-    $("#draw-done").click(function(){
-        $("#draw-box").hide()
+    //                       - disable properties select menu
+    $("#editor-draw-done").click(function(){
+        $("#editor-draw-box").hide()
         $("#editor").show()
 	$("#editor-draw-radio").buttonset("disable");
+	$("#editor-properties").selectmenu( "disable" );
         EditorObject.disableDrawer()
-        //TODO save current drawing somehow...
     });
 }
 
@@ -182,10 +214,9 @@ EditorObject.load = function(eID, eName, eType, properties){
     $('#editor-properties').append($("<option />")
                                    .val(properties.length)
                                    .text("Create new property"));
+    $('#editor-properties').selectmenu("enable");
 
 
-    
-    
 }
 
 
@@ -276,12 +307,13 @@ EditorObject.setProperty = function(i){
     } else {
         $("#editor-draw-options").hide();
         $("#editor-edit-button").show();
-        EditorObject.currDrawing = EditorObject.properties[i].value
-        $("#editor-valid-at").val(EditorObject.properties[i].date)
+        EditorObject.currDrawing = EditorObject.properties[i].value;
+        $("#editor-valid-at").val(EditorObject.properties[i].date);
+        SliderObject.setYear(EditorObject.properties[i].date);
         $("#editor-info-input").val("");
         $("#editor-source-input").val(EditorObject.properties[i].source_name)
 
-        //load the shape as a leaflet object and set it editable
+        //load the shape into a leaflet layer
 	//split at ( or ((
         var typeValue = EditorObject.properties[i].value.split(/[\(]+/);
         //extract coordinates (they are separated by ,)
@@ -297,10 +329,9 @@ EditorObject.setProperty = function(i){
             newPoints[i] = [Number(lngLat[1]), Number(lngLat[0])];
         }
 
-        //create draw layer and make it editable.
+        //create draw layer
         switch(typeValue[0]){
             case "POINT": 
-console.log(newPoints[0])
                 EditorObject.drawLayer = L.marker(newPoints[0]).addTo(MapObject.map);
                 break;
 
@@ -313,10 +344,7 @@ console.log(newPoints[0])
                 break;
  
         }
-console.log("enabling editing...")
-        EditorObject.drawLayer.editing.enable();
     }
-
 }
 
 
