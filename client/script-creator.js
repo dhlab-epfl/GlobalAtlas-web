@@ -202,9 +202,14 @@ formatDrawingInput = function(layer, type){
     //invert the coordinates from (Lat, Long) to (Long, Lat)
     coordinates = currDrawing.split(",");
     currDrawing = "";
+    firstPoint = "";
     for(i in coordinates) {
         latLng = coordinates[i].split(" ");
         currDrawing += "," + latLng[1] + " " + latLng[0];
+        
+        //For polygons the ring needs to be closed...
+        if(i == 0) firstPoint = currDrawing;
+console.log(i + ": " + firstPoint);
     }
 
 
@@ -221,7 +226,8 @@ formatDrawingInput = function(layer, type){
             currDrawing = "MULTILINESTRING((" + currDrawing + "))";
             break;
         case 'polygon':
-            currDrawing = "POLYGON((" + currDrawing + "))";
+            currDrawing = "POLYGON((" + currDrawing + firstPoint + "))";
+            console.log(currDrawing);
     }
 
     return currDrawing;
