@@ -233,6 +233,10 @@
 					</select>
 				</form>
 			</div>
+			<div class="creator-item-right" id="editor-draw-edit">
+				<button id="editor-edit-button" style="display:none"/>
+				<label for="editor-edit-button">Edit</label>
+                        </div>
 			<div style="clear:both"></div> 
 		</div>
 
@@ -289,6 +293,32 @@
 			<div style="clear:both"></div> 
 		</div>
 	</div>
+
+
+        <!-- edit: drawing -->
+	<div id="editor-draw-box" class="editing" style="display: none">
+		<div class="creator-item-left">Draw</div>
+		<div class="creator-item-right">
+			<button id="editor-draw-cancel"/>
+			<label for="editor-draw-cancel">Cancel</label>
+			<button id="editor-draw-done"/>
+			<label for="editor-draw-done">Done</label>
+		</div>
+		<div style="clear:both"></div> 
+        </div>
+
+
+        <!-- edit: editing -->
+	<div id="edit-box" class="editing" style="display: none">
+		<div class="creator-item-left">Edit</div>
+		<div class="creator-item-right">
+			<button id="editor-edit-cancel"/>
+			<label for="editor-edit-cancel">Cancel</label>
+			<button id="editor-edit-done"/>
+			<label for="editor-edit-done">Done</label>
+		</div>
+		<div style="clear:both"></div> 
+        </div>
 
 
 
