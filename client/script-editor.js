@@ -3,12 +3,23 @@ EditorObject.lineDrawer    = null;
 EditorObject.polygonDrawer = null;
 EditorObject.currLayer     = null;
 EditorObject.currDrawing   = "";
+EditorObject.properties    = null;
 
 EditorObject.init = function(){
 
 
     //render radio buttons TODO 
     $("#editor-draw-radio").buttonset();
+
+    //select which property to edit
+    $("#editor-properties")
+      .selectmenu({
+          select: function(event, ui){
+              EditorObject.setProperty($('#editor-properties option:selected').val());
+          }})
+      .selectmenu("option", "width", "100%")
+      .selectmenu( "menuWidget" )
+        .addClass( "overflow" );
 
     $("#editor-type-select")
       .selectmenu()
@@ -23,6 +34,8 @@ EditorObject.init = function(){
     EditorObject.lineDrawer = new L.Draw.Polyline(MapObject.map, MapObject.drawControl);
     EditorObject.polygonDrawer = new L.Draw.Polygon(MapObject.map, MapObject.drawControl);
 
+
+
     //when starting drawing
     //TODO can we erase this?
     MapObject.map.on('draw:drawstart', function(e) {
@@ -30,13 +43,11 @@ EditorObject.init = function(){
     });
 
 
-
     MapObject.map.on('draw:drawstop', function(e) {
         $("#draw-box").hide()
         $("#editor").show()
         EditorObject.disableDrawer()
     });
-
 
 
     //executed when a drawing is done...
@@ -158,10 +169,26 @@ EditorObject.show = function(){
 
 
 // load a new editor (called in script-entity)
-EditorObject.load = function(eID, eName, eType, data){
-    alert(eName + ", " + eType);
+EditorObject.load = function(eID, eName, eType, properties){
     EditorObject.show();
+    
+    //pre set values
     $('#editor-entityName').val(eName);
+    EditorObject.properties = properties;
+
+    
+    //reset properties select (empty, fill properties, fill "create new property")
+    $('#editor-properties').find('option')
+                           .remove()
+                           .end()
+    for(i in properties){
+        $('#editor-properties').append($("<option />")
+                                   .val(i)
+                                   .text("Edit " + properties[i].property_name));
+    }
+    $('#editor-properties').append($("<option />")
+                                   .val(properties.length)
+                                   .text("Create new property"));
     
 }
 
@@ -236,6 +263,30 @@ console.log(i + ": " + firstPoint);
     }
 
     return currDrawing;
+}
+
+
+
+//takes property from property array and sets Editor's fields accordingly
+EditorObject.setProperty = function(i){
+
+    //if creating new property, empty all the fields and enable drawing. 
+    if(i == EditorObject.properties.length){
+        $("#editor-draw-options").show();
+        $("#editor-edit-button").hide();
+        EditorObject.currDrawing = ""
+
+
+    } else {
+        $("#editor-draw-options").hide();
+        $("#editor-edit-button").show();
+        EditorObject.currDrawing = EditorObject.properties[i].value
+        $("#editor-valid-at").val(EditorObject.properties[i].date)
+        $("#editor-info-input").val("");
+        $("#editor-source-input").val(EditorObject.properties[i].source_name)
+
+    }
+
 }
 
 
