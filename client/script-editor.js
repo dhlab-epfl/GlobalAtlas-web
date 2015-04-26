@@ -39,7 +39,7 @@ EditorObject.init = function(){
 
 
     MapObject.map.on('draw:drawstop', function(e) {
-        $("#draw-box").hide()
+        $("#editor-draw-box").hide()
         $("#editor").show()
         EditorObject.disableDrawer()
     });
@@ -57,7 +57,7 @@ EditorObject.init = function(){
 
 
         //go back to Editor and disable the radio buttons
-        $("#draw-box").hide()
+        $("#editor-draw-box").hide()
         $("#editor").show()
         $("#editor-draw-radio").buttonset("disable");
 
@@ -72,17 +72,17 @@ EditorObject.init = function(){
     //TODO: showing/hiding options in select doesn't work yet!
     $("#editor-dRadioPoint").click(function(){
         $("#editor").hide()
-        $("#draw-box").show()
+        $("#editor-draw-box").show()
         EditorObject.pointDrawer.enable();
     });
     $("#editor-dRadioLine").click(function(){
         $("#editor").hide()
-        $("#draw-box").show()
+        $("#editor-draw-box").show()
         EditorObject.lineDrawer.enable();
     });
     $("#editor-dRadioArea").click(function(){
         $("#editor").hide()
-        $("#draw-box").show()
+        $("#editor-draw-box").show()
         EditorObject.polygonDrawer.enable();
     });
 
@@ -220,8 +220,8 @@ EditorObject.load = function(eID, eName, eType, properties){
                                    .text("Edit " + properties[i].property_name));
     }
     $('#editor-properties').append($("<option />")
-                                   .val(properties.length)
-                                   .text("Create new property"));
+                                   .val(9999)
+                                   .text("Create new Property"));
     $('#editor-properties').selectmenu("enable");
 }
 
@@ -247,7 +247,7 @@ EditorObject.disableDrawer = function(){
 EditorObject.setProperty = function(i){
 
     //if creating new property, empty all the fields and enable drawing. 
-    if(i == EditorObject.properties.length){
+    if(i == 9999){
         $("#editor-draw-options").show();
         $("#editor-edit-button").hide();
         EditorObject.currDrawing = ""
@@ -311,28 +311,30 @@ EditorObject.saveChanges = function(){
     var year        = Number($("#editor-valid-at").val());
     var description = $("#editor-info-input").val();
     var sources     = $("#editor-source-input").val();
-    var propertyID  = EditorObject.properties[$('#editor-properties option:selected').val()].property_id
 
     //if a new property has been created. 
-    if(EditorObject.properties == null || 
-        $('#editor-properties option:selected').val() == EditorObject.properties.length) {
+console.log($('#editor-properties option:selected').text());
+    if($('#editor-properties option:selected').val() == 9999) {
 
         console.log("Saving new property...")
+alert(shape);
 
-        var query = 'create_new_entity';
+        var query = 'create_new_property';
         $.ajax({
             type: "GET",
             dataType: "json",
             url: settings_api_url,
-            data: {'query'      : query,
-                   'name'       : entityName,
-                   'value'      : shape,
-                   'date'       : year,
-                   'description': description,
-                   'sources'    : sources},
+            data: {'query'        : query,
+                   'entityID'     : EditorObject.currEntityID,
+                   'name'         : entityName,
+                   'propertyType' : 1,
+                   'value'        : shape,
+                   'date'         : year,
+                   'description'  : description,
+                   'sources'      : sources},
 
             success: function(data,textStatus,jqXHR){
-                console.log('EditorObject: saved '+ entityName);
+                console.log('EditorObject: saved new property for'+ entityName);
                 MapObject.reloadData();
             },
             error: function( jqXHR, textStatus, errorThrown ){
@@ -343,6 +345,7 @@ EditorObject.saveChanges = function(){
 
     //if a property has been changed...
     } else {
+        var propertyID  = EditorObject.properties[$('#editor-properties option:selected').val()].property_id
         console.log("Saving property change...");
         var query = 'update_entity'
 	$.ajax({
@@ -367,27 +370,5 @@ EditorObject.saveChanges = function(){
                 console.log('EditorObject: error saving changes!\n' + jqXHR.responseText);
             }
         });
-        /*$.ajax({
-            type: "GET",
-            dataType: "json",
-            url: settings_api_url,
-            data: {'query'        : query,
-                   'entityID'     : EditorObject.currEntityID,
-                   'name'         : entityName,
-                   'propertyType' : 1,
-                   'value'        : shape,
-                   'date'         : year,
-                   'description'  : description,
-                   'sources'      : sources, 
-                   'propertyID'   : propertyID},
-
-            success: function(data,textStatus,jqXHR){
-                console.log('EditorObject: saved property and source of '+ entityName);
-                MapObject.reloadData();
-            },
-            error: function( jqXHR, textStatus, errorThrown ){
-                console.log('EditorObject: error saving changes!\n' + jqXHR.responseText);
-            }
-        });*/
     }
 }
