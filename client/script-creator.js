@@ -3,6 +3,7 @@ CreatorObject.lineDrawer    = null;
 CreatorObject.polygonDrawer = null;
 CreatorObject.currLayer     = null;
 CreatorObject.currDrawing   = "";
+CreatorObject.active        = false;
 
 CreatorObject.init = function(){
     
@@ -45,9 +46,11 @@ CreatorObject.init = function(){
 
     //same as clicking on 'cancel' button while drawing.
     MapObject.map.on('draw:drawstop', function(e) {
-        $("#draw-box").hide()
-        $("#creator").show()
-        CreatorObject.disableDrawer()
+        if(CreatorObject.active){
+            $("#draw-box").hide()
+            $("#creator").show()
+            CreatorObject.disableDrawer()
+        }
     });
 
 
@@ -56,21 +59,23 @@ CreatorObject.init = function(){
     //      - create string for sending it to DB
     //      - disable radio buttons
     MapObject.map.on('draw:created', function(e) {
-        var type = e.layerType,
-            layer = e.layer;
+        if(CreatorObject.active){
+            var type = e.layerType,
+                layer = e.layer;
 
-        //get the drawing's correct format 
-        CreatorObject.currDrawing = formatDrawingInput(layer, type);
-
-
-        //go back to creator and disable the radio buttons
-        $("#draw-box").hide()
-        $("#creator").show()
-        $("#draw-radio").buttonset("disable");
+            //get the drawing's correct format 
+            CreatorObject.currDrawing = formatDrawingInput(layer, type);
 
 
-	//TODO: SAVE DRAWING TEMPORARILY...
-	MapObject.map.addLayer(layer);
+            //go back to creator and disable the radio buttons
+            $("#draw-box").hide()
+            $("#creator").show()
+            $("#draw-radio").buttonset("disable");
+
+
+	    //TODO: SAVE DRAWING TEMPORARILY...
+	    MapObject.map.addLayer(layer);
+        }
     });
 
 
@@ -104,13 +109,14 @@ CreatorObject.init = function(){
 
     //Create button
     $("#create-cancel").click(function(){
+        CreatorObject.active = false;
         //TODO: delete made drawing
         CreatorObject.hide();
     });
 
     //Save button
     $("#create-save").click(function(){
-console.log("here I'm right.");
+        CreatorObject.active = false;
         if($('#entityName').val() == '') {
             alert("Please name your new entity.");
         } else {
@@ -147,6 +153,7 @@ console.log("here I'm right.");
 
 // show creator and reset all its fields. 
 CreatorObject.show = function(){
+    CreatorObject.active = true;
     $("#creator").show();
     $("#create-button").hide();
 
