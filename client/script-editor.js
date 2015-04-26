@@ -6,6 +6,7 @@ EditorObject.currDrawing   = "";
 EditorObject.currType      = "";
 EditorObject.properties    = null;
 EditorObject.currEntityID  = 0;
+EditorObject.active        = false;
 
 EditorObject.init = function(){
 
@@ -39,9 +40,11 @@ EditorObject.init = function(){
 
 
     MapObject.map.on('draw:drawstop', function(e) {
-        $("#editor-draw-box").hide()
-        $("#editor").show()
-        EditorObject.disableDrawer()
+        if(EditorObject.active){
+            $("#editor-draw-box").hide()
+            $("#editor").show()
+            EditorObject.disableDrawer()
+        }
     });
 
 
@@ -49,21 +52,23 @@ EditorObject.init = function(){
     //      - create string for sending it to DB
     //      - disable radio buttons
     MapObject.map.on('draw:created', function(e) {
-        var type = e.layerType,
-            layer = e.layer;
+        if(EditorObject.active){
+            var type = e.layerType,
+                layer = e.layer;
 
-        //get the drawing's correct format 
-        EditorObject.currDrawing = formatDrawingInput(layer, type);
-
-
-        //go back to Editor and disable the radio buttons
-        $("#editor-draw-box").hide()
-        $("#editor").show()
-        $("#editor-draw-radio").buttonset("disable");
+            //get the drawing's correct format 
+            EditorObject.currDrawing = formatDrawingInput(layer, type);
 
 
-	//TODO: SAVE DRAWING TEMPORARILY...
-	MapObject.map.addLayer(layer);
+            //go back to Editor and disable the radio buttons
+            $("#editor-draw-box").hide()
+            $("#editor").show()
+            $("#editor-draw-radio").buttonset("disable");
+
+
+	    //TODO: SAVE DRAWING TEMPORARILY...
+	    MapObject.map.addLayer(layer);
+        }
     });
 
 
@@ -106,6 +111,7 @@ EditorObject.init = function(){
 
     //cancel button
     $("#editor-cancel").click(function(){
+        EditorObject.active = false;
         //TODO: delete made drawing
         EditorObject.hide();
         MapObject.map.removeLayer(EditorObject.drawLayer)
@@ -113,6 +119,7 @@ EditorObject.init = function(){
 
     //Save button
     $("#editor-save").click(function(){
+        EditorObject.active = false;
         if($('#editor-entityName').val() == '') {
             alert("Please name your new entity.");
         } else {
@@ -182,6 +189,7 @@ EditorObject.init = function(){
 
 // show Editor and reset all its fields. 
 EditorObject.show = function(){
+    EditorObject.active = true;
     $("#editor").show();
 
     //set "valit at" value
