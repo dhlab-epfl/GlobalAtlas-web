@@ -203,6 +203,56 @@ EOT;
 	break;
 
 
+
+	/************************************************************/
+	/* CREATE_NEW_PROPERTY                                      */
+	/* saves a new property for an existing entity.             */
+	/************************************************************/
+	
+	case 'create_new_property':
+	ini_set('display_errors', 'on');
+
+		$default_params = [
+                        'entityID'     => 0,
+			'name'         => '',
+                        'propertyType' => 1,
+			'date'         => 0,
+			'value'        => '',
+			'sources'      => 'no source',
+			'description'  => 'no description'
+		];
+
+
+		$sql = <<<EOT
+WITH update_e AS (
+        UPDATE vtm.entities
+           SET name = :name
+         WHERE id = :entityID),
+     source AS (
+	INSERT INTO vtm.sources(name)
+	     VALUES (:sources)
+	  RETURNING id)
+
+INSERT INTO vtm.properties(entity_id, 
+			property_type_id, 
+			description,
+			date, 
+			value, 
+			source_id)
+     VALUES (:entityID, 
+	     :propertyType,
+	     :description,
+	     :date,
+	     :value, 
+	     (SELECT id FROM source))
+
+EOT;
+		echo query($sql, $_GET, $default_params);
+	
+		flush(); ob_flush();
+	break;
+
+
 	/************************************************************/
 	/* UPDATE_ENTITY                               */
 	/* saves changes of an entity (a property and it's assigned */
@@ -213,9 +263,9 @@ EOT;
 		ini_set('display_errors', 'on');
 
 		$default_params = [
-                        'entityID'     => '',
+                        'entityID'     => 0,
 			'name'         => '',
-                        'propertyType' => 0,
+                        'propertyType' => 1,
 			'date'         => 0,
 			'value'        => '',
 			'sources'      => 'no source',
