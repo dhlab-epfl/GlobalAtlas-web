@@ -94,8 +94,9 @@ function insert($sql, $http_params, $bindigs){
 	
 	//fill bound_args with the bound values or with a default value 
         //(e.g. bound_args[':name'] = 'entityName')
-	foreach($bindings as $key=>$default){ $bound_args[':'.$key] = @$http_params[$key]?:$default; }
+	foreach($bindings as $value){ $bound_args[':'.$value] = @$http_params[$value]; }
 
+	$statement->execute($bound_args);
 
-
+	return true;
 }

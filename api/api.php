@@ -124,6 +124,7 @@ EOT;
 	/************************************************************/
 
 	case 'properties_for_entity':
+	ini_set('display_errors', 'on');
 
 		$default_params = [
 			'id' => 0, // entity_id
@@ -132,6 +133,7 @@ EOT;
 
 		$sql = <<<EOT
 SELECT 	date,
+                prop.id as property_id,
 		value as value,
 		computed_date_start,
 		computed_date_end,
@@ -148,11 +150,19 @@ WHERE 	prop.entity_id=:id
 ORDER BY property_name
 EOT;
 		echo query($sql, $_GET, $default_params);
-		break;
-		
+		flush(); ob_flush();
+	break;
 
+
+
+	/************************************************************/
+	/* CREATE_NEW_ENTITY                                        */
+	/* inserts a new entity including property and sourceinto   */
+	/* the DB.                                                  */
+	/************************************************************/
+	
 	case 'create_new_entity':
-ini_set('display_errors', 'on');
+	ini_set('display_errors', 'on');
 
 		$default_params = [
 			'name'        => '', 
@@ -166,12 +176,12 @@ ini_set('display_errors', 'on');
 		$sql = <<<EOT
 WITH entity AS (
 	INSERT INTO vtm.entities(name, type_id) 
-             VALUES (:name, 1)
+	     VALUES (:name, 1)
 	  RETURNING id), 
      source AS (
 	INSERT INTO vtm.sources(name)
-             VALUES (:sources)
-          RETURNING id)
+	     VALUES (:sources)
+	  RETURNING id)
 
 INSERT INTO vtm.properties(entity_id, 
 			property_type_id, 
@@ -180,16 +190,63 @@ INSERT INTO vtm.properties(entity_id,
 			value, 
 			source_id)
      VALUES ((SELECT id FROM entity), 
-             1,
-             :description,
-             :date,
-             :value, 
-             (SELECT id FROM source))
+	     1,
+	     :description,
+	     :date,
+	     :value, 
+	     (SELECT id FROM source))
 
 EOT;
 		echo query($sql, $_GET, $default_params);
+	
+		flush(); ob_flush();
+	break;
 
-flush(); ob_flush();
-		break;
+
+	/************************************************************/
+	/* UPDATE_ENTITY                               */
+	/* saves changes of an entity (a property and it's assigned */
+	/* source                                                   */
+	/************************************************************/
+
+	case 'update_entity':
+		ini_set('display_errors', 'on');
+
+		$default_params = [
+                        'entityID'     => '',
+			'name'         => '',
+                        'propertyType' => 0,
+			'date'         => 0,
+			'value'        => '',
+			'sources'      => 'no source',
+			'description'  => 'no description',
+                        'propertyID'   => 0
+		];
+
+		$sql = <<<EOT
+WITH update_e AS (
+        UPDATE vtm.entities
+           SET name = :name
+         WHERE id = :entityID), 
+     update_p AS (
+        UPDATE vtm.properties
+           SET property_type_id = :propertyType,
+               date             = :date,
+               value            = :value,
+               description      = :description
+         WHERE id = :propertyID
+     RETURNING source_id)
+ 
+
+UPDATE vtm.sources
+   SET name = :sources
+ WHERE id = (SELECT source_id FROM update_p)
+EOT;
+
+
+		echo query($sql, $_GET, $default_params);
+
+		flush(); ob_flush();
+	break;
 }
 
