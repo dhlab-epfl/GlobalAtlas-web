@@ -110,6 +110,7 @@ CreatorObject.init = function(){
 
     //Save button
     $("#create-save").click(function(){
+console.log("here I'm right.");
         if($('#entityName').val() == '') {
             alert("Please name your new entity.");
         } else {

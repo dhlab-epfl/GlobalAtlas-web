@@ -3,7 +3,9 @@ EditorObject.lineDrawer    = null;
 EditorObject.polygonDrawer = null;
 EditorObject.drawLayer     = null;
 EditorObject.currDrawing   = "";
+EditorObject.currType      = "";
 EditorObject.properties    = null;
+EditorObject.currEntityID  = 0;
 
 EditorObject.init = function(){
 
@@ -66,14 +68,6 @@ EditorObject.init = function(){
 
 
 
-    // when an existing drawing is edited...
-    MapObject.map.on('draw:edited', function(e){
-        $("#editor-draw-radio").prop("disabled", true);
-        $("[name='dRadio']").button("refresh");
-    });
-
-
-
     //Enable drawing when clicking on one of the Draw-radios
     //TODO: showing/hiding options in select doesn't work yet!
     $("#editor-dRadioPoint").click(function(){
@@ -111,18 +105,18 @@ EditorObject.init = function(){
 
 
     //cancel button
-    $("#editor-create-cancel").click(function(){
+    $("#editor-cancel").click(function(){
         //TODO: delete made drawing
         EditorObject.hide();
         MapObject.map.removeLayer(EditorObject.drawLayer)
     });
 
     //Save button
-    $("#editor-create-save").click(function(){
+    $("#editor-save").click(function(){
         if($('#editor-entityName').val() == '') {
             alert("Please name your new entity.");
         } else {
-            EditorObject.saveNewEntity();
+            EditorObject.saveChanges();
             EditorObject.hide();
             MapObject.map.removeLayer(EditorObject.drawLayer)
         }
@@ -140,16 +134,19 @@ EditorObject.init = function(){
         EditorObject.drawLayer.editing.disable();
     });
 
-    //when editing is saved: - hide editbox, show Editor
-    //                       - disable editing.
-    //                       - disable properties select menu
+    //when done editing: - hide editbox, show Editor
+    //                   - disable editing.
+    //                   - disable properties select menu
     $("#editor-edit-done").click(function(){
         $("#edit-box").hide()
         $("#editor").show()
 	$("#editor-properties").selectmenu("disable");
         EditorObject.drawLayer.editing.disable();
-    });
 
+        //save the edited shape as a string
+        EditorObject.currDrawing = formatDrawingInput(EditorObject.drawLayer, 
+                                                      EditorObject.currType);
+    });
 
 
     //DRAW BOX
@@ -161,10 +158,10 @@ EditorObject.init = function(){
         EditorObject.disableDrawer()
     });
 
-    //when drawing is saved: - hide drawbox, show Editor
-    //                       - disable drawer.
-    //                       - disable radio buttons
-    //                       - disable properties select menu
+    //when drawing is done: - hide drawbox, show Editor
+    //                      - disable drawer.
+    //                      - disable radio buttons
+    //                      - disable properties select menu
     $("#editor-draw-done").click(function(){
         $("#editor-draw-box").hide()
         $("#editor").show()
@@ -173,6 +170,14 @@ EditorObject.init = function(){
         EditorObject.disableDrawer()
     });
 }
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+//                                METHODS...                                 //
+///////////////////////////////////////////////////////////////////////////////
 
 
 // show Editor and reset all its fields. 
@@ -193,9 +198,12 @@ EditorObject.show = function(){
 }
 
 
+
 // load a new editor (called in script-entity)
 EditorObject.load = function(eID, eName, eType, properties){
     EditorObject.show();
+
+    EditorObject.currEntityID = eID;
     
     //pre set values
     $('#editor-entityName').val(eName);
@@ -215,8 +223,6 @@ EditorObject.load = function(eID, eName, eType, properties){
                                    .val(properties.length)
                                    .text("Create new property"));
     $('#editor-properties').selectmenu("enable");
-
-
 }
 
 
@@ -237,64 +243,7 @@ EditorObject.disableDrawer = function(){
 
 
 
-// returns geometric shape in correct format
-// each single coordinate has to be inverted. Leaflet draw returns them (Lat, Long) but we need 
-// them as (Long, Lat)
-/*formatDrawingInput = function(layer, type){
-    currDrawing = "";
-
-    if(type == 'marker'){
-        currDrawing = layer.getLatLng().toString()
-    } else {
-        var points = layer.getLatLngs();
-        for(i = 0; i < points.length; i++){
-            currDrawing = currDrawing.concat("," + points[i].toString())
-        }
-    }
-    
-    //set correct coordinate format
-    currDrawing = currDrawing.replace(/,/g, '')
-    currDrawing = currDrawing.replace(/\)/g, '')
-    currDrawing = currDrawing.replace(/LatLng\(/g, ',')
-    currDrawing = currDrawing.substring(1, currDrawing.length-1);
-    
-    //invert the coordinates from (Lat, Long) to (Long, Lat)
-    coordinates = currDrawing.split(",");
-    currDrawing = "";
-    firstPoint = "";
-    for(i in coordinates) {
-        latLng = coordinates[i].split(" ");
-        currDrawing += "," + latLng[1] + " " + latLng[0];
-        
-        //For polygons the ring needs to be closed...
-        if(i == 0) firstPoint = currDrawing;
-console.log(i + ": " + firstPoint);
-    }
-
-
-    //remove last comma
-    currDrawing = currDrawing.substring(1, currDrawing.length-1);
-
-    //set correct geometric type
-    switch(type){
-        case 'marker':
-            //TODO: is this really the correct format (There aren't any points yet in the DB)
-            currDrawing = "POINT(" + currDrawing + ")";
-            break;
-        case 'polyline':
-            currDrawing = "MULTILINESTRING((" + currDrawing + "))";
-            break;
-        case 'polygon':
-            currDrawing = "POLYGON((" + currDrawing + firstPoint + "))";
-            console.log(currDrawing);
-    }
-
-    return currDrawing;
-}*/
-
-
-
-//takes property from property array and sets Editor's fields accordingly
+//takes chosen property from property array and sets Editor's fields accordingly
 EditorObject.setProperty = function(i){
 
     //if creating new property, empty all the fields and enable drawing. 
@@ -314,12 +263,12 @@ EditorObject.setProperty = function(i){
         $("#editor-source-input").val(EditorObject.properties[i].source_name)
 
         //load the shape into a leaflet layer
-	//split at ( or ((
+	//split at '(' or '(('
         var typeValue = EditorObject.properties[i].value.split(/[\(]+/);
         //extract coordinates (they are separated by ,)
         var points = typeValue[1].replace(")", "").split(",");
         var newPoints = [];
-        //in polygons the last coordinate == the first. leaflet doesn't like this.
+        //in polygons the last coordinate == the first. leaflet doesn't like this...
         var length = points.length
         if(typeValue[0] == "POLYGON") length--;
 
@@ -329,52 +278,116 @@ EditorObject.setProperty = function(i){
             newPoints[i] = [Number(lngLat[1]), Number(lngLat[0])];
         }
 
-        //create draw layer
+        //create draw layer and remember it's type...
         switch(typeValue[0]){
             case "POINT": 
                 EditorObject.drawLayer = L.marker(newPoints[0]).addTo(MapObject.map);
+                EditorObject.currType = 'marker';
                 break;
 
             case "LINESTRING": 
                 EditorObject.drawLayer = L.polyline(newPoints).addTo(MapObject.map);
+                EditorObject.currType = 'polyline';
                 break;
 
             case "POLYGON":
                 EditorObject.drawLayer = L.polygon(newPoints).addTo(MapObject.map);
+                EditorObject.currType = 'polygon';
                 break;
  
         }
+
+        
     }
 }
 
 
 
 //insert data in DB and reload map...
-EditorObject.saveNewEntity = function(){
+EditorObject.saveChanges = function(){
 
-    console.log('EditorObject: savaing new entity...');
-
-    var query       = 'create_new_entity';
     var entityName  = $("#editor-entityName").val();
     var shape       = EditorObject.currDrawing;
     var year        = Number($("#editor-valid-at").val());
     var description = $("#editor-info-input").val();
-    var sources     = $("#editor-source-input").val()
+    var sources     = $("#editor-source-input").val();
+    var propertyID  = EditorObject.properties[$('#editor-properties option:selected').val()].property_id
 
+    //if a new property has been created. 
+    if(EditorObject.properties == null || 
+        $('#editor-properties option:selected').val() == EditorObject.properties.length) {
+
+        console.log("Saving new property...")
+
+        var query = 'create_new_entity';
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: settings_api_url,
+            data: {'query'      : query,
+                   'name'       : entityName,
+                   'value'      : shape,
+                   'date'       : year,
+                   'description': description,
+                   'sources'    : sources},
+
+            success: function(data,textStatus,jqXHR){
+                console.log('EditorObject: saved '+ entityName);
+                MapObject.reloadData();
+            },
+            error: function( jqXHR, textStatus, errorThrown ){
+                console.log('EditorObject: error saving new property!\n' +
+                jqXHR.responseText);
+            }
+        });
+
+    //if a property has been changed...
+    } else {
+        console.log("Saving property change...");
+        var query = 'update_entity'
 	$.ajax({
-                type: "GET",
-                dataType: "json",
-                url: settings_api_url,
-                data: {'query': query,'name': entityName,'value': shape,'date': year,'description':description,'sources':sources},
+            type: "GET",
+            dataType: "json",
+            url: settings_api_url,
+            data: {'query'        : query,
+                   'entityID'     : EditorObject.currEntityID,
+                   'name'         : entityName,
+                   'propertyType' : 1,
+                   'value'        : shape,
+                   'date'         : year,
+                   'description'  : description,
+                   'sources'      : sources, 
+                   'propertyID'   : propertyID},
 
-                success: function(data,textStatus,jqXHR){
-					console.log('EditorObject: saved '+ entityName);
-					MapObject.reloadData();
-                },
-                error: function( jqXHR, textStatus, errorThrown ){
-                	console.log('EditorObject: error saving new entity!\n' + jqXHR.responseText);
-                }
-            });
+            success: function(data,textStatus,jqXHR){
+                console.log('EditorObject: saved change of '+ entityName);
+                MapObject.reloadData();
+            },
+            error: function( jqXHR, textStatus, errorThrown ){
+                console.log('EditorObject: error saving changes!\n' + jqXHR.responseText);
+            }
+        });
+        /*$.ajax({
+            type: "GET",
+            dataType: "json",
+            url: settings_api_url,
+            data: {'query'        : query,
+                   'entityID'     : EditorObject.currEntityID,
+                   'name'         : entityName,
+                   'propertyType' : 1,
+                   'value'        : shape,
+                   'date'         : year,
+                   'description'  : description,
+                   'sources'      : sources, 
+                   'propertyID'   : propertyID},
 
-
+            success: function(data,textStatus,jqXHR){
+                console.log('EditorObject: saved property and source of '+ entityName);
+                MapObject.reloadData();
+            },
+            error: function( jqXHR, textStatus, errorThrown ){
+                console.log('EditorObject: error saving changes!\n' + jqXHR.responseText);
+            }
+        });*/
+    }
 }
