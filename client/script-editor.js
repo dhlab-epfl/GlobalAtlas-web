@@ -249,13 +249,13 @@ EditorObject.setProperty = function(i){
     //if creating new property, empty all the fields and enable drawing. 
     if(i == 9999){
         $("#editor-draw-options").show();
-        $("#editor-edit-button").hide();
+        $("#editor-draw-edit").hide();
         EditorObject.currDrawing = ""
 
 
     } else {
         $("#editor-draw-options").hide();
-        $("#editor-edit-button").show();
+        $("#editor-draw-edit").show();
         EditorObject.currDrawing = EditorObject.properties[i].value;
         $("#editor-valid-at").val(EditorObject.properties[i].date);
         SliderObject.setYear(EditorObject.properties[i].date);
