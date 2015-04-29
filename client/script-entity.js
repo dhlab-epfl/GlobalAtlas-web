@@ -12,9 +12,6 @@ EntityObject.init = function(){
 
 	EntityObject.loadedEntity = (hash['loadedEntity']?hash['loadedEntity']:null);
 
-    EntityObject.populateSucc
-
-
     $('#inspector').resizable({handles: 'w'});
 
     $('#inspector #hidebox').click(EntityObject.closeInspector);
@@ -36,10 +33,9 @@ EntityObject.init = function(){
         EntityObject.loadedEntity=null;
         $('#inspector').hide();
     });
-    
+
     $('#inspector #next_geom').click(function() { EntityObject.nextGeom(1) });
     $('#inspector #prev_geom').click(function() { EntityObject.nextGeom(-1) });
-    $('#inspector #succ_rel').click(EntityObject.showSuccRel);
 
 }
 
@@ -63,8 +59,6 @@ EntityObject.setHash = function(){
 	hash.loadedEntity = EntityObject.loadedEntity;
 	setHash();
 }
-
-
 
 EntityObject.closeInspector = function(e){
     e.stopPropagation();
@@ -131,5 +125,21 @@ EntityObject.reloadData = function(){
         	console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
         }
     });
+
+    //get succession relation
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: settings_api_url,
+        data: {'query': 'succession_relation_for_entity','id': EntityObject.loadedEntity},
+        success: function(data,textStatus,jqXHR){
+            var html = '';
+            $.each(data,function(i,item){ html += '   <option value="key">'+item.name+' ('+item.date+')</option>'; });
+            $('#succ_rel').html(html);
+        },
+        error: function( jqXHR, textStatus, errorThrown ){
+            console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
+        }
+    })
 
 }

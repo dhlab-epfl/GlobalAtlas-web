@@ -329,5 +329,32 @@ LIMIT 1
 EOT;
 		echo query($sql, $_GET, $default_params);
 		break;
+
+	/************************************************************/
+	/* SUCCESSION_RELATION_FOR_ENTITY                           */
+	/* Finds all succession relations for an entity 			*/
+	/************************************************************/
+
+	case 'succession_relation_for_entity':
+
+		$default_params = [
+			'id' => 0 // entity_id
+		];
+
+		$sql = <<<EOT
+SELECT
+  entities.name, prop.date
+FROM
+  vtm.properties as prop   ,
+  vtm.properties_types as proptype   ,
+  vtm.entities as entities
+WHERE
+  prop.entity_id = :id
+  AND  prop.value :: Integer = entities.id
+  AND  proptype.name = 'succession_relation'
+  AND  proptype.id = prop.property_type_id
+EOT;
+		echo query($sql, $_GET, $default_params);
+		break;
 }
 
