@@ -34,8 +34,13 @@ EntityObject.init = function(){
         $('#inspector').hide();
     });
 
-    $('#inspector #next_geom').click(function() { EntityObject.nextGeom(1) });
-    $('#inspector #prev_geom').click(function() { EntityObject.nextGeom(-1) });
+    $('#inspector #next_geom').button().click(function() { EntityObject.nextGeom(1) });
+    $('#inspector #prev_geom').button().click(function() { EntityObject.nextGeom(-1) });
+
+    $("#succ_rel").selectmenu()
+      .selectmenu("option", "width", "35%")
+      .selectmenu( "menuWidget" )
+        .addClass( "overflow" );
 
 }
 
@@ -46,7 +51,8 @@ EntityObject.nextGeom = function(dir){
         url: settings_api_url,
         data: {'query': 'next_geometry_for_entity','id': EntityObject.loadedEntity,'date': MapObject.date,'direction': dir},
         success: function(data,textStatus,jqXHR){
-            if (data[0] != undefined) {
+            if (data.length != 0) {
+		//if(data[0].computed_date_start == null) $("#prev_geom").disable()
 	        SliderObject.setYear(data[0].date);
                 MapObject.setDate(data[0].date) 
             } else { 
@@ -137,11 +143,23 @@ EntityObject.reloadData = function(){
         url: settings_api_url,
         data: {'query': 'succession_relation_for_entity','id': EntityObject.loadedEntity},
         success: function(data,textStatus,jqXHR){
-            var html = '';
+            /*var html = '';
             $.each(data,function(i,item){ 
                 html += '   <option value="key">'+item.name+' ('+item.date+')</option>'; 
-            });
-            $('#succ_rel').html(html);
+            });*/
+            //$('#succ_rel').html(html);
+
+
+            //TODO: is this ok?
+            //empty succ_rel
+            $('#succ_rel').find('option')
+                          .remove()
+                          .end()
+            for(i in data){
+                $('#editor-properties').append($("<option />")
+                    .val(i)
+                    .text(data[i].name + ' (' + data[i].date));
+            }
         },
         error: function( jqXHR, textStatus, errorThrown ){
             console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
