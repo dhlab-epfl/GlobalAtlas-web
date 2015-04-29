@@ -46,8 +46,12 @@ EntityObject.nextGeom = function(dir){
         url: settings_api_url,
         data: {'query': 'next_geometry_for_entity','id': EntityObject.loadedEntity,'date': MapObject.date,'direction': dir},
         success: function(data,textStatus,jqXHR){
-            if (data[0] != undefined) { MapObject.setDate(data[0].date) }
-            else { alert("No further connected geometry found."); }  
+            if (data[0] != undefined) {
+	        SliderObject.setYear(data[0].date);
+                MapObject.setDate(data[0].date) 
+            } else { 
+                alert("No further connected geometry found."); 
+            }  
         },
         error: function( jqXHR, textStatus, errorThrown ){
             console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
@@ -134,7 +138,9 @@ EntityObject.reloadData = function(){
         data: {'query': 'succession_relation_for_entity','id': EntityObject.loadedEntity},
         success: function(data,textStatus,jqXHR){
             var html = '';
-            $.each(data,function(i,item){ html += '   <option value="key">'+item.name+' ('+item.date+')</option>'; });
+            $.each(data,function(i,item){ 
+                html += '   <option value="key">'+item.name+' ('+item.date+')</option>'; 
+            });
             $('#succ_rel').html(html);
         },
         error: function( jqXHR, textStatus, errorThrown ){
