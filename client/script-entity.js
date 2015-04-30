@@ -162,6 +162,9 @@ EntityObject.reloadData = function(){
                                            .val(i)
                                            .text(item.name + ' (' + item.date+ ')'));
             });
+            //select first
+            $('#succ_rel').val(0)
+            $('#succ_rel').selectmenu("refresh");
 
         },
         error: function( jqXHR, textStatus, errorThrown ){
