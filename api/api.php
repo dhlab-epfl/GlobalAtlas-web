@@ -336,6 +336,7 @@ EOT;
 	/************************************************************/
 
 	case 'succession_relation_for_entity':
+		ini_set('display_errors', 'on');
 
 		$default_params = [
 			'id' => 0 // entity_id
@@ -350,11 +351,13 @@ FROM
   vtm.entities as entities
 WHERE
   prop.entity_id = :id
-  AND  prop.value :: Integer = entities.id
   AND  proptype.name = 'succession_relation'
   AND  proptype.id = prop.property_type_id
+  AND  prop.value ~ '^[0-9\.]+$'
+  AND  prop.value :: Integer = entities.id
 EOT;
 		echo query($sql, $_GET, $default_params);
+		flush(); ob_flush();
 		break;
 }
 

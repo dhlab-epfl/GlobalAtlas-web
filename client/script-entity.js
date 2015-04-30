@@ -52,7 +52,6 @@ EntityObject.nextGeom = function(dir){
         data: {'query': 'next_geometry_for_entity','id': EntityObject.loadedEntity,'date': MapObject.date,'direction': dir},
         success: function(data,textStatus,jqXHR){
             if (data.length != 0) {
-		//if(data[0].computed_date_start == null) $("#prev_geom").disable()
 	        SliderObject.setYear(data[0].date);
                 MapObject.setDate(data[0].date) 
             } else { 
@@ -92,20 +91,20 @@ EntityObject.reloadData = function(){
 
 	//Get entity's name and type
 	$.ajax({
-        type: "GET",
-        dataType: "json",
-        url: settings_api_url,
-        data: {'query': 'entity','id': EntityObject.loadedEntity},
-        success: function(data,textStatus,jqXHR){
-		EntityObject.currName = data[0].name;
-		EntityObject.currType = data[0].entity_type_name;
-        	$('#inspector').show();
-        	$('#inspector h1').html('<span class="entity">'+data[0].name+'</span> <span class="type">('+data[0].entity_type_name+')</span>');
-        },
-        error: function( jqXHR, textStatus, errorThrown ){
-            console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
-        } 
-    });
+            type: "GET",
+            dataType: "json",
+            url: settings_api_url,
+            data: {'query': 'entity','id': EntityObject.loadedEntity},
+            success: function(data,textStatus,jqXHR){
+                EntityObject.currName = data[0].name;
+                EntityObject.currType = data[0].entity_type_name;
+                $('#inspector').show();
+                $('#inspector h1').html('<span class="entity">'+data[0].name+'</span> <span class="type">('+data[0].entity_type_name+')</span>');
+            },
+            error: function( jqXHR, textStatus, errorThrown ){
+                console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
+            } 
+        });
 
 	//get properties, valid at, shape, source
 	$.ajax({
@@ -114,22 +113,31 @@ EntityObject.reloadData = function(){
         url: settings_api_url,
         data: {'query': 'properties_for_entity','id': EntityObject.loadedEntity,'date': MapObject.date},
         success: function(data,textStatus,jqXHR){
-		EntityObject.currProperties = data;
+            EntityObject.currProperties = data;
 
-        	$('#inspector').show();
-        	$('#inspector_properties').empty();
-        	$.each(data,function(i,item){
-        		var html = '';
+            $('#inspector').show();
+            $('#inspector_properties').empty();
+            $.each(data,function(i,item){
+                var html = '';
 
-				html += '<tr>';
-				html += '	<td class="key">'+item.property_name+'</td>';
-				html += '	<td class="date"><span class="bounds">'+(item.computed_date_start?item.computed_date_start:'∞')+'&#8239;&lt;&#8239;</span>'+(item.date?item.date:'∞')+'<span class="bounds">&#8239;&lt;&#8239;'+(item.computed_date_end?item.computed_date_end:"∞")+'</span></td>';
-				html += '	<td class="value">'+item.value+'</td>';
-				html += '	<td class="source">['+item.source_name+']</td>';
-				html += '</tr>';
+                    html += '<tr>';
+                    html += '	<td class="key">'+item.property_name+'</td>';
+                    html += '	<td class="date"><span class="bounds">'+(item.computed_date_start?item.computed_date_start:'∞')+'&#8239;&lt;&#8239;</span>'+(item.date?item.date:'∞')+'<span class="bounds">&#8239;&lt;&#8239;'+(item.computed_date_end?item.computed_date_end:"∞")+'</span></td>';
+                    html += '	<td class="value">'+item.value+'</td>';
+                    html += '	<td class="source">['+item.source_name+']</td>';
+                    html += '</tr>';
 
-        		$('#inspector_properties').append(html);
+                    $('#inspector_properties').append(html);
         	});
+
+            //enable/disable next/prev geom buttons
+            if(data[0].computed_date_start == null) 
+                $("#prev_geom").button("disable")
+            else $("#prev_geom").button("enable")
+            if(data[0].computed_date_end == null)
+                $("#next_geom").button("disable")
+            else $("#next_geom").button("enable")
+
         },
         error: function( jqXHR, textStatus, errorThrown ){
         	console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
@@ -155,10 +163,11 @@ EntityObject.reloadData = function(){
             $('#succ_rel').find('option')
                           .remove()
                           .end()
+            //fill it up again....
             for(i in data){
                 $('#editor-properties').append($("<option />")
-                    .val(i)
-                    .text(data[i].name + ' (' + data[i].date));
+                                           .val(i)
+                                           .text(data[i].name + ' (' + data[i].date+ ')'));
             }
         },
         error: function( jqXHR, textStatus, errorThrown ){
