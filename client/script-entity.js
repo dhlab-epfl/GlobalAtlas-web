@@ -151,24 +151,18 @@ EntityObject.reloadData = function(){
         url: settings_api_url,
         data: {'query': 'succession_relation_for_entity','id': EntityObject.loadedEntity},
         success: function(data,textStatus,jqXHR){
-            /*var html = '';
-            $.each(data,function(i,item){ 
-                html += '   <option value="key">'+item.name+' ('+item.date+')</option>'; 
-            });*/
-            //$('#succ_rel').html(html);
 
-
-            //TODO: is this ok?
             //empty succ_rel
             $('#succ_rel').find('option')
                           .remove()
                           .end()
             //fill it up again....
-            for(i in data){
-                $('#editor-properties').append($("<option />")
+            $.each(data,function(i,item){ 
+                $('#succ_rel').append($("<option />")
                                            .val(i)
-                                           .text(data[i].name + ' (' + data[i].date+ ')'));
-            }
+                                           .text(item.name + ' (' + item.date+ ')'));
+            });
+
         },
         error: function( jqXHR, textStatus, errorThrown ){
             console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
