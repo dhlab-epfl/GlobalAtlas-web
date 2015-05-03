@@ -40,12 +40,16 @@ EntityObject.init = function(){
 
 }
 
-EntityObject.nextGeom = function(dir){
+EntityObject.nextGeom = function(direction, propertyIndex){
     $.ajax({
         type: "GET",
         dataType: "json",
         url: settings_api_url,
-        data: {'query': 'next_geometry_for_entity','id': EntityObject.loadedEntity,'date': MapObject.date,'direction': dir},
+        data: {'query'    : 'next_geometry_for_entity',
+	       'id'       : EntityObject.loadedEntity,
+               'date'     : MapObject.date,
+	       'direction': direction, 
+	       'type'     : EntityObject.currProperties[propertyIndex].property_name},
         success: function(data,textStatus,jqXHR){
             if (data.length != 0) {
 	        SliderObject.setYear(data[0].date);
@@ -115,16 +119,15 @@ EntityObject.reloadData = function(){
             $('#inspector_properties').empty();
             $.each(data,function(i,item){
                 var html = '';
-
                     html += '<tr>';
                     html += '	<td class="key">'+item.property_name+'</td>';
                     html += '   <td class="date"><span class="bounds">'
-                    html += '		<a href="javascript:EntityObject.nextGeom(-1);">'
+                    html += '		<a href="javascript:EntityObject.nextGeom(-1,'+i+');">'
 			+ (item.computed_date_start?item.computed_date_start:'∞') 
 			+ '</a>&#8239;&lt;&#8239;</span>'
 			+ (item.date?item.date:'∞')
 			+ '<span class="bounds">&#8239;&lt;&#8239;'
-			+ '<a href="javascript:EntityObject.nextGeom(1);">'
+			+ '<a href="javascript:EntityObject.nextGeom(1,'+i+');">'
 			+ (item.computed_date_end?item.computed_date_end:"∞")
 			+'</a></span></td>';
                     html += '	<td class="value">'+item.value+'</td>';

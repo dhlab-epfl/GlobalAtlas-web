@@ -307,9 +307,10 @@ EOT;
 
 	case 'next_geometry_for_entity':
 		$default_params = [
-			'id' => 0, //entity_id
-			'date' => 2015,
-			'direction' => 1 // either 1 (future) or -1 (to go into the past)
+			'id'        => 0, //entity_id
+			'date'      => 2015,
+			'direction' => 1, // either 1 (future) or -1 (to go into the past)
+			'type'      => 'geom'
 		];
 
 		$sql = <<<EOT
@@ -321,7 +322,7 @@ FROM
 WHERE
   prop.entity_id = :id
   AND  :direction * prop.date > :direction * :date
-  AND  proptype.name = 'geom'
+  AND  proptype.name = :type
   AND  proptype.id = prop.property_type_id
 ORDER BY
   :direction * prop.date
