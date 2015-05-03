@@ -33,10 +33,6 @@ EntityObject.init = function(){
         EntityObject.loadedEntity=null;
         $('#inspector').hide();
     });
-
-    $('#inspector #next_geom').button().click(function() { EntityObject.nextGeom(1) });
-    $('#inspector #prev_geom').button().click(function() { EntityObject.nextGeom(-1) });
-
     $("#succ_rel").selectmenu()
       .selectmenu("option", "width", "35%")
       .selectmenu( "menuWidget" )
@@ -122,21 +118,21 @@ EntityObject.reloadData = function(){
 
                     html += '<tr>';
                     html += '	<td class="key">'+item.property_name+'</td>';
-                    html += '	<td class="date"><span class="bounds">'+(item.computed_date_start?item.computed_date_start:'∞')+'&#8239;&lt;&#8239;</span>'+(item.date?item.date:'∞')+'<span class="bounds">&#8239;&lt;&#8239;'+(item.computed_date_end?item.computed_date_end:"∞")+'</span></td>';
+                    html += '   <td class="date"><span class="bounds">'
+                    html += '		<a href="javascript:EntityObject.nextGeom(-1);">'
+			+ (item.computed_date_start?item.computed_date_start:'∞') 
+			+ '</a>&#8239;&lt;&#8239;</span>'
+			+ (item.date?item.date:'∞')
+			+ '<span class="bounds">&#8239;&lt;&#8239;'
+			+ '<a href="javascript:EntityObject.nextGeom(1);">'
+			+ (item.computed_date_end?item.computed_date_end:"∞")
+			+'</a></span></td>';
                     html += '	<td class="value">'+item.value+'</td>';
                     html += '	<td class="source">['+item.source_name+']</td>';
                     html += '</tr>';
 
                     $('#inspector_properties').append(html);
         	});
-
-            //enable/disable next/prev geom buttons
-            if(data[0].computed_date_start == null) 
-                $("#prev_geom").button("disable")
-            else $("#prev_geom").button("enable")
-            if(data[0].computed_date_end == null)
-                $("#next_geom").button("disable")
-            else $("#next_geom").button("enable")
 
         },
         error: function( jqXHR, textStatus, errorThrown ){
