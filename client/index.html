@@ -37,6 +37,7 @@
 	<script src="script-entity.js"></script>
 	<script src="script-creator.js"></script>
 	<script src="script-editor.js"></script>
+        <script src="property_entries.js"></script>
 
 
 </head>
@@ -69,12 +70,11 @@
 
 	<!-- creator -->
 	<div id="creator" class="bigbox" style="display: none">
-		<h1>Creator</h1>
+		<h1>New Property</h1>
 		<!-- Entity -->
 		<div class="creator-item">
 			<div class="creator-item-left">Entity</div>
-			<div class="creator-item-right">
-				<input id="entityName" type="text" placeholder="Enter entity name">
+			<div class="creator-item-right" id="entityName">
 			</div>
 			<div style="clear:both"></div> 
 		</div>
@@ -354,6 +354,8 @@
 				<td class="source">[Euratlas]</td>
 			</tr>
 		</table>
+		
+		<button id="add-property">New Property</button>
 
 		<h2>Discussions</h2>
 		<table id="inspector_discussion">
@@ -368,10 +370,6 @@
 		</table>
 		</br>
 		</br>
-
-
-		<button id="edit-button"/>
-		<label for="edit-button">Edit</label>
 		
 
 	</div>

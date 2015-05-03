@@ -16,7 +16,7 @@ $(function(){
     SliderObject.init();
     EntityObject.init();
     CreatorObject.init();
-    EditorObject.init();
+    //EditorObject.init();
 });
 
 function setHash(key, value){

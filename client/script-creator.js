@@ -151,6 +151,36 @@ CreatorObject.init = function(){
 }
 
 
+
+// load a creator (called in script-entity)
+CreatorObject.load = function(eID, eName){
+    CreatorObject.show();
+
+    CreatorObject.currEntityID = eID;
+    
+    //pre set values
+    $('#entityName').val(eName);
+
+    
+    //TODO: Fill 'choose property type'
+/*
+    $('#editor-properties').find('option')
+                           .remove()
+                           .end()
+    for(i in properties){
+        $('#editor-properties').append($("<option />")
+                                   .val(i)
+                                   .text("Edit " + properties[i].property_name));
+    }
+    $('#editor-properties').append($("<option />")
+                                   .val(9999)
+                                   .text("Create new Property"));
+    $('#editor-properties').selectmenu("enable");
+*/
+}
+
+
+
 // show creator and reset all its fields. 
 CreatorObject.show = function(){
     CreatorObject.active = true;

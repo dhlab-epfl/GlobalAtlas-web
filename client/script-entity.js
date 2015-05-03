@@ -38,6 +38,12 @@ EntityObject.init = function(){
       .selectmenu( "menuWidget" )
         .addClass( "overflow" );
 
+
+    $("#add-property").click(function() {
+        EntityObject.hideInspector()
+        CreatorObject.load(EntityObject.loadedEntity, EntityObject.currName);
+    });
+
 }
 
 EntityObject.nextGeom = function(direction, propertyIndex){
@@ -69,6 +75,15 @@ EntityObject.setHash = function(){
 	setHash();
 }
 
+EntityObject.hideInspector = function(){
+    $('#inspector').hide();
+}
+
+EntityObject.showInspector = function(){
+    EntityObject.reloadData();
+    $('#inspector').show();
+}
+
 EntityObject.closeInspector = function(e){
     e.stopPropagation();
     EntityObject.loadedEntity=null;
@@ -95,6 +110,7 @@ EntityObject.reloadData = function(){
             dataType: "json",
             url: settings_api_url,
             data: {'query': 'entity','id': EntityObject.loadedEntity},
+//TODO: if type == succession_relation, make it clickable!
             success: function(data,textStatus,jqXHR){
                 EntityObject.currName = data[0].name;
                 EntityObject.currType = data[0].entity_type_name;
@@ -111,31 +127,20 @@ EntityObject.reloadData = function(){
         type: "GET",
         dataType: "json",
         url: settings_api_url,
-        data: {'query': 'properties_for_entity','id': EntityObject.loadedEntity,'date': MapObject.date},
+        data: {'query': 'properties_for_entity',
+               'id'   : EntityObject.loadedEntity,
+               'date' : MapObject.date},
         success: function(data,textStatus,jqXHR){
             EntityObject.currProperties = data;
 
             $('#inspector').show();
             $('#inspector_properties').empty();
-            $.each(data,function(i,item){
-                var html = '';
-                    html += '<tr>';
-                    html += '	<td class="key">'+item.property_name+'</td>';
-                    html += '   <td class="date"><span class="bounds">'
-                    html += '		<a href="javascript:EntityObject.nextGeom(-1,'+i+');">'
-			+ (item.computed_date_start?item.computed_date_start:'∞') 
-			+ '</a>&#8239;&lt;&#8239;</span>'
-			+ (item.date?item.date:'∞')
-			+ '<span class="bounds">&#8239;&lt;&#8239;'
-			+ '<a href="javascript:EntityObject.nextGeom(1,'+i+');">'
-			+ (item.computed_date_end?item.computed_date_end:"∞")
-			+'</a></span></td>';
-                    html += '	<td class="value">'+item.value+'</td>';
-                    html += '	<td class="source">['+item.source_name+']</td>';
-                    html += '</tr>';
+            
+            var entryManager = new PropertyEntries(data)
 
-                    $('#inspector_properties').append(html);
-        	});
+            $.each(data,function(i,item){
+                    $('#inspector_properties').append(entryManager.setUneditable(i));
+            });
 
         },
         error: function( jqXHR, textStatus, errorThrown ){
