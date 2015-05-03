@@ -19,7 +19,7 @@ PropertyEntries.prototype.getNewEntry = function(index){
 
 PropertyEntries.prototype.setUneditable = function(index) {
     var property = this.properties[index];
-    var propName =  property.property_name;
+    var name     =  property.property_name;
     var start    = (property.computed_date_start?property.computed_date_start:'∞');
     var date     = (property.date?property.date:'∞');
     var end      = (property.computed_date_end?property.computed_date_end:"∞");
