@@ -4,6 +4,7 @@ EntityObject.loadedEntity   = null;
 EntityObject.currName       = '';
 EntityObject.currType       = '';
 EntityObject.currProperties = {};
+EntityObject.entryManager   = null;
 
 
 EntityObject.init = function(){
@@ -16,8 +17,10 @@ EntityObject.init = function(){
 
     $('#inspector #hidebox').click(EntityObject.closeInspector);
 
-    //Create edit button
-    $("#edit-button").button({
+    EntityObject.entryManager = new PropertyEntries('inspector_properties');
+
+    //Create edit button TODO: remove! 
+    /*$("#edit-button").button({
         icons: {
             primary: "ui-icon-pencil"
         }
@@ -32,7 +35,8 @@ EntityObject.init = function(){
         //TODO: really...?
         EntityObject.loadedEntity=null;
         $('#inspector').hide();
-    });
+    });*/
+
     $("#succ_rel").selectmenu()
       .selectmenu("option", "width", "35%")
       .selectmenu( "menuWidget" )
@@ -96,6 +100,17 @@ EntityObject.loadEntity = function(newEntity){
 	EntityObject.reloadData();
 }
 
+/*
+ * Makes a property entry editable.
+ */
+EntityObject.editProp = function(index){
+    EntityObject.entryManager.enableEdit(index)
+}
+
+EntityObject.cancelEdit = function(){
+    EntityObject.entryManager.disableEdit()
+}
+
 EntityObject.reloadData = function(){
 
 	MapObject.setHash();
@@ -110,7 +125,6 @@ EntityObject.reloadData = function(){
             dataType: "json",
             url: settings_api_url,
             data: {'query': 'entity','id': EntityObject.loadedEntity},
-//TODO: if type == succession_relation, make it clickable!
             success: function(data,textStatus,jqXHR){
                 EntityObject.currName = data[0].name;
                 EntityObject.currType = data[0].entity_type_name;
@@ -135,12 +149,8 @@ EntityObject.reloadData = function(){
 
             $('#inspector').show();
             $('#inspector_properties').empty();
-            
-            var entryManager = new PropertyEntries(data)
 
-            $.each(data,function(i,item){
-                    $('#inspector_properties').append(entryManager.setUneditable(i));
-            });
+            EntityObject.entryManager.reset(data);
 
         },
         error: function( jqXHR, textStatus, errorThrown ){

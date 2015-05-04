@@ -253,6 +253,7 @@ EOT;
 	break;
 
 
+
 	/************************************************************/
 	/* UPDATE_ENTITY                               */
 	/* saves changes of an entity (a property and it's assigned */
@@ -263,9 +264,9 @@ EOT;
 		ini_set('display_errors', 'on');
 
 		$default_params = [
-            'entityID'     => 0,
+                        'entityID'     => 0,
 			'name'         => '',
-            'propertyType' => 1,
+                        'propertyType' => 1,
 			'date'         => 0,
 			'value'        => '',
 			'sources'      => 'no source',
@@ -300,9 +301,30 @@ EOT;
 		flush(); ob_flush();
 	break;
 
+
+
+	/************************************************************/
+	/* GET_PROPERTY_TYPES                                       */
+	/* Returns all possible types for properties                */
+	/************************************************************/
+
+	case 'get_property_types':
+		ini_set('display_errors', 'on');
+		$default_params = [];
+	$sql = <<<EOT
+SELECT id, name, description, type
+  FROM vtm.properties_types
+EOT;
+	echo query($sql, $_GET, $default_params);
+
+        break;
+
+
+
+
 	/************************************************************/
 	/* NEXT_GEOMETRY_FOR_ENTITY                                 */
-	/* find the next set of geometries for the entity at hand 	*/
+	/* find the next set of geometries for the entity at hand   */
 	/************************************************************/
 
 	case 'next_geometry_for_entity':
@@ -330,6 +352,8 @@ LIMIT 1
 EOT;
 		echo query($sql, $_GET, $default_params);
 		break;
+
+
 
 	/************************************************************/
 	/* SUCCESSION_RELATION_FOR_ENTITY                           */
