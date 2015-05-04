@@ -24,6 +24,9 @@ MapObject.init = function(){
     			edit : false
 		});
 
+	MapObject.drawLayer = new L.FeatureGroup();;
+	MapObject.map.addLayer(MapObject.drawLayer);
+
 
 	/* ADD BACKGROUND LAYER */
 

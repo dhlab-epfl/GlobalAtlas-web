@@ -108,7 +108,9 @@ PropertyEntries.prototype.putEditableEntryIntoRow = function(index){
                 </div>\
                 <div style="float:right">\
                     <button onclick="EntityObject.cancelEdit();">❌ Cancel</button>\
-                    <button onclick="EntityObject.saveProp('+ index +');"> Save</button>\
+                    <button onclick="EntityObject.propertyManager.saveProperty('+ index +');">\
+                         Save\
+                    </button>\
                 </div>\
             </div>\
         </td>\
@@ -145,7 +147,7 @@ PropertyEntries.prototype.setEditable = function(index){
 /*
  * Set the currently editable entry (incl. its geometry if necessary) non-editable. 
  */
-PropertyEntries.prototype.disableEdit = function(){
+PropertyEntries.prototype.cancelEdit = function(){
     if(this.currEditable >= 0){
         this.putUneditableEntryIntoRow(this.currEditable)
 
@@ -153,7 +155,7 @@ PropertyEntries.prototype.disableEdit = function(){
         if(this.creatingProp){
             var toRemove = this.properties.length - 1;
             this.properties.pop();
-            //$('#propEntry'+toRemove).replaceWith('');
+            $('#propEntry'+toRemove).replaceWith('');
         }
 
         //not in creating phase anymore...
@@ -171,10 +173,23 @@ PropertyEntries.prototype.disableEdit = function(){
 
 
 /*
+ * This method gets called when edit or new property gets saved.
+ */
+PropertyEntries.prototype.saveProperty = function(){
+    var drawing = this.drawer.currDrawingz
+    console.log(drawing)
+
+
+    //finally, reload map for making changes visible
+    MapObject.reloadData();
+}
+
+
+/*
  * This method needs to be called when inspector is closed.
  */
 PropertyEntries.prototype.reset = function(){
-    this.disableEdit();
+    this.cancelEdit();
 }
 
 
@@ -253,9 +268,18 @@ PropertyEntries.prototype.setValueEditTool = function(type, index){
     switch(type) {
         case 'geom': 
             if(this.creatingProp) {
-                tool = '<button id="propValue">Create Geometry</button>';
+                tool = '<form style="display: inline">\
+                            <div id="draw-radio" style="display: inline">\
+                                <input type="radio" id="dRadioPoint" name="dRadio">\
+                                <label for="dRadioPoint">Point</label>\
+                                <input type="radio" id="dRadioLine" name="dRadio">\
+                                <label for="dRadioLine">Line</label>\
+                                <input type="radio" id="dRadioArea" name="dRadio">\
+                                <label for="dRadioArea">Area</label>\
+                            </div>\
+                        </form>';
             } else {
-                tool = '<button id="propValue">Edit Geometry</button>';
+                tool = '<button id="editGeom">Edit Geometry</button>';
             }
             break;
 
@@ -266,36 +290,54 @@ PropertyEntries.prototype.setValueEditTool = function(type, index){
             var val = 0;
             if(!isNaN(this.properties[index].value))
                 val = parseFloat(this.properties[index].value);
-            tool += '<input id="propValue" type="number" value="'+ val +'"/>'
+            tool += '<input id="setValue" type="number" value="'+ val +'"/>'
             break;
 
 
         default:
-            tool += '<input id="propValue" type="text" value="'+ this.properties[index].value +'"/>'
+            tool += '<input id="setValue" type="text" value="'+this.properties[index].value+'"/>'
             break;
 
     }
 
     // insert tool into HTML
-    $("#propValue").replaceWith(tool);
+    $("#propValue").empty().append(tool);
 
-    // now that tool is loaded, the appropriate listeners need to be instantiated...
+    // now that tool is loaded, the appropriate listeners need to be instantiated and elements
+    // rendered correctly.
     if(type == 'geom'){
-        //button listener
-        $("#propValue").click(function(){
-            //propertyManager can only be reached so complicatedly from inside listener:
-            propMgr = EntityObject.propertyManager
-            var geom = propMgr.properties[index].value
-            propMgr.drawer.loadGeometry(geom)
-        });
+        if(this.creatingProp) {
+            $("#draw-radio").buttonset()
+            $("#draw-radio").find('span.ui-button-text').addClass('drawRadioStyle');
+
+            var drawType = '';
+
+            //Enable drawing when clicking on one of the Draw-radios
+            $("#dRadioPoint").click(function(){
+                $("#draw-radio").buttonset("disable");
+                EntityObject.propertyManager.drawer.createGeometry('point');
+            });
+            $("#dRadioLine").click(function(){
+                $("#draw-radio").buttonset("disable");
+                EntityObject.propertyManager.drawer.createGeometry('polyline');
+            });
+            $("#dRadioArea").click(function(){
+                $("#draw-radio").buttonset("disable");
+                EntityObject.propertyManager.drawer.createGeometry('polygon');
+            });
+
+        } else {
+            $("#editGeom").click(function(){
+                //propertyManager can only be reached so complicatedly from inside listener:
+                propMgr = EntityObject.propertyManager
+                var geom = propMgr.properties[index].value;
+        
+                //set geometry editable
+                propMgr.drawer.loadGeometry(geom);
+            });
+        }
     }
-    
-
 };
-
-
-
-
 
 
 

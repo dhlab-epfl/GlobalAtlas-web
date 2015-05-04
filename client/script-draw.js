@@ -4,16 +4,17 @@
  * This object is in charge of managing anything that has to do with drawing on the map.
  */
 function Drawer(){
-    this.pointDrawer   = null;
-    this.lineDrawer    = null;
-    this.polygonDrawer = null;
-    this.drawLayer     = null;
-    this.currDrawing   = "";
-    this.currType      = "";
+    this.pen         = null;
+    this.drawLayer   = null;
+    this.currDrawing = "";
+    this.currType    = "";
 
 
+    //triggered when a drawing is done (click on last point)
+    //informs property manager.
     MapObject.map.on('draw:drawstop', function(e) {
-        this.disableDrawer()
+        //TODO: this must be somehow possible in an easier way...
+        EntityObject.propertyManager.drawer.pen.disable()
     });
 
 
@@ -25,14 +26,8 @@ function Drawer(){
             layer = e.layer;
 
         //get the drawing's correct format 
-        this.currDrawing = this.toDBGeomFormat(layer, type);
+        this.currDrawing = toDBGeomFormat(layer, type)
 
-
-        //TODO go back to Editor and disable the radio buttons
-        $("#editor-draw-radio").buttonset("disable");
-
-
-	//TODO: really...?
         MapObject.map.addLayer(layer);
     });
 }
@@ -42,17 +37,23 @@ function Drawer(){
  * Removes geometry from draw layer. Resets variables.
  */
 Drawer.prototype.disable = function(){
-    /*this.pointDrawer.disable();
-    this.lineDrawer.disable();
-    this.polygonDrawer.disable();*/
+    if(this.pen != null){ 
+        this.pen.disable();
+    }
+
+    //reset draw layer
+    MapObject.drawLayer = new L.FeatureGroup();
+    MapObject.map.addLayer(MapObject.drawLayer);
+
+
 
     if(this.drawLayer != null){
         MapObject.map.removeLayer(this.drawLayer);
         this.drawLayer.editing.disable();
     }
-    this.currType = '';
+    this.currType     = '';
     this.currDrawing = '';
-    this.drawLayer     = null;
+    this.drawLayer    = null;
 }
 
 
@@ -103,11 +104,32 @@ Drawer.prototype.loadGeometry = function(geometry){
 
 
 /*
+ * Enables drawing on the map.
+ */
+Drawer.prototype.createGeometry = function(type){
+    switch(type){
+        case 'point': 
+            this.pen = new L.Draw.Marker(MapObject.map, MapObject.drawControl);
+            break;
+
+        case 'polyline': 
+            this.pen = new L.Draw.Polyline(MapObject.map, MapObject.drawControl);
+            break;
+
+        case 'polygon':
+            this.pen = new L.Draw.Polygon(MapObject.map, MapObject.drawControl);
+            break;
+    }
+    this.pen.enable();
+}
+
+
+/*
  * returns geometric shape in correct format for saving it in the database.
  * each single coordinate has to be inverted. Leaflet draw returns them (Lat, Long) but we need 
  * them as (Long, Lat)
  */
-Drawer.prototype.toDBGeomFormat = function(layer, type){
+toDBGeomFormat = function(layer, type){
     currDrawing = "";
 
     if(type == 'marker'){

@@ -82,7 +82,7 @@ EntityObject.editProp = function(index){
 }
 
 EntityObject.cancelEdit = function(){
-    EntityObject.propertyManager.disableEdit()
+    EntityObject.propertyManager.cancelEdit()
 }
 
 EntityObject.reloadData = function(){
