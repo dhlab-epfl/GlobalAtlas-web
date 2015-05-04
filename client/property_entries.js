@@ -55,19 +55,15 @@ PropertyEntries.prototype.setUneditable = function(index) {
     <tr id="propEntry'+ index +'">\
         <td class="key">'+ name +'</td>\
         <td class="date">\
+            <button onclick="EntityObject.nextGeom(-1,'+ index +');">◂</button>\
             <span class="bounds">\
-                '+ start + '\
-                <a href="javascript:EntityObject.nextGeom(-1,'+ index +');">\
-                    &#8239;&lt;&#8239;\
-                </a>\
+                '+ start + '&#8239;&lt;&#8239;\
             </span>\
-                '+ date +'\
+            '+ date +'\
             <span class="bounds">\
-                <a href="javascript:EntityObject.nextGeom(1,'+ index +');">\
-                &#8239;&lt;&#8239;\
-                </a>\
-                '+ end +'\
+                &#8239;&lt;&#8239;'+ end +'\
             </span>\
+            <button onclick="EntityObject.nextGeom(1,'+ index +');">▸</button>\
         </td>\
         <td class="value">'+ value +'</td>\
         <td class="source">['+ source +']</td>\
@@ -94,23 +90,6 @@ PropertyEntries.prototype.setEditable = function(index){
     var end      = (property.computed_date_end?property.computed_date_end:"∞");
     var value    =  property.value;
     var source   =  property.source_name;
-
-    var editableEntry = '\
-    <tr id="propEntry'+ index +'">\
-        <td class="key">\
-            <select id="propType"/>\
-        </td>\
-        <td class="date">\
-            <input id="date" type="number" value="'+ date +'"/>\
-        </td>\
-        <td class="value">'+ value +'</td>\
-        <td class="source">\
-            <input type="text" value="'+ source +'"</td>\
-        <td>\
-            <button onclick="EntityObject.cancelEdit();">❌</button>\
-            <button onclick="EntityObject.saveProp('+ index +');"></button>\
-        </td>\
-    </tr>';
 
     var editableEntry = '\
     <tr id="propEntry'+ index +'">\
@@ -180,33 +159,37 @@ PropertyEntries.prototype.disableEdit = function(){
  * Populates a table entrie's select. 
  */
 PropertyEntries.prototype.populateSelect = function(selectID, index, currValue){
-   switch(selectID){
-       case 'propType': 
-           $.ajax({
-               type: "GET",
-               dataType: "json",
-               url: settings_api_url,
-               data: {'query': 'get_property_types'},
-               success: function(types,textStatus,jqXHR){
-                   $.each(types,function(i,item){ 
-                       $('#propType').append($("<option />")
-                                         .val(item.id).text(item.name));
-                   });
+    switch(selectID){
+        case 'propType': 
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: settings_api_url,
+                data: {'query': 'get_property_types'},
+                success: function(types,textStatus,jqXHR){
+                    $.each(types,function(i,item){ 
+                        $('#propType').append($("<option />")
+                                          .val(item.id).text(item.name));
+                    });
 
-                   //set current value selected
-                   $("#propType option").filter(function() {
-                       return $(this).text() == currValue; 
-                   }).attr('selected', true);
-               },
-               error: function( jqXHR, textStatus, errorThrown ){
-                   console.log('EntityObject: error getting property types!\n'+jqXHR.responseText);
-               } 
-           });
-       break;
-   }
+                    //set current value selected
+                    $("#propType option").filter(function() {
+                        return $(this).text() == currValue; 
+                    }).attr('selected', true);
+                },
+                error: function( jqXHR, textStatus, errorThrown ){
+                    console.log('EntityObject: error getting property types!\n'+jqXHR.responseText);
+                } 
+            });
+        break;
+    }
+    //set correct edit tool
+    EntityObject.entryManager.setValueEditTool(currValue, index);
 
-   
-   this.setValueEditTool();
+    //Change listener for property type select box: Set according edit tool. 
+    $("#propType").change(function(){
+        EntityObject.entryManager.setValueEditTool($(this).find("option:selected").text(), index);
+    });
 };	
 
 
@@ -214,14 +197,29 @@ PropertyEntries.prototype.populateSelect = function(selectID, index, currValue){
 /*
  * sets the property value edit tool according to chosen property type.
  */
-PropertyEntries.prototype.setValueEditTool = function(selectID, index, currValue){
-        /*switch($(this).find("option:selected").text()) {
-            case 'geom': //TODO: drawing stuff
-alert('geom')
-                break;
+PropertyEntries.prototype.setValueEditTool = function(type, index){
+    var tool = '';
 
-        }*/
-alert('geom')
+    switch(type) {
+        case 'geom': //TODO: drawing stuff
+            break;
+
+        //TODO: We're concentrating on borders, so this part here is rather dummy ;-)
+        case 'succession_relation':
+        case 'height':
+            var val = 0;
+            if(!isNaN(this.properties[index].value))
+                val = parseFloat(this.properties[index].value);
+            tool += '<input id="propValue" type="number" value="'+ val +'"/>'
+            break;
+
+        default:
+            tool += '<input id="propValue" type="text" value="'+ this.properties[index].value +'"/>'
+            break;
+
+    }
+
+    $("#propValue").replaceWith(tool);
 
 };
 
