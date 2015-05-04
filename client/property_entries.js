@@ -55,17 +55,9 @@ PropertyEntries.prototype.setUneditable = function(index) {
     <tr id="propEntry'+ index +'">\
         <td class="key">'+ name +'</td>\
         <td class="date">\
-            <span class="bounds">\
-                <a href="javascript:EntityObject.nextGeom(-1,'+ index +');">\
-                    '+ start + '\
-                </a>&#8239;&lt;&#8239;\
-            </span>\
-                '+ date +'\
-            <span class="bounds">&#8239;&lt;&#8239;\
-                <a href="javascript:EntityObject.nextGeom(1,'+ index +');">\
-                    '+ end +'\
-                </a>\
-            </span>\
+            <span class="bounds">'+ start + '&#8239;&lt;&#8239;</span>\
+            <a href="javascript:MapObject.setDate('+ date +');">'+ date +'</a>\
+            <span class="bounds">&#8239;&lt;&#8239;'+ end +'</span>\
         </td>\
         <td class="value">'+ value +'</td>\
         <td class="source">['+ source +']</td>\
