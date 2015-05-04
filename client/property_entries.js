@@ -19,6 +19,7 @@ function PropertyEntries(tableID){
 PropertyEntries.prototype.reset = function(properties){
     this.entries = [];
     this.properties = properties;
+    this.currEditable = -1;
     
     for (i in properties){
         this.createNewEntry(i)
@@ -201,8 +202,10 @@ PropertyEntries.prototype.setValueEditTool = function(type, index){
     var tool = '';
 
     switch(type) {
-        case 'geom': //TODO: drawing stuff
+        case 'geom': 
+            tool = '' ;
             break;
+
 
         //TODO: We're concentrating on borders, so this part here is rather dummy ;-)
         case 'succession_relation':
@@ -212,6 +215,7 @@ PropertyEntries.prototype.setValueEditTool = function(type, index){
                 val = parseFloat(this.properties[index].value);
             tool += '<input id="propValue" type="number" value="'+ val +'"/>'
             break;
+
 
         default:
             tool += '<input id="propValue" type="text" value="'+ this.properties[index].value +'"/>'
