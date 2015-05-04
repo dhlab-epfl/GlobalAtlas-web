@@ -38,11 +38,21 @@ function Drawer(){
 }
 
 
-//TODO is this needed?
-Drawer.prototype.disableDrawer = function(){
-    this.pointDrawer.disable();
+/*
+ * Removes geometry from draw layer. Resets variables.
+ */
+Drawer.prototype.disable = function(){
+    /*this.pointDrawer.disable();
     this.lineDrawer.disable();
-    this.polygonDrawer.disable();
+    this.polygonDrawer.disable();*/
+
+    if(this.drawLayer != null){
+        MapObject.map.removeLayer(this.drawLayer);
+        this.drawLayer.editing.disable();
+    }
+    this.currType = '';
+    this.currDrawing = '';
+    this.drawLayer     = null;
 }
 
 
@@ -92,10 +102,11 @@ Drawer.prototype.loadGeometry = function(geometry){
 
 
 
-
-// returns geometric shape in correct format for saving it in the database.
-// each single coordinate has to be inverted. Leaflet draw returns them (Lat, Long) but we need 
-// them as (Long, Lat)
+/*
+ * returns geometric shape in correct format for saving it in the database.
+ * each single coordinate has to be inverted. Leaflet draw returns them (Lat, Long) but we need 
+ * them as (Long, Lat)
+ */
 Drawer.prototype.toDBGeomFormat = function(layer, type){
     currDrawing = "";
 

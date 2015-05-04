@@ -143,7 +143,7 @@ PropertyEntries.prototype.enableEdit = function(index){
 
 
 /*
- * Set the currently editable entry non-editable
+ * Set the currently editable entry (incl. its geometry if necessary) non-editable. 
  */
 PropertyEntries.prototype.disableEdit = function(){
     if(this.currEditable >= 0){
@@ -151,6 +151,8 @@ PropertyEntries.prototype.disableEdit = function(){
 
         //allow to edit all the props
         $('.editButton').removeAttr('disabled');
+
+        this.drawer.disable();
         
         this.currEditable = -1;
     }
