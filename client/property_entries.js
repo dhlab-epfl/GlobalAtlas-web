@@ -10,6 +10,7 @@ function PropertyEntries(tableID){
     this.properties   = [];
     this.tableID      = '#' + tableID;
     this.currEditable = -1;
+    this.drawer       = new Drawer();
 };
 
 
@@ -179,7 +180,7 @@ PropertyEntries.prototype.populateSelect = function(selectID, index, currValue){
                     }).attr('selected', true);
                 },
                 error: function( jqXHR, textStatus, errorThrown ){
-                    console.log('EntityObject: error getting property types!\n'+jqXHR.responseText);
+                    console.log('EntityObject: error getting property types! \n'+jqXHR.responseText);
                 } 
             });
         break;
@@ -203,7 +204,7 @@ PropertyEntries.prototype.setValueEditTool = function(type, index){
 
     switch(type) {
         case 'geom': 
-            tool = '' ;
+            tool = '<button id="propValue">Edit Geometry</button>';
             break;
 
 
@@ -223,7 +224,19 @@ PropertyEntries.prototype.setValueEditTool = function(type, index){
 
     }
 
+    // insert tool into HTML
     $("#propValue").replaceWith(tool);
+
+    // now that tool is loaded, the appropriate listeners need to be instantiated...
+    if(type == 'geom'){
+        //button listener
+        $("#propValue").click(function(){
+            var em   = EntityObject.entryManager
+            var geom = em.properties[index].value
+            em.drawer.loadGeometry(geom)
+        });
+    }
+    
 
 };
 
