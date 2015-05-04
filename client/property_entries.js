@@ -6,43 +6,37 @@
   * property table entry. 
   */
 function PropertyEntries(tableID){
-    this.entries      = [];
     this.properties   = [];
     this.tableID      = '#' + tableID;
     this.currEditable = -1;
     this.drawer       = new Drawer();
+    this.creatingProp = false;
 };
 
 
 /*
- * Resets the property table: remove old content, fill with new. 
+ * shows properties in array
  */
-PropertyEntries.prototype.reset = function(properties){
-    this.entries = [];
+PropertyEntries.prototype.showNew = function(properties){
     this.properties = properties;
     this.currEditable = -1;
+
+    $('.editButton').removeAttr('disabled');
+    $("#add-property").removeAttr('disabled');
     
+    //Creates HTML code for a property entry. Saves it in array. 
+    // --> first create empty entry, then fill it with this.setEntry.
     for (i in properties){
-        this.createNewEntry(i)
+        $(this.tableID).append('<tr id="propEntry'+ i +'"/>')
+        this.putUneditableEntryIntoRow(i);
     }
-}
-
-
-/*
- * Creates HTML code for a property entry. Saves it in array. 
- * --> first create empty entry, then fill it with this.setEntry.
- */
-PropertyEntries.prototype.createNewEntry = function(index){
-    this.entries.push('');
-    $(this.tableID).append('<tr id="propEntry'+ index +'"/>')
-    this.setUneditable(index);
 }
 
 
 /*
  * Sets a given entry in the table uneditable.
  */
-PropertyEntries.prototype.setUneditable = function(index) {
+PropertyEntries.prototype.putUneditableEntryIntoRow = function(index) {
     var property = this.properties[index];
     var name     =  property.property_name;
     var start    = (property.computed_date_start?property.computed_date_start:'∞');
@@ -74,19 +68,19 @@ PropertyEntries.prototype.setUneditable = function(index) {
         </td>\
     </tr>';
 
-    this.entries[index] = entry;
     $('#propEntry'+index).replaceWith(entry);
 }
 
- 
+
+
 /*
  * Insert an editable row into the table. 
  */
-PropertyEntries.prototype.setEditable = function(index){
+PropertyEntries.prototype.putEditableEntryIntoRow = function(index){
     this.currEditable = index;
 
     var property = this.properties[index];
-    var name     =  property.property_name;
+    var type     =  property.property_name;
     var start    = (property.computed_date_start?property.computed_date_start:'∞');
     var date     = (property.date?property.date:'∞');
     var end      = (property.computed_date_end?property.computed_date_end:"∞");
@@ -120,24 +114,30 @@ PropertyEntries.prototype.setEditable = function(index){
         </td>\
     </tr>';
 
-    this.entries[index] = editableEntry;
     $('#propEntry'+index).replaceWith(editableEntry);
 
-    //setup property type select...
-    this.populateSelect('propType', index, name);
+    //setup property type select if in creating mode. Set current property's type otherwise
+    if(this.creatingProp){
+        this.populateSelect('propType', index);
+    } else {
+        $('#propType').replaceWith(type);
+        //propertyManager can only be reached so complicatedly from inside listener:
+        EntityObject.propertyManager.setValueEditTool(type, index);
+    }
 }
 
 
 /*
  * Set an entry editable
  */
-PropertyEntries.prototype.enableEdit = function(index){
+PropertyEntries.prototype.setEditable = function(index){
     if(this.currEditable < 0){
         this.currEditable = index;
-        this.setEditable(index)
+        this.putEditableEntryIntoRow(index)
 
-        //only one property can be edited at a time.
+        //only one property can be edited at a time. 
         $('.editButton').attr("disabled","disaled")
+        $("#add-property").attr("disabled","disaled")
     } 
 }
 
@@ -147,10 +147,21 @@ PropertyEntries.prototype.enableEdit = function(index){
  */
 PropertyEntries.prototype.disableEdit = function(){
     if(this.currEditable >= 0){
-        this.setUneditable(this.currEditable)
+        this.putUneditableEntryIntoRow(this.currEditable)
 
-        //allow to edit all the props
+        //remove empty property.
+        if(this.creatingProp){
+            var toRemove = this.properties.length - 1;
+            this.properties.pop();
+            //$('#propEntry'+toRemove).replaceWith('');
+        }
+
+        //not in creating phase anymore...
+        this.creatingProp = false;
+
+        //allow to edit all the props and add a new one
         $('.editButton').removeAttr('disabled');
+        $("#add-property").removeAttr('disabled');
 
         this.drawer.disable();
         
@@ -160,9 +171,42 @@ PropertyEntries.prototype.disableEdit = function(){
 
 
 /*
+ * This method needs to be called when inspector is closed.
+ */
+PropertyEntries.prototype.reset = function(){
+    this.disableEdit();
+}
+
+
+/*
+ * Create new empty property (only locally) and set it editable.
+ */
+PropertyEntries.prototype.createNewProperty = function(){
+    //indicate that we're in the property creating phase
+    this.creatingProp = true;
+
+    //create empty property
+    var newProp = {property_name       : 'geom',
+                   computed_date_start : '',
+                   date                : '',
+                   computed_date_end   : '',
+                   value               : '',
+                   source_name         : ''};
+    this.properties.push(newProp);
+
+    var index = this.properties.length - 1;
+
+    //set it editable (first create empty table row, then replace it by editable row)
+    $(this.tableID).append('<tr id="propEntry'+ index +'"/>')
+    this.setEditable(index);
+}
+
+
+/*
  * Populates a table entrie's select. 
  */
-PropertyEntries.prototype.populateSelect = function(selectID, index, currValue){
+PropertyEntries.prototype.populateSelect = function(selectID, index){
+    var standardType = 'geom';
     switch(selectID){
         case 'propType': 
             $.ajax({
@@ -178,7 +222,7 @@ PropertyEntries.prototype.populateSelect = function(selectID, index, currValue){
 
                     //set current value selected
                     $("#propType option").filter(function() {
-                        return $(this).text() == currValue; 
+                        return $(this).text() == standardType; 
                     }).attr('selected', true);
                 },
                 error: function( jqXHR, textStatus, errorThrown ){
@@ -187,12 +231,14 @@ PropertyEntries.prototype.populateSelect = function(selectID, index, currValue){
             });
         break;
     }
-    //set correct edit tool
-    EntityObject.entryManager.setValueEditTool(currValue, index);
+    //set correct edit tool at the beginning
+    this.setValueEditTool(standardType, index);
 
-    //Change listener for property type select box: Set according edit tool. 
+    //Set according edit tool when other type is selected.
     $("#propType").change(function(){
-        EntityObject.entryManager.setValueEditTool($(this).find("option:selected").text(), index);
+        //propertyManager can only be reached so complicatedly from inside listener:
+        EntityObject.propertyManager
+            .setValueEditTool($(this).find("option:selected").text(), index);
     });
 };	
 
@@ -206,7 +252,11 @@ PropertyEntries.prototype.setValueEditTool = function(type, index){
 
     switch(type) {
         case 'geom': 
-            tool = '<button id="propValue">Edit Geometry</button>';
+            if(this.creatingProp) {
+                tool = '<button id="propValue">Create Geometry</button>';
+            } else {
+                tool = '<button id="propValue">Edit Geometry</button>';
+            }
             break;
 
 
@@ -233,9 +283,10 @@ PropertyEntries.prototype.setValueEditTool = function(type, index){
     if(type == 'geom'){
         //button listener
         $("#propValue").click(function(){
-            var em   = EntityObject.entryManager
-            var geom = em.properties[index].value
-            em.drawer.loadGeometry(geom)
+            //propertyManager can only be reached so complicatedly from inside listener:
+            propMgr = EntityObject.propertyManager
+            var geom = propMgr.properties[index].value
+            propMgr.drawer.loadGeometry(geom)
         });
     }
     

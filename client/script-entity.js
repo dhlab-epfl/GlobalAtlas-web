@@ -1,10 +1,10 @@
 
 
-EntityObject.loadedEntity   = null;
-EntityObject.currName       = '';
-EntityObject.currType       = '';
-EntityObject.currProperties = {};
-EntityObject.entryManager   = null;
+EntityObject.loadedEntity    = null;
+EntityObject.currName        = '';
+EntityObject.currType        = '';
+EntityObject.currProperties  = {};
+EntityObject.propertyManager = null;
 
 
 EntityObject.init = function(){
@@ -16,13 +16,11 @@ EntityObject.init = function(){
 
     $('#inspector #hidebox').click(EntityObject.closeInspector);
 
-    EntityObject.entryManager = new PropertyEntries('inspector_properties');
+    EntityObject.propertyManager = new PropertyEntries('inspector_properties');
 
     $("#add-property").click(function() {
-        EntityObject.hideInspector()
-        CreatorObject.load(EntityObject.loadedEntity, EntityObject.currName);
+        EntityObject.propertyManager.createNewProperty();
     });
-
 }
 
 EntityObject.nextGeom = function(direction, propertyIndex){
@@ -65,7 +63,8 @@ EntityObject.showInspector = function(){
 
 EntityObject.closeInspector = function(e){
     e.stopPropagation();
-    EntityObject.loadedEntity=null;
+    EntityObject.propertyManager.reset();
+    EntityObject.loadedEntity = null;
     $('#inspector').hide();
     return false;
 }
@@ -79,11 +78,11 @@ EntityObject.loadEntity = function(newEntity){
  * Makes a property entry editable.
  */
 EntityObject.editProp = function(index){
-    EntityObject.entryManager.enableEdit(index)
+    EntityObject.propertyManager.setEditable(index)
 }
 
 EntityObject.cancelEdit = function(){
-    EntityObject.entryManager.disableEdit()
+    EntityObject.propertyManager.disableEdit()
 }
 
 EntityObject.reloadData = function(){
@@ -125,7 +124,7 @@ EntityObject.reloadData = function(){
             $('#inspector').show();
             $('#inspector_properties').empty();
 
-            EntityObject.entryManager.reset(data);
+            EntityObject.propertyManager.showNew(data);
 
         },
         error: function( jqXHR, textStatus, errorThrown ){
