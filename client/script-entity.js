@@ -9,39 +9,14 @@ EntityObject.entryManager   = null;
 
 EntityObject.init = function(){
 
-	/* GET THE HASH */
-
-	EntityObject.loadedEntity = (hash['loadedEntity']?hash['loadedEntity']:null);
+    // GET THE HASH
+    EntityObject.loadedEntity = (hash['loadedEntity']?hash['loadedEntity']:null);
 
     $('#inspector').resizable({handles: 'w'});
 
     $('#inspector #hidebox').click(EntityObject.closeInspector);
 
     EntityObject.entryManager = new PropertyEntries('inspector_properties');
-
-    //Create edit button TODO: remove! 
-    /*$("#edit-button").button({
-        icons: {
-            primary: "ui-icon-pencil"
-        }
-	
-    })
-    .click(function() {
-        EditorObject.load(EntityObject.loadedEntity,
-                          EntityObject.currName, 
-                          EntityObject.currType, 
-                          EntityObject.currProperties);
-
-        //TODO: really...?
-        EntityObject.loadedEntity=null;
-        $('#inspector').hide();
-    });*/
-
-    $("#succ_rel").selectmenu()
-      .selectmenu("option", "width", "35%")
-      .selectmenu( "menuWidget" )
-        .addClass( "overflow" );
-
 
     $("#add-property").click(function() {
         EntityObject.hideInspector()

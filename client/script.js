@@ -15,8 +15,6 @@ $(function(){
     MapObject.init();
     SliderObject.init();
     EntityObject.init();
-    CreatorObject.init();
-    //EditorObject.init();
 });
 
 function setHash(key, value){
