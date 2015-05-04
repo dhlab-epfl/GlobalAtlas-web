@@ -55,9 +55,19 @@ PropertyEntries.prototype.setUneditable = function(index) {
     <tr id="propEntry'+ index +'">\
         <td class="key">'+ name +'</td>\
         <td class="date">\
-            <span class="bounds">'+ start + '&#8239;&lt;&#8239;</span>\
-            <a href="javascript:MapObject.setDate('+ date +');">'+ date +'</a>\
-            <span class="bounds">&#8239;&lt;&#8239;'+ end +'</span>\
+            <span class="bounds">\
+                '+ start + '\
+                <a href="javascript:EntityObject.nextGeom(-1,'+ index +');">\
+                    &#8239;&lt;&#8239;\
+                </a>\
+            </span>\
+                '+ date +'\
+            <span class="bounds">\
+                <a href="javascript:EntityObject.nextGeom(1,'+ index +');">\
+                &#8239;&lt;&#8239;\
+                </a>\
+                '+ end +'\
+            </span>\
         </td>\
         <td class="value">'+ value +'</td>\
         <td class="source">['+ source +']</td>\
@@ -85,7 +95,6 @@ PropertyEntries.prototype.setEditable = function(index){
     var value    =  property.value;
     var source   =  property.source_name;
 
-    //TODO: replace propType with select menu
     var editableEntry = '\
     <tr id="propEntry'+ index +'">\
         <td class="key">\
@@ -95,17 +104,60 @@ PropertyEntries.prototype.setEditable = function(index){
             <input id="date" type="number" value="'+ date +'"/>\
         </td>\
         <td class="value">'+ value +'</td>\
-        <td class="source">['+ source +']</td>\
+        <td class="source">\
+            <input type="text" value="'+ source +'"</td>\
         <td>\
             <button onclick="EntityObject.cancelEdit();">❌</button>\
             <button onclick="EntityObject.saveProp('+ index +');"></button>\
         </td>\
     </tr>';
 
+    var editableEntry = '\
+    <tr id="propEntry'+ index +'">\
+        <td colspan="5">\
+            <div class="editable-property-entry">\
+                <div>\
+                    <select id="propType"/>\
+                    <div id="propValue" style="display:inline">'+ value +'</div>\
+                </div>\
+                <div style="display:inline">\
+                    <label for="date">This property was valid in </label>\
+                    <input id="date" type="number" value="'+ date +'"/>\
+                    <input id="startCheck" type="checkbox">\
+                        This was the start of its validity.\
+                    </input>\
+                </div>\
+                <div>\
+                    <label for="date">Source: </label>\
+                    <input type="text" value="'+ source +'"</td>\
+                </div>\
+                <div style="float:right">\
+                    <button onclick="EntityObject.cancelEdit();">❌ Cancel</button>\
+                    <button onclick="EntityObject.saveProp('+ index +');"> Save</button>\
+                </div>\
+            </div>\
+        </td>\
+    </tr>';
+
     this.entries[index] = editableEntry;
     $('#propEntry'+index).replaceWith(editableEntry);
 
+    //setup property type select...
     this.populateSelect('propType', index, name);
+}
+
+
+/*
+ * Set an entry editable
+ */
+PropertyEntries.prototype.enableEdit = function(index){
+    if(this.currEditable < 0){
+        this.currEditable = index;
+        this.setEditable(index)
+
+        //only one property can be edited at a time.
+        $('.editButton').attr("disabled","disaled")
+    } 
 }
 
 
@@ -121,20 +173,6 @@ PropertyEntries.prototype.disableEdit = function(){
         
         this.currEditable = -1;
     }
-}
-
-
-/*
- * Set an entry editable
- */
-PropertyEntries.prototype.enableEdit = function(index){
-    if(this.currEditable < 0){
-        this.currEditable = index;
-        this.setEditable(index)
-
-        //only one property can be edited at a time.
-        $('.editButton').attr("disabled","disaled")
-    } 
 }
 
 
@@ -165,16 +203,27 @@ PropertyEntries.prototype.populateSelect = function(selectID, index, currValue){
                } 
            });
        break;
-
    }
 
-}
+   
+   this.setValueEditTool();
+};	
 
 
 
+/*
+ * sets the property value edit tool according to chosen property type.
+ */
+PropertyEntries.prototype.setValueEditTool = function(selectID, index, currValue){
+        /*switch($(this).find("option:selected").text()) {
+            case 'geom': //TODO: drawing stuff
+alert('geom')
+                break;
 
+        }*/
+alert('geom')
 
-
+};
 
 
 
