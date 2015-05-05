@@ -210,46 +210,46 @@ EOT;
 	/************************************************************/
 	
 	case 'create_new_property':
-	ini_set('display_errors', 'on');
 
 		$default_params = [
-                        'entityID'     => 0,
-			'name'         => '',
-                        'propertyType' => 1,
-			'date'         => 0,
-			'value'        => '',
-			'sources'      => 'no source',
-			'description'  => 'no description'
+                        'entityID'      => 0,
+                        'propertyType'  => 1,
+			'date'          => 0,
+			'interpolation' => 'default',
+			'value'         => '',
+			'source'        => 'no source'
 		];
 
 
 		$sql = <<<EOT
-WITH update_e AS (
-        UPDATE vtm.entities
-           SET name = :name
-         WHERE id = :entityID),
+WITH insert AS (
+	INSERT INTO vtm.sources (name)
+        SELECT :source
+         WHERE NOT EXISTS (
+                   SELECT id 
+                     FROM vtm.sources
+                    WHERE name = :source)),
      source AS (
-	INSERT INTO vtm.sources(name)
-	     VALUES (:sources)
-	  RETURNING id)
+        SELECT id 
+          FROM vtm.sources
+         WHERE name = :source)
+         
 
 INSERT INTO vtm.properties(entity_id, 
-			property_type_id, 
-			description,
-			date, 
-			value, 
-			source_id)
+			   property_type_id, 
+			   date, 
+                           interpolation,
+			   value, 
+			   source_id)
      VALUES (:entityID, 
 	     :propertyType,
-	     :description,
 	     :date,
+             :interpolation,
 	     :value, 
 	     (SELECT id FROM source))
 
 EOT;
 		echo query($sql, $_GET, $default_params);
-	
-		flush(); ob_flush();
 	break;
 
 
@@ -304,6 +304,27 @@ EOT;
 
 
 	/************************************************************/
+	/* CALCULATE_DATES                                          */
+	/* Returns all possible types for properties                */
+	/************************************************************/
+
+	case 'calculate_dates':
+		ini_set('display_errors', 'on');
+		$default_params = [
+			'entityID'     => 0,
+                        'propertyType' => 1,];
+
+		$sql = 'SELECT vtm.compute_date_for_property_of_entity(:entityID, :propertyType);';
+
+		echo query($sql, $_GET, $default_params);
+
+		flush(); ob_flush();
+
+        break;
+
+
+
+	/************************************************************/
 	/* GET_PROPERTY_TYPES                                       */
 	/* Returns all possible types for properties                */
 	/************************************************************/
@@ -311,14 +332,13 @@ EOT;
 	case 'get_property_types':
 		ini_set('display_errors', 'on');
 		$default_params = [];
-	$sql = <<<EOT
+		$sql = <<<EOT
 SELECT id, name, description, type
   FROM vtm.properties_types
 EOT;
-	echo query($sql, $_GET, $default_params);
+		echo query($sql, $_GET, $default_params);
 
         break;
-
 
 
 

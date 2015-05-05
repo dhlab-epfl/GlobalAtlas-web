@@ -176,22 +176,71 @@ PropertyEntries.prototype.cancelEdit = function(){
  * This method gets called when edit or new property gets saved.
  */
 PropertyEntries.prototype.saveProperty = function(){
-    var drawing = this.drawer.currDrawing
 
-    console.log('CreatorObject: savaing new entity...');
-
-    var query    = 'create_new_entity';
-    var entityID = EntityObject.loadedEntity
-    var shape    = this.drawer.currDrawing
+    var type     = Number($("#propType option:selected").val());
+    var entityID = Number(EntityObject.loadedEntity);
+    var value    = '';
     var year     = Number($("#valid-at").val());
-    //var description = $("#info-input").val();
-    var isStart  = $("#startCheck").is(":checked")?'start':''
-    var source   = $("#source").val()
+    var isStart  = $("#startCheck").is(":checked")?'start':'default';
+    var source   = $("#source").val();
 
-    console.log(query + "\n" + entityID + "\n" + shape + "\n" + year + "\n" + isStart + "\n" + source);
+    if($("#propType option:selected").text() == 'geom'){
+        value = this.drawer.currDrawing;
+    } else {
+        value = $("#setValue").val()
+    }
+
+
+    //saving property
+    if(this.creatingProp){
+        console.log('Property Manager: savaing new property...');
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: settings_api_url,
+            data: {'query'         : 'create_new_property',
+                   'entityID'      : entityID,
+                   'propertyType'  : type,
+                   'value'         : value,
+                   'date'          : year,
+                   'interpolation' : isStart,
+                   'source'        : $("#source").val()},
+
+            success: function(data,textStatus,jqXHR){
+                console.log("Property Manager: Source '"+ source +"' created.");
+            },
+            error: function( jqXHR, textStatus, errorThrown ){
+                console.log('Property Manager: Error saving new source!\n' + jqXHR.responseText);
+            }
+        });
+    }
+
+
+    //calculate start/end date of created/edited property
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: settings_api_url,
+        data: {'query'         : 'calculate_dates',
+               'entityID'      : entityID,
+               'propertyType'  : type},
+
+        success: function(data,textStatus,jqXHR){
+            console.log("Property Manager: Start and end dates of calculated.");
+        },
+        error: function( jqXHR, textStatus, errorThrown ){
+            console.log('Property Manager: Error calculating dates!\n' + jqXHR.responseText);
+        }
+    });
+
 
     //finally, reload map for making changes visible
     MapObject.reloadData();
+
+    //not creating anymore
+    this.creatingProp = false;
+
+    this.drawer.disable();
 }
 
 
@@ -228,12 +277,12 @@ PropertyEntries.prototype.createNewProperty = function(){
 
 
 /*
- * Populates a table entrie's select. 
+ * Populates a table entry's select. 
  */
 PropertyEntries.prototype.populateSelect = function(selectID, index){
-    var standardType = 'geom';
     switch(selectID){
         case 'propType': 
+            var standardType = 'geom';
             $.ajax({
                 type: "GET",
                 dataType: "json",

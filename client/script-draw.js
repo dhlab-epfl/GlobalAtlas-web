@@ -65,7 +65,6 @@ Drawer.prototype.disable = function(){
  * Loads geometry into a leaflet layer such that it can be edited.
  */
 Drawer.prototype.loadGeometry = function(geometry){
-console.log("uhu!");
     //load the shape into a leaflet layer
     //split at '(' or '((' or '((('
     var typeValue = geometry.split(/[\(]+/);
@@ -177,6 +176,5 @@ toDBGeomFormat = function(layer, type){
         case 'polygon':
             currDrawing = "POLYGON((" + currDrawing + firstPoint + "))";
     }
-console.log('converted: ' + currDrawing);
     return currDrawing;
 }
