@@ -110,7 +110,7 @@ Drawer.prototype.loadGeometry = function(geometry){
  */
 Drawer.prototype.createGeometry = function(type){
     switch(type){
-        case 'point': 
+        case 'marker': 
             this.pen = new L.Draw.Marker(MapObject.map, MapObject.drawControl);
             break;
 
@@ -124,6 +124,16 @@ Drawer.prototype.createGeometry = function(type){
     }
     this.pen.enable();
 }
+
+
+
+/*
+ * Calls toDBGeomFormat with correct arguments.
+ */
+Drawer.prototype.getEditedGeom = function(){
+return toDBGeomFormat(this.drawLayer, this.currType)
+}
+
 
 
 /*
@@ -154,6 +164,7 @@ toDBGeomFormat = function(layer, type){
     currDrawing = "";
     firstPoint = "";
     for(i in coordinates) {
+console.log(coordinates[i])
         latLng = coordinates[i].split(" ");
         currDrawing += "," + latLng[1] + " " + latLng[0];
         

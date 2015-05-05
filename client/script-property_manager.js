@@ -177,23 +177,32 @@ PropertyEntries.prototype.cancelEdit = function(){
  */
 PropertyEntries.prototype.saveProperty = function(){
 
-    var type     = Number($("#propType option:selected").val());
-    var entityID = Number(EntityObject.loadedEntity);
-    var value    = '';
-    var year     = Number($("#valid-at").val());
-    var isStart  = $("#startCheck").is(":checked")?'start':'default';
-    var source   = $("#source").val();
+    var entityID   = Number(EntityObject.loadedEntity);
+    var propertyID = this.properties[this.currEditable].property_id;
+    var type       = Number($("#propType option:selected").val());
+    var value      = '';
+    var year       = Number($("#valid-at").val());
+    var isStart    = $("#startCheck").is(":checked")?'start':'default';
+    var source     = $("#source").val();
 
-    if($("#propType option:selected").text() == 'geom'){
-        value = this.drawer.currDrawing;
+    if(this.creatingProp){
+        if($("#propType option:selected").text() == 'geom'){
+            value = this.drawer.currDrawing;
+        } else {
+            value = $("#setValue").val()
+        }
     } else {
-        value = $("#setValue").val()
+        value = this.drawer.getEditedGeom()
+console.log(value)
+        if(value == ''){
+            value = this.properties[this.currEditable].value
+        }
     }
 
 
-    //saving property
+    //saving property (create new or update existing)
     if(this.creatingProp){
-        console.log('Property Manager: savaing new property...');
+        console.log('Property Manager: Savaing new property...');
         $.ajax({
             type: "GET",
             dataType: "json",
@@ -204,7 +213,7 @@ PropertyEntries.prototype.saveProperty = function(){
                    'value'         : value,
                    'date'          : year,
                    'interpolation' : isStart,
-                   'source'        : $("#source").val()},
+                   'source'        : source},
 
             success: function(data,textStatus,jqXHR){
                 console.log("Property Manager: Source '"+ source +"' created.");
@@ -213,6 +222,30 @@ PropertyEntries.prototype.saveProperty = function(){
                 console.log('Property Manager: Error saving new source!\n' + jqXHR.responseText);
             }
         });
+
+    } else {
+        console.log("Property Manager: Saving property change..." + propertyID);
+	$.ajax({
+            type: "GET",
+            dataType: "json",
+            url: settings_api_url,
+            data: {'query'         : 'update_property',
+                   'propertyID'    : propertyID,
+                   'date'          : year,
+                   'interpolation' : isStart,
+                   'value'         : value,
+                   'source'        : source},
+
+            success: function(data,textStatus,jqXHR){
+                console.log('Property Manager: Saved change of property #'+ propertyID);
+                MapObject.reloadData();
+            },
+            error: function( jqXHR, textStatus, errorThrown ){
+                console.log('Property Manager: Error saving changes!\n' + jqXHR.responseText);
+            }
+        });
+
+
     }
 
 
@@ -237,10 +270,19 @@ PropertyEntries.prototype.saveProperty = function(){
     //finally, reload map for making changes visible
     MapObject.reloadData();
 
-    //not creating anymore
+    //set row uneditable
+    this.putUneditableEntryIntoRow(this.currEditable)
+
+    //not in creating phase anymore...
     this.creatingProp = false;
 
+    //allow to edit all the props and add a new one
+    $('.editButton').removeAttr('disabled');
+    $("#add-property").removeAttr('disabled');
+
     this.drawer.disable();
+        
+    this.currEditable = -1;
 }
 
 
@@ -374,7 +416,7 @@ PropertyEntries.prototype.setValueEditTool = function(type, index){
             //Enable drawing when clicking on one of the Draw-radios
             $("#dRadioPoint").click(function(){
                 $("#draw-radio").buttonset("disable");
-                EntityObject.propertyManager.drawer.createGeometry('point');
+                EntityObject.propertyManager.drawer.createGeometry('marker');
             });
             $("#dRadioLine").click(function(){
                 $("#draw-radio").buttonset("disable");
@@ -390,6 +432,9 @@ PropertyEntries.prototype.setValueEditTool = function(type, index){
                 //propertyManager can only be reached so complicatedly from inside listener:
                 propMgr = EntityObject.propertyManager
                 var geom = propMgr.properties[index].value;
+
+                //set the editGeom button disabled
+                $("#editGeom").attr("disabled","disaled");
         
                 //set geometry editable
                 propMgr.drawer.loadGeometry(geom);

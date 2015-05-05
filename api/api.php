@@ -255,44 +255,42 @@ EOT;
 
 
 	/************************************************************/
-	/* UPDATE_ENTITY                               */
+	/* UPDATE_PROPERTY                                          */
 	/* saves changes of an entity (a property and it's assigned */
 	/* source                                                   */
 	/************************************************************/
 
-	case 'update_entity':
+	case 'update_property':
 		ini_set('display_errors', 'on');
 
 		$default_params = [
-                        'entityID'     => 0,
-			'name'         => '',
-                        'propertyType' => 1,
-			'date'         => 0,
-			'value'        => '',
-			'sources'      => 'no source',
-			'description'  => 'no description',
-                        'propertyID'   => 0
+                        'propertyID'    => 0,
+			'date'          => 0,
+			'interpolation' => 'default',
+			'value'         => '',
+			'source'        => 'no source'
 		];
 
 		$sql = <<<EOT
-WITH update_e AS (
-        UPDATE vtm.entities
-           SET name = :name
-         WHERE id = :entityID), 
-     update_p AS (
-        UPDATE vtm.properties
-           SET property_type_id = :propertyType,
-               date             = :date,
-               value            = :value,
-               description      = :description
-         WHERE id = :propertyID
-     RETURNING source_id)
- 
-		break;
+WITH update_s AS (
+          INSERT INTO vtm.sources (name)
+          SELECT :source
+           WHERE NOT EXISTS (
+                     SELECT id 
+                       FROM vtm.sources
+                      WHERE name = :source)),
+       source AS (
+          SELECT id 
+            FROM vtm.sources
+           WHERE name = :source)
 
-UPDATE vtm.sources
-   SET name = :sources
- WHERE id = (SELECT source_id FROM update_p)
+
+UPDATE vtm.properties
+   SET date          = :date,
+       value         = :value,
+       interpolation = :interpolation,
+       source_id     = (SELECT id FROM source)
+ WHERE id = :propertyID
 EOT;
 
 
@@ -309,7 +307,6 @@ EOT;
 	/************************************************************/
 
 	case 'calculate_dates':
-		ini_set('display_errors', 'on');
 		$default_params = [
 			'entityID'     => 0,
                         'propertyType' => 1,];
@@ -317,9 +314,6 @@ EOT;
 		$sql = 'SELECT vtm.compute_date_for_property_of_entity(:entityID, :propertyType);';
 
 		echo query($sql, $_GET, $default_params);
-
-		flush(); ob_flush();
-
         break;
 
 
