@@ -10,6 +10,8 @@ EntityObject.init = function(){
 
     $('#inspector #hidebox').click(EntityObject.closeInspector);
 
+    $('#inspector').resizable({handles: 'w'});
+
 }
 
 EntityObject.setHash = function(){
