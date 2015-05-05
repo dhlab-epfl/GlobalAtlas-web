@@ -134,6 +134,7 @@ EOT;
 		$sql = <<<EOT
 SELECT 	date,
                 prop.id as property_id,
+                prop.interpolation,
 		value as value,
 		computed_date_start,
 		computed_date_end,

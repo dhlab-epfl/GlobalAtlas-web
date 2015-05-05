@@ -118,6 +118,11 @@ PropertyEntries.prototype.putEditableEntryIntoRow = function(index){
 
     $('#propEntry'+index).replaceWith(editableEntry);
 
+    //set startCheck checked if date is start date
+    if(property.interpolation == 'start'){
+        $("#startCheck").prop('checked', true);
+    }
+
     //setup property type select if in creating mode. Set current property's type otherwise
     if(this.creatingProp){
         this.populateSelect('propType', index);
@@ -193,7 +198,6 @@ PropertyEntries.prototype.saveProperty = function(){
         }
     } else {
         value = this.drawer.getEditedGeom()
-console.log(value)
         if(value == ''){
             value = this.properties[this.currEditable].value
         }
