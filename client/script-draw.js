@@ -25,8 +25,11 @@ function Drawer(){
         var type = e.layerType,
             layer = e.layer;
 
-        //get the drawing's correct format 
-        this.currDrawing = toDBGeomFormat(layer, type)
+        //get the drawing's correct format and save it
+        EntityObject.propertyManager.drawer.currDrawing = toDBGeomFormat(layer, type);
+
+        //save the drawed geom so that it can be removed from the map later.
+        EntityObject.propertyManager.drawer.drawLayer = layer;
 
         MapObject.map.addLayer(layer);
     });
@@ -62,7 +65,7 @@ Drawer.prototype.disable = function(){
  * Loads geometry into a leaflet layer such that it can be edited.
  */
 Drawer.prototype.loadGeometry = function(geometry){
-
+console.log("uhu!");
     //load the shape into a leaflet layer
     //split at '(' or '((' or '((('
     var typeValue = geometry.split(/[\(]+/);
@@ -174,6 +177,6 @@ toDBGeomFormat = function(layer, type){
         case 'polygon':
             currDrawing = "POLYGON((" + currDrawing + firstPoint + "))";
     }
-
+console.log('converted: ' + currDrawing);
     return currDrawing;
 }

@@ -96,15 +96,15 @@ PropertyEntries.prototype.putEditableEntryIntoRow = function(index){
                     <div id="propValue" style="display:inline">'+ value +'</div>\
                 </div>\
                 <div style="display:inline">\
-                    <label for="date">This property was valid in </label>\
-                    <input id="date" type="number" value="'+ date +'"/>\
+                    <label for="valid-at">This property was valid in </label>\
+                    <input id="valid-at" type="number" value="'+ date +'"/>\
                     <input id="startCheck" type="checkbox">\
                         This was the start of its validity.\
                     </input>\
                 </div>\
                 <div>\
-                    <label for="date">Source: </label>\
-                    <input type="text" value="'+ source +'"</td>\
+                    <label for="source">Source: </label>\
+                    <input id="source" type="text" value="'+ source +'"</td>\
                 </div>\
                 <div style="float:right">\
                     <button onclick="EntityObject.cancelEdit();">❌ Cancel</button>\
@@ -176,9 +176,19 @@ PropertyEntries.prototype.cancelEdit = function(){
  * This method gets called when edit or new property gets saved.
  */
 PropertyEntries.prototype.saveProperty = function(){
-    var drawing = this.drawer.currDrawingz
-    console.log(drawing)
+    var drawing = this.drawer.currDrawing
 
+    console.log('CreatorObject: savaing new entity...');
+
+    var query    = 'create_new_entity';
+    var entityID = EntityObject.loadedEntity
+    var shape    = this.drawer.currDrawing
+    var year     = Number($("#valid-at").val());
+    //var description = $("#info-input").val();
+    var isStart  = $("#startCheck").is(":checked")?'start':''
+    var source   = $("#source").val()
+
+    console.log(query + "\n" + entityID + "\n" + shape + "\n" + year + "\n" + isStart + "\n" + source);
 
     //finally, reload map for making changes visible
     MapObject.reloadData();
