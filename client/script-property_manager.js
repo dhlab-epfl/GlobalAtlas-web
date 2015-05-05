@@ -198,10 +198,14 @@ PropertyEntries.prototype.saveProperty = function(){
         }
     } else {
         value = this.drawer.getEditedGeom()
+console.log('\t'+value == '');
         if(value == ''){
-            value = this.properties[this.currEditable].value
+            value = $("#setValue").val()
+        } else {
         }
     }
+
+console.log(value)
 
 
     //saving property (create new or update existing)
@@ -242,7 +246,6 @@ PropertyEntries.prototype.saveProperty = function(){
 
             success: function(data,textStatus,jqXHR){
                 console.log('Property Manager: Saved change of property #'+ propertyID);
-                MapObject.reloadData();
             },
             error: function( jqXHR, textStatus, errorThrown ){
                 console.log('Property Manager: Error saving changes!\n' + jqXHR.responseText);

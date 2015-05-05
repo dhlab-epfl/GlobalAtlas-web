@@ -129,9 +129,11 @@ Drawer.prototype.createGeometry = function(type){
 
 /*
  * Calls toDBGeomFormat with correct arguments.
+ * Returns '' if nothing has been edited.
  */
 Drawer.prototype.getEditedGeom = function(){
-return toDBGeomFormat(this.drawLayer, this.currType)
+    if(this.drawLayer == null) return '';
+    return toDBGeomFormat(this.drawLayer, this.currType)
 }
 
 
@@ -150,6 +152,7 @@ toDBGeomFormat = function(layer, type){
         var points = layer.getLatLngs();
         for(i = 0; i < points.length; i++){
             currDrawing = currDrawing.concat("," + points[i].toString())
+
         }
     }
     
@@ -157,14 +160,13 @@ toDBGeomFormat = function(layer, type){
     currDrawing = currDrawing.replace(/,/g, '')
     currDrawing = currDrawing.replace(/\)/g, '')
     currDrawing = currDrawing.replace(/LatLng\(/g, ',')
-    currDrawing = currDrawing.substring(1, currDrawing.length-1);
+    currDrawing = currDrawing.substring(1, currDrawing.length);
     
     //invert the coordinates from (Lat, Long) to (Long, Lat)
     coordinates = currDrawing.split(",");
     currDrawing = "";
     firstPoint = "";
     for(i in coordinates) {
-console.log(coordinates[i])
         latLng = coordinates[i].split(" ");
         currDrawing += "," + latLng[1] + " " + latLng[0];
         
@@ -172,8 +174,8 @@ console.log(coordinates[i])
         if(i == 0) firstPoint = currDrawing;
     }
 
-    //remove last comma
-    currDrawing = currDrawing.substring(1, currDrawing.length-1);
+    //remove first comma
+    currDrawing = currDrawing.substring(1, currDrawing.length);
 
     //set correct geometric type
     switch(type){
@@ -187,5 +189,6 @@ console.log(coordinates[i])
         case 'polygon':
             currDrawing = "POLYGON((" + currDrawing + firstPoint + "))";
     }
+
     return currDrawing;
 }

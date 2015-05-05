@@ -211,6 +211,7 @@ EOT;
 	/************************************************************/
 	
 	case 'create_new_property':
+		ini_set('display_errors', 'on');
 
 		$default_params = [
                         'entityID'      => 0,
@@ -251,6 +252,7 @@ INSERT INTO vtm.properties(entity_id,
 
 EOT;
 		echo query($sql, $_GET, $default_params);
+		flush(); ob_flush();
 	break;
 
 
