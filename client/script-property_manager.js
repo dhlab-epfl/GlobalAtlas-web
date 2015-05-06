@@ -21,6 +21,10 @@ PropertyEntries.prototype.showNew = function(properties){
     this.properties = properties;
     this.currEditable = -1;
 
+    //when clicking an entity on map while drawing, inspector is reloaded. Drawing needs to be 
+    //disabled in this case.
+    this.drawer.disable();
+
     $('.editButton').removeAttr('disabled');
     $("#add-property").removeAttr('disabled');
     
@@ -198,14 +202,11 @@ PropertyEntries.prototype.saveProperty = function(){
         }
     } else {
         value = this.drawer.getEditedGeom()
-console.log('\t'+value == '');
         if(value == ''){
             value = $("#setValue").val()
         } else {
         }
     }
-
-console.log(value)
 
 
     //saving property (create new or update existing)
@@ -251,8 +252,6 @@ console.log(value)
                 console.log('Property Manager: Error saving changes!\n' + jqXHR.responseText);
             }
         });
-
-
     }
 
 

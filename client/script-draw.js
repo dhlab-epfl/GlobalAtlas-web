@@ -51,12 +51,17 @@ Drawer.prototype.disable = function(){
 
 
     if(this.drawLayer != null){
-        MapObject.map.removeLayer(this.drawLayer);
+        if(this.drawLayer.snapediting != null){
+            this.drawLayer.snapediting.disable()
+            this.drawLayer.snapediting = null;
+        }
         this.drawLayer.editing.disable();
+        MapObject.map.removeLayer(this.drawLayer);
     }
-    this.currType     = '';
+
+    this.currType    = '';
     this.currDrawing = '';
-    this.drawLayer    = null;
+    this.drawLayer   = null;
 }
 
 
@@ -81,26 +86,33 @@ Drawer.prototype.loadGeometry = function(geometry){
         newPoints[i] = [Number(lngLat[1]), Number(lngLat[0])];
     }
 
-    //create draw layer and remember it's type...
+    //create draw layer, add snap and remember it's type...
     switch(typeValue[0]){
         case "POINT": 
             this.drawLayer = L.marker(newPoints[0]).addTo(MapObject.map);
+            this.drawLayer.snapediting = new L.Handler.MarkerSnap(MapObject.map, this.drawLayer, {snapDistance: 1000});
             this.currType = 'marker';
             break;
 
         case "LINESTRING": 
             this.drawLayer = L.polyline(newPoints).addTo(MapObject.map);
+            this.drawLayer.snapediting = new L.Handler.PolylineSnap(MapObject.map, this.drawLayer, {snapDistance: 10000});
             this.currType = 'polyline';
             break;
 
         case "POLYGON":
         case "MULTIPOLYGON":
             this.drawLayer = L.polygon(newPoints).addTo(MapObject.map);
+            this.drawLayer.snapediting = new L.Handler.PolylineSnap(MapObject.map, this.drawLayer, {snapDistance: 100000});
             this.currType = 'polygon';
             break;
     }
 
+    /*this.drawLayer.snapediting.addGuideLayer(MapObject.jsonLayer);
+    this.drawLayer.snapediting.enable();*/
     this.drawLayer.editing.enable();
+console.log(MapObject.jsonLayer);
+console.log(this.drawLayer);
 }
 
 

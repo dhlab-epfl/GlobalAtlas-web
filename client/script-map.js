@@ -14,11 +14,11 @@ MapObject.init = function(){
 
 	MapObject.drawControl = new L.Control.Draw({
     		draw : {
-			position : 'topleft',
-			polygon : false,
-			polyline : false,
+			position  : 'topleft',
+			polygon   : {guideLayers: [MapObject.jsonLayer], snapDistance: 5},
+			polyline  : {guideLayers: [MapObject.jsonLayer], snapDistance: 5},
 			rectangle : false,
-			circle : false
+			circle    : false
 
     		},
     			edit : false
@@ -30,10 +30,11 @@ MapObject.init = function(){
 
 	/* ADD BACKGROUND LAYER */
 
-	var mapboxTiles = L.tileLayer('https://{s}.tiles.mapbox.com/v3/mapbox.world-blank-bright/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoib2RhbGFuZyIsImEiOiJxbTlhYVZFIn0.HQNXXBx1A7BFrQVcQqTEDA', {attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>', maxNativeZoom: 11, maxZoom: 25});
-    var emptyTiles = L.tileLayer('seamless_white_background_texture.jpg', {maxZoom: 25}).addTo(MapObject.map);
+	var mapboxTiles = L.tileLayer('https://{s}.tiles.mapbox.com/v3/mapbox.world-blank-bright/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoib2RhbGFuZyIsImEiOiJxbTlhYVZFIn0.HQNXXBx1A7BFrQVcQqTEDA', {attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>', maxNativeZoom: 11, maxZoom: 25}).addTo(MapObject.map);
+    var emptyTiles = L.tileLayer('seamless_white_background_texture.jpg', {maxZoom: 25});
+    var topoMap    = L.tileLayer('https://{s}.tiles.mapbox.com/v3/mapbox.natural-earth-2/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoib2RhbGFuZyIsImEiOiJxbTlhYVZFIn0.HQNXXBx1A7BFrQVcQqTEDA', {attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>', maxNativeZoom: 11, maxZoom: 25, opacity: 0.5});
 
-    L.control.layers({'Mapbox':mapboxTiles,'No background':emptyTiles},{},{position: 'bottomleft'}).addTo(MapObject.map);
+    L.control.layers({'Topographic Map': topoMap, 'Mapbox':mapboxTiles,'No background':emptyTiles},{},{position: 'bottomleft'}).addTo(MapObject.map);
 
 	/* ADD LAYER */
 
@@ -188,7 +189,7 @@ MapObject.styles = {
     'border':{
         weight: 2,
         opacity: 1.0,
-        dashArray: [4,4],
+        //dashArray: [4,4],
         color: '#000'
     }
 };
