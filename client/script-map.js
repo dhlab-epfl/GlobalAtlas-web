@@ -10,22 +10,7 @@ MapObject.ignoreTypes = [];
 
 MapObject.init = function(){
 
-	MapObject.map = L.map('map').setView([45.44, 12.33], 13);
-
-	MapObject.drawControl = new L.Control.Draw({
-    		draw : {
-			position  : 'topleft',
-			polygon   : {guideLayers: [MapObject.jsonLayer], snapDistance: 5},
-			polyline  : {guideLayers: [MapObject.jsonLayer], snapDistance: 5},
-			rectangle : false,
-			circle    : false
-
-    		},
-    			edit : false
-		});
-
-	MapObject.drawLayer = new L.FeatureGroup();;
-	MapObject.map.addLayer(MapObject.drawLayer);
+	MapObject.map = L.map('map', {drawControl: false}).setView([45.44, 12.33], 13);
 
 
 	/* ADD BACKGROUND LAYER */
@@ -36,9 +21,39 @@ MapObject.init = function(){
 
     L.control.layers({'Topographic Map': topoMap, 'Mapbox':mapboxTiles,'No background':emptyTiles},{},{position: 'bottomleft'}).addTo(MapObject.map);
 
+
 	/* ADD LAYER */
 
-	MapObject.jsonLayer = L.geoJson([],{style: MapObject.featureStyle, onEachFeature: MapObject.onEachFeature}).addTo(MapObject.map);
+	MapObject.jsonLayer = L.geoJson([],{style: MapObject.featureStyle, onEachFeature: 	MapObject.onEachFeature}).addTo(MapObject.map);
+	
+
+	/* CREATE DRAW CONTROL AND DRAWLAYER*/
+
+	var guideLayers = [MapObject.jsonLayer]
+
+	MapObject.drawControl = new L.Control.Draw({
+    		draw : {
+			polygon   : {guideLayers: guideLayers, snapDistance: 100},
+			polyline  : {guideLayers: guideLayers, snapDistance: 100},
+			marker    : {guideLayers: guideLayers, snapDistance: 100},
+			rectangle : false,
+			circle    : false
+    		},
+    		edit : true
+	});
+
+/*MapObject.drawControl = new L.Draw.Feature.SnapMixin()/*{
+			polygon   : {guideLayers: guideLayers, snapDistance: 100},
+			polyline  : {guideLayers: guideLayers, snapDistance: 100},
+			marker    : {guideLayers: guideLayers, snapDistance: 100},
+			rectangle : false,
+			circle    : false
+    		});*/
+
+	//MapObject.map.drawControl.setDrawingOptions(MapObject.drawControl)
+
+	MapObject.drawLayer = new L.FeatureGroup();
+	MapObject.map.addLayer(MapObject.drawLayer);
 
 
 	/* GET THE HASH */

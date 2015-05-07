@@ -171,3 +171,6 @@ div#map{
 #inspector .source{
 	text-align: right
 }
+.leaflet-editing-icon.marker-snapped {
+	background-color: yellow;
+}
