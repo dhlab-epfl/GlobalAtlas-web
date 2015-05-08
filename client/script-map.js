@@ -15,11 +15,11 @@ MapObject.init = function(){
 
 	/* ADD BACKGROUND LAYER */
 
-	var mapboxTiles = L.tileLayer('https://{s}.tiles.mapbox.com/v3/mapbox.world-blank-bright/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoib2RhbGFuZyIsImEiOiJxbTlhYVZFIn0.HQNXXBx1A7BFrQVcQqTEDA', {attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>', maxNativeZoom: 11, maxZoom: 25}).addTo(MapObject.map);
+	var mapboxTiles = L.tileLayer('https://{s}.tiles.mapbox.com/v3/mapbox.world-blank-bright/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoib2RhbGFuZyIsImEiOiJxbTlhYVZFIn0.HQNXXBx1A7BFrQVcQqTEDA', {attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>', maxNativeZoom: 11, maxZoom: 25})
     var emptyTiles = L.tileLayer('seamless_white_background_texture.jpg', {maxZoom: 25});
-    var topoMap    = L.tileLayer('https://{s}.tiles.mapbox.com/v3/mapbox.natural-earth-2/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoib2RhbGFuZyIsImEiOiJxbTlhYVZFIn0.HQNXXBx1A7BFrQVcQqTEDA', {attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>', maxNativeZoom: 11, maxZoom: 25, opacity: 0.5});
+    var relief     = L.esri.tiledMapLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/', {maxNativeZoom: 11, maxZoom: 25, opacity: 0.5}).addTo(MapObject.map);
 
-    L.control.layers({'Topographic Map': topoMap, 'Mapbox':mapboxTiles,'No background':emptyTiles},{},{position: 'bottomleft'}).addTo(MapObject.map);
+    L.control.layers({'Mapbox':mapboxTiles,'No background':emptyTiles,'Relief':relief},{},{position: 'bottomleft'}).addTo(MapObject.map);
 
 
 	/* ADD LAYER */
@@ -41,16 +41,6 @@ MapObject.init = function(){
     		},
     		edit : true
 	});
-
-/*MapObject.drawControl = new L.Draw.Feature.SnapMixin()/*{
-			polygon   : {guideLayers: guideLayers, snapDistance: 100},
-			polyline  : {guideLayers: guideLayers, snapDistance: 100},
-			marker    : {guideLayers: guideLayers, snapDistance: 100},
-			rectangle : false,
-			circle    : false
-    		});*/
-
-	//MapObject.map.drawControl.setDrawingOptions(MapObject.drawControl)
 
 	MapObject.drawLayer = new L.FeatureGroup();
 	MapObject.map.addLayer(MapObject.drawLayer);
