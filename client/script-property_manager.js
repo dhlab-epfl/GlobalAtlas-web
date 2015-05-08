@@ -1,10 +1,8 @@
-
-
-/**
-  * PropertyEntries keeps track of the currently displayed properties. It produces the HTML code 
-  * for feeding the properties table in the inspector. This allows to easily modify the form of a
-  * property table entry. 
-  */
+/*
+ * PropertyEntries keeps track of the currently displayed properties. It produces the HTML code 
+ * for feeding the properties table in the inspector. This allows to easily modify the form of a
+ * property table entry. 
+ */
 function PropertyEntries(tableID){
     this.properties   = [];
     this.tableID      = '#' + tableID;
@@ -13,9 +11,8 @@ function PropertyEntries(tableID){
     this.creatingProp = false;
 };
 
-
 /*
- * shows properties in array
+ * Shows properties in array
  */
 PropertyEntries.prototype.showNew = function(properties){
     this.properties = properties;
@@ -368,7 +365,7 @@ PropertyEntries.prototype.populateSelect = function(selectID, index){
 
 
 /*
- * sets the property value edit tool according to chosen property type.
+ * Sets the property value edit tool according to chosen property type.
  */
 PropertyEntries.prototype.setValueEditTool = function(type, index){
     var tool = '';
@@ -449,8 +446,3 @@ PropertyEntries.prototype.setValueEditTool = function(type, index){
         }
     }
 };
-
-
-
-
-
