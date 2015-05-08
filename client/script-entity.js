@@ -28,18 +28,30 @@ EntityObject.nextGeom = function(direction, propertyIndex){
         type: "GET",
         dataType: "json",
         url: settings_api_url,
-        data: {'query'    : 'next_geometry_for_entity',
-	       'id'       : EntityObject.loadedEntity,
-               'date'     : MapObject.date,
-	       'direction': direction, 
-	       'type'     : EntityObject.currProperties[propertyIndex].property_name},
+        invokedata: {  'direction' : direction,
+                        'index' : propertyIndex },
+        data: { 'query'    : 'next_geometry_for_entity',
+                'id'        : EntityObject.loadedEntity,
+                'date'      : MapObject.date,
+                'direction' : direction, 
+                'type'      : EntityObject.currProperties[propertyIndex].property_name},
         success: function(data,textStatus,jqXHR){
-            if (data.length != 0) {
-	        SliderObject.setYear(data[0].date);
-                MapObject.setDate(data[0].date) 
-            } else { 
-                alert("No further connected geometry found."); 
-            }  
+            var direction = this.invokedata.direction
+            var index = this.invokedata.index
+            var html = ''
+            if (data.length > 0) {
+                if (direction == -1) { 
+                    var iconprev = "◂";
+                    var iconnext = ""
+                    var htmlclass = ".prev"
+                } else {
+                    var iconprev = "";
+                    var iconnext = "▸";
+                    var htmlclass = ".next"
+                }
+                html = '<button onclick="SliderObject.setYear('+data[0].date+'); MapObject.setDate('+data[0].date+')">'+iconprev+data[0].date+iconnext+'</button>';
+            } 
+            $('#propEntry'+ index +' '+htmlclass).html(html)
         },
         error: function( jqXHR, textStatus, errorThrown ){
             console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
@@ -48,8 +60,8 @@ EntityObject.nextGeom = function(direction, propertyIndex){
 }
 
 EntityObject.setHash = function(){
-	hash.loadedEntity = EntityObject.loadedEntity;
-	setHash();
+    hash.loadedEntity = EntityObject.loadedEntity;
+    setHash();
 }
 
 EntityObject.hideInspector = function(){
@@ -70,8 +82,8 @@ EntityObject.closeInspector = function(e){
 }
 
 EntityObject.loadEntity = function(newEntity){
-	EntityObject.loadedEntity = newEntity;
-	EntityObject.reloadData();
+    EntityObject.loadedEntity = newEntity;
+    EntityObject.reloadData();
 }
 
 /*
@@ -87,14 +99,14 @@ EntityObject.cancelEdit = function(){
 
 EntityObject.reloadData = function(){
 
-	MapObject.setHash();
+    MapObject.setHash();
 
-	if(EntityObject.loadedEntity == null){
-		return;
-	}
+    if(EntityObject.loadedEntity == null){
+        return;
+    }
 
-	//Get entity's name and type
-	$.ajax({
+    //Get entity's name and type
+    $.ajax({
             type: "GET",
             dataType: "json",
             url: settings_api_url,
@@ -110,8 +122,8 @@ EntityObject.reloadData = function(){
             } 
         });
 
-	//get properties, valid at, shape, source
-	$.ajax({
+    //get properties, valid at, shape, source
+    $.ajax({
         type: "GET",
         dataType: "json",
         url: settings_api_url,
@@ -128,7 +140,7 @@ EntityObject.reloadData = function(){
 
         },
         error: function( jqXHR, textStatus, errorThrown ){
-        	console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
+            console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
         }
     });
 

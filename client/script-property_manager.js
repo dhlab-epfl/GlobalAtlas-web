@@ -40,9 +40,7 @@ PropertyEntries.prototype.showNew = function(properties){
 PropertyEntries.prototype.putUneditableEntryIntoRow = function(index) {
     var property = this.properties[index];
     var name     =  property.property_name;
-    var start    = (property.computed_date_start?property.computed_date_start:'∞');
     var date     = (property.date?property.date:'∞');
-    var end      = (property.computed_date_end?property.computed_date_end:"∞");
     var value    =  property.value;
     var source   =  property.source_name;
 
@@ -52,15 +50,7 @@ PropertyEntries.prototype.putUneditableEntryIntoRow = function(index) {
     <tr id="propEntry'+ index +'">\
         <td class="key">'+ name +'</td>\
         <td class="date">\
-            <button onclick="EntityObject.nextGeom(-1,'+ index +');">◂</button>\
-            <span class="bounds">\
-                '+ start + '&#8239;&lt;&#8239;\
-            </span>\
-            '+ date +'\
-            <span class="bounds">\
-                &#8239;&lt;&#8239;'+ end +'\
-            </span>\
-            <button onclick="EntityObject.nextGeom(1,'+ index +');">▸</button>\
+        <span class="prev"></span> ' + date + ' <span class="next"></span>\
         </td>\
         <td class="value">'+ value +'</td>\
         <td class="source">['+ source +']</td>\
@@ -68,6 +58,10 @@ PropertyEntries.prototype.putUneditableEntryIntoRow = function(index) {
             <button class="editButton" onclick="EntityObject.editProp('+ index +');">✎</button>\
         </td>\
     </tr>';
+
+    // Fill the previous and next fields
+    EntityObject.nextGeom(-1, index)
+    EntityObject.nextGeom(1, index)
 
     $('#propEntry'+index).replaceWith(entry);
 }

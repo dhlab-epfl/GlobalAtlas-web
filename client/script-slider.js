@@ -39,6 +39,8 @@ SliderObject.init = function(){
  */
 SliderObject.setYear = function(y){
     var x = Number(y)
+    var min = Number($("#slider-min").val())
+    var max = Number($("#slider-max").val())
 
     // Move the spinner's year to y
     $("#spinner-ui").spinner("value", x);
