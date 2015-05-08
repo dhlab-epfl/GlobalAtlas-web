@@ -1,118 +1,81 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-	<title>Time Machine</title>
+    <title>Time Machine</title>
 
-	<!-- VENDORS -->
+    <!-- VENDORS -->
 
-	<!-- jquery -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <!-- jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
-	<!-- jqueryUI -->
-	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
-	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
+    <!-- jqueryUI -->
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
 
-	<!-- leaflet -->
-	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
-	<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-	<!-- leaflet-label -->
-	<link rel="stylesheet" href="leaflet.label.css" />
-	<script src="leaflet.label.js"></script>
-	<!-- leaflet draw -->
-	<link href="http://leaflet.github.io/Leaflet.draw/leaflet.draw.css" rel="stylesheet"></link>
-	<script src="http://leaflet.github.io/Leaflet.draw/leaflet.draw.js"></script>
-	<!-- leaflet snap -->
-        <script src="leaflet.geometryutil.js"></script>
-        <script src="leaflet.snap.js"></script>
-        <!-- esri leaflet -->
+    <!-- leaflet -->
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <!-- leaflet-label -->
+    <link rel="stylesheet" href="leaflet.label.css" />
+    <script src="leaflet.label.js"></script>
+    <!-- leaflet draw -->
+    <link href="http://leaflet.github.io/Leaflet.draw/leaflet.draw.css" rel="stylesheet"></link>
+    <script src="http://leaflet.github.io/Leaflet.draw/leaflet.draw.js"></script>
+    <-- leaflet snap -->
+    <script src="leaflet.geometryutil.js"></script>
+    <script src="leaflet.snap.js"></script>
+    <!-- esri leaflet -->
     <script src="http://cdn-geoweb.s3.amazonaws.com/esri-leaflet/1.0.0-rc.6/esri-leaflet.js"></script>
 
 
-	<!-- CUSTOM -->
+    <!-- CUSTOM -->
 
-	<!-- styles -->
-	<link rel="stylesheet" href="style.css" />
+    <!-- styles -->
+    <link rel="stylesheet" href="style.css" />
 
-	<!-- scripts -->
-	<script src="script.js"></script>
-	<script src="script-map.js"></script>
-	<script src="script-slider.js"></script>
-	<script src="script-entity.js"></script>
-	<script src="script-draw.js"></script>
-        <script src="script-property_manager.js"></script>
-
-
+    <!-- scripts -->
+    <script src="script.js"></script>
+    <script src="script-map.js"></script>
+    <script src="script-slider.js"></script>
+    <script src="script-entity.js"></script>
+    <script src="script-draw.js"></script>
+    <script src="script-property_manager.js"></script>
 </head>
 <body> 
-        <div id="map"></div>
+    <div id="map"></div>
 
+    <!-- time slider -->
+    <input id="slider-max" value="2015"/>
+    <div id="slider-container">
+        <div id="slider-ui"></div>
+    </div>
+    <input id="slider-min" value="1000"/>
+    <div id="spinner-container">
+        <input id="spinner-ui" name="spinner" value="2015">
+    </div>
 
-        <!-- time slider -->
-	<input id="slider-max" value="2015"/>
-	<div id="slider-container">
-		<div id="slider-ui"></div>
-	</div>
-	<input id="slider-min" value="1000"/>
-	<div id="spinner-container">
-		<input id="spinner-ui" name="spinner" value="2015">
-	</div>
+    <!-- inspector -->
+    <div id="inspector" style="display: none">
+        <a id="hidebox">X</a>
+        <h1><span class="entity">Entity_name</span> <span class="type">(type)</span></h1>
 
+        <h2>Properties</h2>
+        <table id="inspector_properties"></table>
+        <button id="add-property">New Property</button>
 
-
-
-
-        <!-- inspector -->
-	<div id="inspector" style="display: none">
-		<a id="hidebox">X</a>
-		<h1><span class="entity">Entity_name</span> <span class="type">(type)</span></h1>
-		<h2>Properties</h2>
-		<table id="inspector_properties">
-			<tr>
-				<td class="key">Geometry</td>
-				<td class="date"><span class="bounds">1420&#8239;&lt;&#8239;</span>1678<span class="bounds">&#8239;&lt;&#8239;∞</span></td>
-				<td class="value">MULTIPOLYGON(1231 32 132  32 132  32 132  32 132  32 132  32 132  32 132  32 132  32 132  32 132  32 132  32 132  32 132  32 132  32 132  32 132  32 132  32 132  32 132 31)</td>
-				<td class="source">[Euratlas]</td>
-			</tr>
-			<tr>
-				<td class="key">Owner</td>
-				<td class="date"><span class="bounds">1420&#8239;&lt;&#8239;</span>1678<span class="bounds">&#8239;&lt;&#8239;∞</span></td>
-				<td class="value">M. Nabakuza</td>
-				<td class="source">[Wikipedia]</td>
-			</tr>
-			<tr>
-				<td class="key">Height</td>
-				<td class="date"><span class="bounds">1420&#8239;&lt;&#8239;</span>1678<span class="bounds">&#8239;&lt;&#8239;∞</span></td>
-				<td class="value">12.43 m</td>
-				<td class="source">[Euratlas]</td>
-			</tr>
-			<tr>
-				<td class="key">Material</td>
-				<td class="date"><span class="bounds">1420&#8239;&lt;&#8239;</span>1678<span class="bounds">&#8239;&lt;&#8239;∞</span></td>
-				<td class="value">wood</td>
-				<td class="source">[Euratlas]</td>
-			</tr>
-		</table>
-		
-		<button id="add-property">New Property</button>
-
-		<h2>Discussions</h2>
-		<table id="inspector_discussion">
-			<tr>
-				<td class="key">Olivier <span class="bounds">6.3.15</span></td>
-				<td class="value">There is a contradiction between two sources...</td>
-			</tr>
-			<tr>
-				<td class="key">Isabella di Lenardo <span class="bounds">6.3.15</span></td>
-				<td class="value">I updated the shape</td>
-			</tr>
-		</table>
-		</br>
-		</br>
-		
-
-	</div>
-
+        <h2>Discussions</h2>
+        <table id="inspector_discussion">
+            <tr>
+                <td class="key">Olivier <span class="bounds">6.3.15</span></td>
+                <td class="value">There is a contradiction between two sources...</td>
+            </tr>
+            <tr>
+                <td class="key">Isabella di Lenardo <span class="bounds">6.3.15</span></td>
+                <td class="value">I updated the shape</td>
+            </tr>
+        </table>
+    </div>
 </body>
 </html>
