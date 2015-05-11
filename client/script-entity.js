@@ -16,6 +16,9 @@ EntityObject.init = function(){
 
     $('#inspector #hidebox').click(EntityObject.closeInspector);
 
+    $('#create-button').click(EntityObject.newEntity)
+
+
     EntityObject.propertyManager = new PropertyEntries('inspector_properties');
 
     $("#add-property").click(function() {
@@ -69,7 +72,7 @@ EntityObject.hideInspector = function(){
 }
 
 EntityObject.showInspector = function(){
-    EntityObject.reloadData();
+    $('#create-button-container').hide();
     $('#inspector').show();
 }
 
@@ -78,12 +81,29 @@ EntityObject.closeInspector = function(e){
     EntityObject.propertyManager.reset();
     EntityObject.loadedEntity = null;
     $('#inspector').hide();
+    $('#create-button-container').show();
     return false;
 }
 
 EntityObject.loadEntity = function(newEntity){
     EntityObject.loadedEntity = newEntity;
     EntityObject.reloadData();
+}
+
+EntityObject.newEntity = function() {
+    $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: settings_api_url,
+            data: {'query': 'create_new_entity','name': '', 'entity_type': ''},
+            success: function(data,textStatus,jqXHR){
+                EntityObject.loadedEntity = data[0].id;
+                EntityObject.showInspector();
+            },
+            error: function( jqXHR, textStatus, errorThrown ){
+                console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
+            }
+    });
 }
 
 /*
@@ -114,7 +134,7 @@ EntityObject.reloadData = function(){
             success: function(data,textStatus,jqXHR){
                 EntityObject.currName = data[0].name;
                 EntityObject.currType = data[0].entity_type_name;
-                $('#inspector').show();
+                EntityObject.showInspector();
                 $('#inspector h1').html('<span class="entity">'+data[0].name+'</span> <span class="type">('+data[0].entity_type_name+')</span>');
             },
             error: function( jqXHR, textStatus, errorThrown ){

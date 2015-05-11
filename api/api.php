@@ -158,8 +158,7 @@ EOT;
 
 	/************************************************************/
 	/* CREATE_NEW_ENTITY                                        */
-	/* inserts a new entity including property and sourceinto   */
-	/* the DB.                                                  */
+	/* inserts a new entity                                     */
 	/************************************************************/
 	
 	case 'create_new_entity':
@@ -167,36 +166,15 @@ EOT;
 
 		$default_params = [
 			'name'        => '', 
-			'date'        => '',
-			'value'       => '',
-			'sources'     => '',
-			'description' => ''
+			'entity_type' => 1,
 		];
 
-
 		$sql = <<<EOT
-WITH entity AS (
-	INSERT INTO vtm.entities(name, type_id) 
-	     VALUES (:name, 1)
-	  RETURNING id), 
-     source AS (
-	INSERT INTO vtm.sources(name)
-	     VALUES (:sources)
-	  RETURNING id)
-
-INSERT INTO vtm.properties(entity_id, 
-			property_type_id, 
-			description,
-			date, 
-			value, 
-			source_id)
-     VALUES ((SELECT id FROM entity), 
-	     1,
-	     :description,
-	     :date,
-	     :value, 
-	     (SELECT id FROM source))
-
+INSERT INTO
+  vtm.entities(name, type_id) 
+VALUES 
+  (:name, :entity_type)
+RETURNING id
 EOT;
 		echo query($sql, $_GET, $default_params);
 	

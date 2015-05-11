@@ -174,7 +174,7 @@ div#map{
 .leaflet-editing-icon.marker-snapped {
 	background-color: yellow;
 }
-#create-container{
+#create-button-container{
 	position: absolute;
 	top: 10px;
 	right: 10px;
