@@ -86,26 +86,16 @@ PropertyEntries.prototype.putEditableEntryIntoRow = function(index){
     <tr id="propEntry'+ index +'">\
         <td colspan="5">\
             <div class="editable-property-entry">\
-                <div>\
-                    <select id="propType"/>\
-                    <div id="propValue" style="display:inline">'+ value +'</div>\
-                </div>\
-                <div style="display:inline">\
-                    <label for="valid-at">This property was valid in </label>\
-                    <input id="valid-at" type="number" value="'+ date +'"/>\
-                    <input id="startCheck" type="checkbox">\
-                        This was the start of its validity.\
-                    </input>\
-                </div>\
-                <div>\
-                    <label for="source">Source: </label>\
-                    <input id="source" type="text" value="'+ source +'"</td>\
-                </div>\
+                <ul>\
+                    <li>Type: <select id="propType"/></li>\
+                    <li>Edit: <div id="propValue" style="display:inline">'+ value +'</div></li>\
+                    <li>Valid at: <input id="valid-at" type="number" value="'+ date +'"/></li>\
+                    <li>Start of validity:<input id="startCheck" type="checkbox" /></li>\
+                    <li>Source: <input id="source" type="text" value="'+ source +'" /></li>\
+                </ul>\
                 <div style="float:right">\
-                    <button onclick="EntityObject.cancelEdit();">❌ Cancel</button>\
-                    <button onclick="EntityObject.propertyManager.saveProperty('+ index +');">\
-                         Save\
-                    </button>\
+                    <button onclick="EntityObject.cancelEdit();">Cancel</button>\
+                    <button onclick="EntityObject.propertyManager.saveProperty('+ index +');">Save</button>\
                 </div>\
             </div>\
         </td>\
