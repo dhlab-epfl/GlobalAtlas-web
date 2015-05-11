@@ -153,8 +153,7 @@ EntityObject.newEntity = function() {
             url: settings_api_url,
             data: {'query': 'create_new_entity','name': '', 'entity_type': ''},
             success: function(data,textStatus,jqXHR){
-                EntityObject.loadedEntity = data[0].id;
-                EntityObject.showInspector();
+                EntityObject.loadEntity(data[0].id);
             },
             error: function( jqXHR, textStatus, errorThrown ){
                 console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
