@@ -95,7 +95,7 @@ EntityObject.toggleEditableTitle = function(){
         editableTitle += '<input id="entity-name" type="text" value="'+ name +'"/>';
         editableTitle += '<select id="entity-type"/>';
         editableTitle += '<button onclick="EntityObject.toggleEditableTitle();">Cancel</button>';
-        editableTitle += '<button onclick="EntityObject.setName(); EntityObject.setType(); EntityObject.toggleEditableTitle();">Save</button>';
+        editableTitle += '<button onclick="EntityObject.writeTitleToDB();">Save</button>';
         $('#entity-title').html(editableTitle);
 
         // Populate the enity type select menu
@@ -121,6 +121,24 @@ EntityObject.toggleEditableTitle = function(){
     } else { // "Cancel" or "Save" button was pushed
         EntityObject.reloadData();
     }
+}
+
+EntityObject.writeTitleToDB = function(){
+    $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: settings_api_url,
+            data: { 'query': 'update_entity',
+                    'id': EntityObject.loadedEntity,
+                    'name': $('#entity-name').val(),
+                    'type': $('#entity-type').val()},
+            success: function(data,textStatus,jqXHR){
+                EntityObject.toggleEditableTitle();
+            },
+            error: function( jqXHR, textStatus, errorThrown ){
+                console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
+            }
+    });
 }
 
 EntityObject.loadEntity = function(newEntity){

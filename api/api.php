@@ -234,6 +234,36 @@ EOT;
 	break;
 
 
+    /************************************************************/
+    /* UPDATE_ENTITY                                            */
+    /* saves changes of an entity                               */
+    /************************************************************/
+
+    case 'update_entity':
+        ini_set('display_errors', 'on');
+
+        $default_params = [
+            'id'    => 0,
+            'name'  => 'default_name',
+            'type'  => '1',
+        ];
+
+        $sql = <<<EOT
+UPDATE
+  vtm.entities 
+SET
+  name          = :name,
+  type_id       = :type
+WHERE
+  id = :id
+EOT;
+
+
+        echo query($sql, $_GET, $default_params);
+
+        flush(); ob_flush();
+    break;
+
 
 	/************************************************************/
 	/* UPDATE_PROPERTY                                          */
