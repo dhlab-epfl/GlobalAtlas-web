@@ -315,7 +315,20 @@ EOT;
 
         break;
 
+    /************************************************************/
+    /* GET_ENTITY_TYPES                                         */
+    /* Returns all possible types for entities                  */
+    /************************************************************/
 
+    case 'get_entity_types':
+        $default_params = [];
+        $sql = <<<EOT
+SELECT id, name, min_zoom, max_zoom, zindex
+  FROM vtm.entity_types
+EOT;
+        echo query($sql, $_GET, $default_params);
+
+        break;
 
 	/************************************************************/
 	/* NEXT_GEOMETRY_FOR_ENTITY                                 */

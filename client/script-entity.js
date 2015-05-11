@@ -95,17 +95,31 @@ EntityObject.toggleEditableTitle = function(){
         editableTitle += '<input id="entity-name" type="text" value="'+ name +'"/>';
         editableTitle += '<select id="entity-type"/>';
         editableTitle += '<button onclick="EntityObject.toggleEditableTitle();">Cancel</button>';
-        editableTitle += '<button onclick="EntityObject.setName(); EntityObject.setType();">Save</button>';
+        editableTitle += '<button onclick="EntityObject.setName(); EntityObject.setType(); EntityObject.toggleEditableTitle();">Save</button>';
         $('#entity-title').html(editableTitle);
-    } else {
-        var name = $('#entity-title').data('originalName');
-        var type = $('#entity-title').data('originalType');
-        var title = '';
-        title += '<span class="entity">' + name + '</span> (';
-        title += '<span class="type">' + type + '</span>)';
-        title += '<button id="edit-entity-title-button" onclick="EntityObject.toggleEditableTitle();">Edit</button>'
-        $('#entity-title').html(title);
-        $('#entity-title').removeData();
+
+        // Populate the enity type select menu
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: settings_api_url,
+            data: {'query': 'get_entity_types'},
+            success: function(types,textStatus,jqXHR){
+                $.each(types,function(i,item){
+                    $('#entity-type').append($("<option />")
+                        .val(item.id).text(item.name));
+                });
+                // Set current value selected
+                $("#entity-type option").filter(function() {
+                    return $(this).text() == type;
+                }).attr('selected', true);
+            },
+            error: function( jqXHR, textStatus, errorThrown ){
+                console.log('EntityObject: error getting entity types! \n'+jqXHR.responseText);
+            }
+        });
+    } else { // "Cancel" or "Save" button was pushed
+        EntityObject.reloadData();
     }
 }
 
