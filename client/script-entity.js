@@ -85,6 +85,30 @@ EntityObject.closeInspector = function(e){
     return false;
 }
 
+EntityObject.toggleEditableTitle = function(){
+    if($('#edit-entity-title-button').length == 1) {
+        var name = $('#entity-title .entity').html();
+        var type = $('#entity-title select.type option:selected').val();
+        $('#entity-title').data('originalName', name)
+        $('#entity-title').data('originalType', type)
+        var editableTitle = '';
+        editableTitle += '<input id="entity-name" type="text" value="'+ name +'"/>';
+        editableTitle += '<select id="entity-type"/>';
+        editableTitle += '<button onclick="EntityObject.toggleEditableTitle();">Cancel</button>';
+        editableTitle += '<button onclick="EntityObject.setName(); EntityObject.setType();">Save</button>';
+        $('#entity-title').html(editableTitle);
+    } else {
+        var name = $('#entity-title').data('originalName');
+        var type = $('#entity-title').data('originalType');
+        var title = '';
+        title += '<span class="entity">' + name + '</span> (';
+        title += '<span class="type">' + type + '</span>)';
+        title += '<button id="edit-entity-title-button" onclick="EntityObject.toggleEditableTitle();">Edit</button>'
+        $('#entity-title').html(title);
+        $('#entity-title').removeData();
+    }
+}
+
 EntityObject.loadEntity = function(newEntity){
     EntityObject.loadedEntity = newEntity;
     EntityObject.reloadData();
@@ -135,7 +159,11 @@ EntityObject.reloadData = function(){
                 EntityObject.currName = data[0].name;
                 EntityObject.currType = data[0].entity_type_name;
                 EntityObject.showInspector();
-                $('#inspector h1').html('<span class="entity">'+data[0].name+'</span> <span class="type">('+data[0].entity_type_name+')</span>');
+                entityTitle = '';
+                entityTitle += '<span class="entity">'+data[0].name+'</span>';
+                entityTitle += '<span class="type">('+data[0].entity_type_name+')</span>';
+                entityTitle += '<button id="edit-entity-title-button" onclick="EntityObject.toggleEditableTitle();">Edit</button>';
+                $('#inspector h1').html(entityTitle);
             },
             error: function( jqXHR, textStatus, errorThrown ){
                 console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
