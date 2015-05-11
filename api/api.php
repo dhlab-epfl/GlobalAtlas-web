@@ -319,10 +319,10 @@ EOT;
 
 	case 'calculate_dates':
 		$default_params = [
-			'entityID'     => 0,
-                        'propertyType' => 1,];
+			'entityID'    => 0,
+            'propertyID'  => 0];
 
-		$sql = 'SELECT vtm.compute_date_for_property_of_entity(:entityID, :propertyType);';
+		$sql = 'SELECT vtm.compute_date_for_property_of_entity(:entityID, :propertyID)';
 
 		echo query($sql, $_GET, $default_params);
         break;

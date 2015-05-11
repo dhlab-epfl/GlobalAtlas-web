@@ -217,6 +217,7 @@ PropertyEntries.prototype.saveProperty = function(){
 
             success: function(data,textStatus,jqXHR){
                 console.log("Property Manager: Source '"+ source +"' created.");
+                MapObject.reloadData();
             },
             error: function( jqXHR, textStatus, errorThrown ){
                 console.log('Property Manager: Error saving new source!\n' + jqXHR.responseText);
@@ -238,6 +239,7 @@ PropertyEntries.prototype.saveProperty = function(){
 
             success: function(data,textStatus,jqXHR){
                 console.log('Property Manager: Saved change of property #'+ propertyID);
+                MapObject.reloadData();
             },
             error: function( jqXHR, textStatus, errorThrown ){
                 console.log('Property Manager: Error saving changes!\n' + jqXHR.responseText);
@@ -253,7 +255,7 @@ PropertyEntries.prototype.saveProperty = function(){
         url: settings_api_url,
         data: {'query'         : 'calculate_dates',
                'entityID'      : entityID,
-               'propertyType'  : type},
+               'propertyID'    : propertyID},
 
         success: function(data,textStatus,jqXHR){
             console.log("Property Manager: Start and end dates of calculated.");
@@ -264,8 +266,6 @@ PropertyEntries.prototype.saveProperty = function(){
     });
 
 
-    //finally, reload map for making changes visible
-    MapObject.reloadData();
 
     //set row uneditable
     this.putUneditableEntryIntoRow(this.currEditable)
