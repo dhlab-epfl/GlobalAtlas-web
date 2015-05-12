@@ -17,7 +17,7 @@ MapObject.init = function(){
 
 	var mapboxTiles = L.tileLayer('https://{s}.tiles.mapbox.com/v3/mapbox.world-blank-bright/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoib2RhbGFuZyIsImEiOiJxbTlhYVZFIn0.HQNXXBx1A7BFrQVcQqTEDA', {attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>', maxNativeZoom: 11, maxZoom: 25})
     var emptyTiles = L.tileLayer('seamless_white_background_texture.jpg', {maxZoom: 25});
-    var relief     = L.esri.tiledMapLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/', {maxNativeZoom: 11, maxZoom: 25, opacity: 0.5}).addTo(MapObject.map);
+    var relief     = L.esri.tiledMapLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/', {maxNativeZoom: 13, maxZoom: 15, opacity: 0.6}).addTo(MapObject.map);
 
     L.control.layers({'Mapbox':mapboxTiles,'No background':emptyTiles,'Relief':relief},{},{position: 'bottomleft'}).addTo(MapObject.map);
 
