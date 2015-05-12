@@ -49,8 +49,9 @@ PropertyEntries.prototype.putUneditableEntryIntoRow = function(index) {
     var entry = '\
     <tr id="propEntry'+ index +'">\
         <td class="key">'+ name +'</td>\
-        <td class="date">\
-        <span class="prev"></span> ' + date + ' <span class="next"></span>\
+        <td><span class="prev"/></td>\
+        <td class="date">' + date + '\
+        <td> <span class="next"/></td>\
         </td>\
         <td class="value">'+ value +'</td>\
         <td class="source">['+ source +']</td>\
@@ -84,7 +85,7 @@ PropertyEntries.prototype.putEditableEntryIntoRow = function(index){
 
     var editableEntry = '\
     <tr id="propEntry'+ index +'">\
-        <td colspan="5">\
+        <td colspan="7">\
             <div class="editable-property-entry">\
                 <ul>\
                     <li>Type: <select id="propType"/></li>\
