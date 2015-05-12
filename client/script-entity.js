@@ -94,8 +94,12 @@ EntityObject.toggleEditableTitle = function(){
         var editableTitle = '';
         editableTitle += '<input id="entity-name" type="text" value="'+ name +'"/>';
         editableTitle += '<select id="entity-type"/>';
-        editableTitle += '<button onclick="EntityObject.toggleEditableTitle();">Cancel</button>';
-        editableTitle += '<button onclick="EntityObject.writeTitleToDB();">Save</button>';
+        editableTitle += '<button onclick="EntityObject.toggleEditableTitle();" title="Cancel" class="entity-button">\
+                              <img src="icons/cancel.png" width="16" height="16">\
+                          </button>';
+        editableTitle += '<button onclick="EntityObject.writeTitleToDB();" title="Save" class="entity-button">\
+                              <img src="icons/save.png" width="16" height="16">\
+                          </button>';
         $('#entity-title').html(editableTitle);
 
         // Populate the enity type select menu
@@ -193,7 +197,13 @@ EntityObject.reloadData = function(){
                 entityTitle = '';
                 entityTitle += '<span class="entity">'+data[0].name+'</span>';
                 entityTitle += '<span class="type">('+data[0].entity_type_name+')</span>';
-                entityTitle += '<button id="edit-entity-title-button" onclick="EntityObject.toggleEditableTitle();">Edit</button>';
+                entityTitle += '<button id="edit-entity-title-button"\
+                                        onclick="EntityObject.toggleEditableTitle();"\
+                                        title="Edit Entity"\
+                                        class="entity-button"\
+                                >\
+                                    <img src="icons/edit.png" width="16" height="16">\
+                                </button>';
                 $('#inspector h1').html(entityTitle);
             },
             error: function( jqXHR, textStatus, errorThrown ){

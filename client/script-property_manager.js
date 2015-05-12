@@ -56,7 +56,9 @@ PropertyEntries.prototype.putUneditableEntryIntoRow = function(index) {
         <td class="value">'+ value +'</td>\
         <td class="source">['+ source +']</td>\
         <td>\
-            <button class="editButton" onclick="EntityObject.editProp('+ index +');">✎</button>\
+            <button class="editButton" title="Edit Property" onclick="EntityObject.editProp('+ index +');">\
+                <img src="icons/edit.png" width="16" height="16">\
+            </button>\
         </td>\
     </tr>';
 
@@ -95,8 +97,15 @@ PropertyEntries.prototype.putEditableEntryIntoRow = function(index){
                     <li>Source: <input id="source" type="text" value="'+ source +'" /></li>\
                 </ul>\
                 <div style="float:right">\
-                    <button onclick="EntityObject.cancelEdit();">Cancel</button>\
-                    <button onclick="EntityObject.propertyManager.saveProperty('+ index +');">Save</button>\
+                    <button title="Delete Property" onclick="EntityObject.propertyManager.deleteProperty('+ index +');">\
+                        <img src="icons/delete.png" width="16" height="16">\
+                    </button>\
+                    <button title="Cancel Changes" onclick="EntityObject.cancelEdit();">\
+                        <img src="icons/cancel.png" width="16" height="16">\
+                    </button>\
+                    <button title="Save Changes" onclick="EntityObject.propertyManager.saveProperty('+ index +');">\
+                        <img src="icons/save.png" width="16" height="16">\
+                    </button>\
                 </div>\
             </div>\
         </td>\

@@ -108,8 +108,9 @@ div#map{
 	padding: 0.05em 0em;
 }
 
-
-
+.entity-button {
+	float: right;
+}
 
 .editing {
 	position: absolute;
