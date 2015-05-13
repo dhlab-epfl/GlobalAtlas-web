@@ -335,8 +335,8 @@ function PropertyEntries(tableID){
         var index = properties.length - 1;
 
         //set it editable (first create empty table row, then replace it by editable row)
-        $(tableID).append('<tr id="propEntry'+ index +'"/>')
-        this.setEditable(index);
+        $(tableID).append('<tr id="propEntry'+ index +'"/>');
+        EntityObject.propertyManager.setEditable(index);
     }
 
 
@@ -481,6 +481,7 @@ function PropertyEntries(tableID){
         $("#add-property").removeAttr('disabled');
 
         EntityObject.reloadData();
+        MapObject.reloadData();
 
         drawer.disable();
             
@@ -503,8 +504,6 @@ function PropertyEntries(tableID){
 
             success: function(data,textStatus,jqXHR){
                 console.log("Property Manager: Deleted property #" + propertyID);
-                currEditable = -1
-                EntityObject.reloadData();
             },
             error: function( jqXHR, textStatus, errorThrown ){
                 console.log('Property Manager: Error deleting property!\n' + jqXHR.responseText);
@@ -522,6 +521,7 @@ function PropertyEntries(tableID){
         $("#add-property").removeAttr('disabled');
 
         EntityObject.reloadData();
+        MapObject.reloadData();
 
         drawer.disable();
             
