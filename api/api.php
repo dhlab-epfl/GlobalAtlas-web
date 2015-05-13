@@ -279,10 +279,10 @@ EOT;
 
 		$default_params = [
                         'propertyID'    => 0,
-			'date'          => 0,
-			'interpolation' => 'default',
-			'value'         => '',
-			'source'        => 'no source'
+			            'date'          => 0,
+			            'interpolation' => 'default',
+			            'value'         => '',
+			            'source'        => 'no source'
 		];
 
 		$sql = <<<EOT
@@ -332,6 +332,25 @@ EOT;
 
 		echo query($sql, $_GET, $default_params);
         break;
+
+
+	/************************************************************/
+	/* DELETE_PROPERTY                                          */
+	/* saves changes of an entity (a property and it's assigned */
+	/* source                                                   */
+	/************************************************************/
+
+	case 'delete_property':
+		ini_set('display_errors', 'on');
+
+		$default_params = ['propertyID' => 0];
+
+		$sql = 'DELETE FROM vtm.properties WHERE id = :propertyID';
+
+		echo query($sql, $_GET, $default_params);
+
+		flush(); ob_flush();
+	break;
 
 
 

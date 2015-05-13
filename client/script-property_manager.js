@@ -451,7 +451,6 @@ function PropertyEntries(tableID){
 
             success: function(data,textStatus,jqXHR){
                 console.log("Property Manager: Start and end dates of calculated.");
-                EntityObject.reloadData();
             },
             error: function( jqXHR, textStatus, errorThrown ){
                 console.log('Property Manager: Error calculating dates!\n' + jqXHR.responseText);
@@ -469,6 +468,49 @@ function PropertyEntries(tableID){
         //allow to edit all the props and add a new one
         $('.editButton').removeAttr('disabled');
         $("#add-property").removeAttr('disabled');
+
+        EntityObject.reloadData();
+
+        drawer.disable();
+            
+        currEditable = -1;
+    }
+
+
+
+    /*
+     * Deletes the currently edited property
+     */
+    this.deleteProperty = function(index){
+        var propertyID = properties[index].property_id
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: settings_api_url,
+            data: {'query'      : 'delete_property',
+                   'propertyID' : propertyID},
+
+            success: function(data,textStatus,jqXHR){
+                console.log("Property Manager: Deleted property #" + propertyID);
+                currEditable = -1
+                EntityObject.reloadData();
+            },
+            error: function( jqXHR, textStatus, errorThrown ){
+                console.log('Property Manager: Error deleting property!\n' + jqXHR.responseText);
+            }
+        });
+        
+        //set row uneditable
+        putUneditableEntry(currEditable)
+
+        //not in creating phase anymore...
+        creatingProp = false;
+
+        //allow to edit all the props and add a new one
+        $('.editButton').removeAttr('disabled');
+        $("#add-property").removeAttr('disabled');
+
+        EntityObject.reloadData();
 
         drawer.disable();
             
