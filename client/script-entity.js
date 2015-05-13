@@ -90,6 +90,7 @@ EntityObject.toggleEditableTitle = function(){
 
 EntityObject.showEditableTitle = function() {
     var editableTitle = '';
+    editableTitle += '<h1>';
     editableTitle += '<input id="entity-name" type="text" value="'+ EntityObject.currName +'"/>';
     editableTitle += '<select id="entity-type"/>';
     editableTitle += '<button onclick="EntityObject.toggleEditableTitle();" title="Cancel" class="entity-button">\
@@ -98,7 +99,8 @@ EntityObject.showEditableTitle = function() {
     editableTitle += '<button onclick="EntityObject.writeTitleToDB();" title="Save" class="entity-button">\
                           <img src="icons/save.png" width="16" height="16">\
                       </button>';
-    $('#entity-title').html(editableTitle);
+    editableTitle += '</h1>';
+    $('#entity-title-container').html(editableTitle);
     EntityObject.showEntityTypesSelectMenu();
 }
 
@@ -200,17 +202,17 @@ EntityObject.getInspectorTitle = function() {
 
 EntityObject.showInspectorTitle = function() {
     entityTitle = '';
+    entityTitle += '<h1>';
     entityTitle += '<span class="entity">'+EntityObject.currName+'</span> ';
     entityTitle += '<span class="type">('+EntityObject.currType+')</span>';
     entityTitle += '<button id="edit-entity-title-button"\
                             onclick="EntityObject.toggleEditableTitle();"\
                             title="Edit Entity"\
-                            class="entity-button"\
-                    >\
+                            class="entity-button">\
                         <img src="icons/edit.png" width="16" height="16">\
                     </button>';
-    $('#inspector h1').html(entityTitle);
-    $('#inspector h1')
+    entityTitle += '</h1>';
+    $('#inspector #entity-title-container').html(entityTitle);
 }
 
 EntityObject.getPropertyTable = function() {
@@ -224,7 +226,6 @@ EntityObject.getPropertyTable = function() {
                'date' : MapObject.date},
         success: function(data,textStatus,jqXHR){
             EntityObject.currProperties = data;
-            $('#inspector_properties').empty();
             EntityObject.propertyManager.showNew(data);
         },
         error: function( jqXHR, textStatus, errorThrown ){
