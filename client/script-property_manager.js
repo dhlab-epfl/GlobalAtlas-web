@@ -372,8 +372,6 @@ function PropertyEntries(tableID){
         var isStart    = $("#startCheck").is(":checked")?'start':'default';
         var source     = $("#source").val();
 
-console.log(source)
-
         //if creating a new property AND creating new geometry...
         if(creatingProp){
             if($("#propType option:selected").text() == 'geom'){
@@ -383,10 +381,15 @@ console.log(source)
             }
         //if editing...
         } else {
-            value = drawer.getGeometry()
-            if(value == ''){
-                value = $("#setValue").val()
+            // if geom, get value from drawer. If this is empty, geom itself was not modified. But 
+            // maybe another value. So just get the current value...
+            if(properties[currEditable].property_name == 'geom'){
+                value = drawer.getGeometry()
+                if(value == ''){
+                    value = properties[currEditable].value
+                }
             } else {
+                value = $("#setValue").val()
             }
         }
 
