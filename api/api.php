@@ -202,23 +202,24 @@ EOT;
 
 
 		$sql = <<<EOT
-WITH insert AS (
-	INSERT INTO vtm.sources (name)
-        SELECT :source
-         WHERE NOT EXISTS (
-                   SELECT id 
-                     FROM vtm.sources
-                    WHERE name = :source)),
-     source AS (
-        SELECT id 
-          FROM vtm.sources
-         WHERE name = :source)
+WITH ins AS (
+     INSERT INTO vtm.sources (name)
+     SELECT :source
+      WHERE NOT EXISTS (
+                SELECT id 
+                  FROM vtm.sources
+                 WHERE name = :source)
+  RETURNING id),
+     sel AS (
+     SELECT id 
+       FROM vtm.sources
+      WHERE name = :source)
          
 
 INSERT INTO vtm.properties(entity_id, 
 			   property_type_id, 
 			   date, 
-                           interpolation,
+               interpolation,
 			   value, 
 			   source_id)
      VALUES (:entityID, 
@@ -226,7 +227,9 @@ INSERT INTO vtm.properties(entity_id,
 	     :date,
              :interpolation,
 	     :value, 
-	     (SELECT id FROM source))
+	     (SELECT id FROM sel
+           UNION ALL
+          SELECT id FROM ins))
 
 EOT;
 		echo query($sql, $_GET, $default_params);

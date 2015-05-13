@@ -372,6 +372,8 @@ function PropertyEntries(tableID){
         var isStart    = $("#startCheck").is(":checked")?'start':'default';
         var source     = $("#source").val();
 
+console.log(source)
+
         //if creating a new property AND creating new geometry...
         if(creatingProp){
             if($("#propType option:selected").text() == 'geom'){
