@@ -155,22 +155,16 @@ div#map{
 	padding: 4px;
 	border-bottom: solid 1px;
 	vertical-align: top;
-	min-width: 57px;
 	text-align: left;
 }
-#inspector .value{
+#inspector .prev, #inspector .next{
+	min-width: 57px;
+}
+#inspector .value, #inspector .source{
     max-width: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-}
-#inspector .bounds{
-	color: #CCC;
-}
-#inspector .source{
-	text-align: right;
-	max-width: 100px;
-	text-overflow: ellipsis;
 }
 .leaflet-editing-icon.marker-snapped {
 	background-color: yellow;
