@@ -411,7 +411,6 @@ function PropertyEntries(tableID){
 
                 success: function(data,textStatus,jqXHR){
                     console.log("Property Manager: Source '"+ source +"' created.");
-                    MapObject.reloadData();
                 },
                 error: function( jqXHR, textStatus, errorThrown ){
                     console.log('Property Manager: Error saving new source!\n' + jqXHR.responseText);
@@ -433,7 +432,6 @@ function PropertyEntries(tableID){
 
                 success: function(data,textStatus,jqXHR){
                     console.log('Property Manager: Saved change of property #'+ propertyID);
-                    MapObject.reloadData();
                 },
                 error: function( jqXHR, textStatus, errorThrown ){
                     console.log('Property Manager: Error saving changes!\n' + jqXHR.responseText);
@@ -453,6 +451,7 @@ function PropertyEntries(tableID){
 
             success: function(data,textStatus,jqXHR){
                 console.log("Property Manager: Start and end dates of calculated.");
+                EntityObject.reloadData();
             },
             error: function( jqXHR, textStatus, errorThrown ){
                 console.log('Property Manager: Error calculating dates!\n' + jqXHR.responseText);
