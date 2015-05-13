@@ -69,7 +69,7 @@ function PropertyEntries(tableID){
                 <div class="editable-property-entry">\
                     <ul>\
                         <li>Type: <select id="propType"/></li>\
-                        <li>Edit: <div id="propValue" style="display:inline">'+ value +'</div></li>\
+                        <li>Edit: <div id="propValue" style="display:inline; width=400px;">'+ value +'</div></li>\
                         <li>Valid at: <input id="valid-at" type="number" value="'+ date +'"/></li>\
                         <li>Start of validity:<input id="startCheck" type="checkbox" /></li>\
                         <li>Source: <input id="source" type="text" value="'+ source +'" /></li>\
