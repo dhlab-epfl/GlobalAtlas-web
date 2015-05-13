@@ -286,24 +286,27 @@ EOT;
 		];
 
 		$sql = <<<EOT
-WITH update_s AS (
-          INSERT INTO vtm.sources (name)
-          SELECT :source
-           WHERE NOT EXISTS (
-                     SELECT id 
-                       FROM vtm.sources
-                      WHERE name = :source)),
-       source AS (
-          SELECT id 
-            FROM vtm.sources
-           WHERE name = :source)
+WITH ins AS (
+     INSERT INTO vtm.sources (name)
+     SELECT :source
+      WHERE NOT EXISTS (
+                SELECT id 
+                  FROM vtm.sources
+                 WHERE name = :source)
+  RETURNING id),
+     sel AS (
+     SELECT id 
+       FROM vtm.sources
+      WHERE name = :source)
 
 
 UPDATE vtm.properties
    SET date          = :date,
        value         = :value,
        interpolation = :interpolation,
-       source_id     = (SELECT id FROM source)
+       source_id     = (SELECT id FROM sel
+                         UNION ALL
+                        SELECT id FROM ins)
  WHERE id = :propertyID
 EOT;
 
