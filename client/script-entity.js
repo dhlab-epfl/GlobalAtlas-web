@@ -129,19 +129,19 @@ EntityObject.toggleEditableTitle = function(){
 
 EntityObject.writeTitleToDB = function(){
     $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: settings_api_url,
-            data: { 'query': 'update_entity',
-                    'id': EntityObject.loadedEntity,
-                    'name': $('#entity-name').val(),
-                    'type': $('#entity-type').val()},
-            success: function(data,textStatus,jqXHR){
-                EntityObject.toggleEditableTitle();
-            },
-            error: function( jqXHR, textStatus, errorThrown ){
-                console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
-            }
+        type: "GET",
+        dataType: "json",
+        url: settings_api_url,
+        data: { 'query': 'update_entity',
+                'id': EntityObject.loadedEntity,
+                'name': $('#entity-name').val(),
+                'type': $('#entity-type').val()},
+        success: function(data,textStatus,jqXHR){
+            EntityObject.toggleEditableTitle();
+        },
+        error: function( jqXHR, textStatus, errorThrown ){
+            console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
+        }
     });
 }
 
@@ -152,16 +152,16 @@ EntityObject.loadEntity = function(newEntity){
 
 EntityObject.newEntity = function() {
     $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: settings_api_url,
-            data: {'query': 'create_new_entity','name': '', 'entity_type': ''},
-            success: function(data,textStatus,jqXHR){
-                EntityObject.loadEntity(data[0].id);
-            },
-            error: function( jqXHR, textStatus, errorThrown ){
-                console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
-            }
+        type: "GET",
+        dataType: "json",
+        url: settings_api_url,
+        data: {'query': 'create_new_entity','name': '', 'entity_type': ''},
+        success: function(data,textStatus,jqXHR){
+            EntityObject.loadEntity(data[0].id);
+        },
+        error: function( jqXHR, textStatus, errorThrown ){
+            console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
+        }
     });
 }
 
@@ -186,30 +186,30 @@ EntityObject.reloadData = function(){
 
     //Get entity's name and type
     $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: settings_api_url,
-            data: {'query': 'entity','id': EntityObject.loadedEntity},
-            success: function(data,textStatus,jqXHR){
-                EntityObject.currName = data[0].name;
-                EntityObject.currType = data[0].entity_type_name;
-                EntityObject.showInspector();
-                entityTitle = '';
-                entityTitle += '<span class="entity">'+data[0].name+'</span>';
-                entityTitle += '<span class="type">('+data[0].entity_type_name+')</span>';
-                entityTitle += '<button id="edit-entity-title-button"\
-                                        onclick="EntityObject.toggleEditableTitle();"\
-                                        title="Edit Entity"\
-                                        class="entity-button"\
-                                >\
-                                    <img src="icons/edit.png" width="16" height="16">\
-                                </button>';
-                $('#inspector h1').html(entityTitle);
-            },
-            error: function( jqXHR, textStatus, errorThrown ){
-                console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
-            } 
-        });
+        type: "GET",
+        dataType: "json",
+        url: settings_api_url,
+        data: {'query': 'entity','id': EntityObject.loadedEntity},
+        success: function(data,textStatus,jqXHR){
+            EntityObject.currName = data[0].name;
+            EntityObject.currType = data[0].entity_type_name;
+            EntityObject.showInspector();
+            entityTitle = '';
+            entityTitle += '<span class="entity">'+data[0].name+'</span>';
+            entityTitle += '<span class="type">('+data[0].entity_type_name+')</span>';
+            entityTitle += '<button id="edit-entity-title-button"\
+                                    onclick="EntityObject.toggleEditableTitle();"\
+                                    title="Edit Entity"\
+                                    class="entity-button"\
+                            >\
+                                <img src="icons/edit.png" width="16" height="16">\
+                            </button>';
+            $('#inspector h1').html(entityTitle);
+        },
+        error: function( jqXHR, textStatus, errorThrown ){
+            console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
+        } 
+    });
 
     //get properties, valid at, shape, source
     $.ajax({
