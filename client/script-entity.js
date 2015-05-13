@@ -197,7 +197,7 @@ EntityObject.reloadData = function(){
             EntityObject.currType = data[0].entity_type_name;
             EntityObject.showInspector();
             entityTitle = '';
-            entityTitle += '<span class="entity">'+data[0].name+'</span>';
+            entityTitle += '<span class="entity">'+data[0].name+'</span> ';
             entityTitle += '<span class="type">('+data[0].entity_type_name+')</span>';
             entityTitle += '<button id="edit-entity-title-button"\
                                     onclick="EntityObject.toggleEditableTitle();"\

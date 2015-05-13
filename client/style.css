@@ -83,7 +83,7 @@ div#map{
 	position: absolute;
 	right: 0;
 	top: 0;
-	left: 66%;
+	left: 60%;
 	bottom: 0;
 	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
 	background: #fff;
@@ -135,10 +135,10 @@ div#map{
 
 #inspector h1{
 	font-size: 1.6em;
-	font-weight: normal
+	font-weight: bold;
 }
 #inspector h1 .type{
-	font-weight: lighter
+	font-weight: lighter;
 }
 #inspector h2{
 	font-size: 1.6em;
@@ -161,7 +161,7 @@ div#map{
 #inspector .date{
 }
 #inspector .value{
-    max-width: 200px;
+    max-width: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
