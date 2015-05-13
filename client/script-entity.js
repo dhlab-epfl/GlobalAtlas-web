@@ -88,7 +88,8 @@ EntityObject.closeInspector = function(e){
 EntityObject.toggleEditableTitle = function(){
     if($('#edit-entity-title-button').length == 1) {
         var name = $('#entity-title .entity').html();
-        var type = $('#entity-title select.type option:selected').val();
+        var type = $('#entity-title .type'/*select.type option:selected'*/).html();
+console.log("/n/n/n" + type)
         $('#entity-title').data('originalName', name)
         $('#entity-title').data('originalType', type)
         var editableTitle = '';
@@ -114,6 +115,7 @@ EntityObject.toggleEditableTitle = function(){
                         .val(item.id).text(item.name));
                 });
                 // Set current value selected
+                //TODO: this doesn't work!
                 $("#entity-type option").filter(function() {
                     return $(this).text() == type;
                 }).attr('selected', true);
@@ -260,5 +262,15 @@ EntityObject.reloadData = function(){
             console.log('EntityObject: error getting features !\n'+jqXHR.responseText);
         }
     })
+
+}
+
+
+
+
+populateSelect = function(selectID, defaultVal) {
+
+
+
 
 }

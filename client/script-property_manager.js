@@ -17,7 +17,7 @@ function PropertyEntries(tableID){
     /*
      * Sets a given entry in the table uneditable.
      */
-    function putUneditableEntryIntoRow(index) {
+    function putUneditableEntry(index) {
         var property = properties[index];
         var name     =  property.property_name;
         var date     = (property.date?property.date:'∞');
@@ -52,7 +52,7 @@ function PropertyEntries(tableID){
     /*
      * Insert an editable row into the table. 
      */
-    function putEditableEntryIntoRow(index){
+    function putEditableEntry(index){
         currEditable = index;
 
         var property = properties[index];
@@ -241,7 +241,7 @@ function PropertyEntries(tableID){
      */
     this.cancelEdit = function(){
         if(currEditable >= 0){
-            putUneditableEntryIntoRow(currEditable)
+            putUneditableEntry(currEditable)
 
             //remove empty property.
             if(creatingProp){
@@ -283,7 +283,7 @@ function PropertyEntries(tableID){
         // --> first create empty entry, then fill it with this.setEntry.
         for (i in properties){
             $(tableID).append('<tr id="propEntry'+ i +'"/>')
-            putUneditableEntryIntoRow(i);
+            putUneditableEntry(i);
         }
     }
 
@@ -295,7 +295,7 @@ function PropertyEntries(tableID){
     this.setEditable = function(index){
         if(currEditable < 0){
             currEditable = index;
-            putEditableEntryIntoRow(index)
+            putEditableEntry(index)
 
             //only one property can be edited at a time. 
             $('.editButton').attr("disabled","disaled")
@@ -335,7 +335,7 @@ function PropertyEntries(tableID){
      */
     this.cancelEdit = function(){
         if(currEditable >= 0){
-            putUneditableEntryIntoRow(currEditable)
+            putUneditableEntry(currEditable)
 
             //remove empty property.
             if(creatingProp){
@@ -457,7 +457,7 @@ function PropertyEntries(tableID){
 
 
         //set row uneditable
-        putUneditableEntryIntoRow(currEditable)
+        putUneditableEntry(currEditable)
 
         //not in creating phase anymore...
         creatingProp = false;
@@ -477,7 +477,7 @@ function PropertyEntries(tableID){
      * This method needs to be called when inspector is closed.
      */
     this.reset = function(){
-        cancelEdit();
+        this.cancelEdit();
     }
 }
 
