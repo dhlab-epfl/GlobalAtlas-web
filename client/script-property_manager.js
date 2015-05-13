@@ -28,7 +28,7 @@ function PropertyEntries(tableID){
         <tr id="propEntry'+ index +'">\
             <td class="key">'+ name +'</td>\
             <td><span class="prev"/></td>\
-            <td class="date">' + date + '\
+            <td class="date">' + date + '</td>\
             <td> <span class="next"/></td>\
             </td>\
             <td class="value">'+ value +'</td>\
@@ -278,7 +278,18 @@ function PropertyEntries(tableID){
 
         $('.editButton').removeAttr('disabled');
         $("#add-property").removeAttr('disabled');
-        
+        $(tableID).html("");
+        var header = "\
+        <tr>\
+            <th>Type</th>\
+            <th>Previous</th>\
+            <th>Date</th>\
+            <th>Next</th>\
+            <th>Value</th>\
+            <th>Source</th>\
+            <th>Edit</th>\
+        </tr>"
+        $(tableID).append(header)
         //Creates HTML code for a property entry. Saves it in array. 
         // --> first create empty entry, then fill it with this.setEntry.
         for (i in properties){

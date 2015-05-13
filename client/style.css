@@ -151,14 +151,12 @@ div#map{
 	width: 100%;
 	border-collapse: collapse;
 }
-#inspector td{
+#inspector td, th{
 	padding: 4px;
 	border-bottom: solid 1px;
 	vertical-align: top;
-}
-#inspector .key{
-}
-#inspector .date{
+	min-width: 57px;
+	text-align: left;
 }
 #inspector .value{
     max-width: 100px;
@@ -170,7 +168,9 @@ div#map{
 	color: #CCC;
 }
 #inspector .source{
-	text-align: right
+	text-align: right;
+	max-width: 100px;
+	text-overflow: ellipsis;
 }
 .leaflet-editing-icon.marker-snapped {
 	background-color: yellow;
