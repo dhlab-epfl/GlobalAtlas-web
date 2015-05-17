@@ -98,8 +98,8 @@ div#map{
 
 .drawRadioStyle {
 	background: #efefef;
-	font-size: 1em;
-	padding: 0.05em 0em;
+	font-size: 1em !important;
+	padding: 0.1em 0.6em !important;
 }
 
 .ui-button-text {
