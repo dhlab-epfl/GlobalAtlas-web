@@ -323,10 +323,10 @@ function PropertyEntries(tableID){
         //indicate that we're in the property creating phase
         creatingProp = true;
 
-        //create empty property
+        //create empty property (take date from timeslider)
         var newProp = {property_name       : 'geom',
                        computed_date_start : '',
-                       date                : '',
+                       date                : $( "#slider-ui" ).slider("value"),
                        computed_date_end   : '',
                        value               : '',
                        source_name         : ''};
@@ -480,12 +480,12 @@ function PropertyEntries(tableID){
         $('.editButton').removeAttr('disabled');
         $("#add-property").removeAttr('disabled');
 
-        EntityObject.reloadData();
-        MapObject.reloadData();
-
         drawer.disable();
             
         currEditable = -1;
+
+        MapObject.reloadData();
+        EntityObject.reloadData();
     }
 
 
@@ -535,6 +535,14 @@ function PropertyEntries(tableID){
      */
     this.reset = function(){
         this.cancelEdit();
+    }
+
+
+    /*
+     * Thes method is called by the slider when the time changes.
+     */
+    this.setDate = function(d){
+        $("#valid-at").val(d);
     }
 }
 
