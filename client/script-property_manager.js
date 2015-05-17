@@ -294,32 +294,33 @@ function PropertyEntries(tableID){
      * Shows properties in array
      */
     this.showNew = function(props){
-        properties = props;
-        currEditable = -1;
+        if(currEditable == -1) {
+            properties = props;
 
-        //when clicking an entity on map while drawing, inspector is reloaded. Drawing needs to be 
-        //disabled in this case.
-        drawer.disable();
+            //when clicking an entity on map while drawing, inspector is reloaded. Drawing needs to be 
+            //disabled in this case.
+            drawer.disable();
 
-        $('.editButton').removeAttr('disabled');
-        $("#add-property").removeAttr('disabled');
-        $(tableID).html("");
-        var header = '\
-        <tr>\
-            <th class="key">Type</th>\
-            <th class="prev">Previous</th>\
-            <th class="date">Date</th>\
-            <th class="next">Next</th>\
-            <th class="value">Value</th>\
-            <th class="source">Source</th>\
-            <th class="editButton">Edit</th>\
-        </tr>';
-        $(tableID).append(header);
-        //Creates HTML code for a property entry. Saves it in array. 
-        // --> first create empty entry, then fill it with this.setEntry.
-        for (i in properties){
-            $(tableID).append('<tr id="propEntry'+ i +'"/>');
-            putUneditableEntry(i);
+            $('.editButton').removeAttr('disabled');
+            $("#add-property").removeAttr('disabled');
+            $(tableID).html("");
+            var header = '\
+            <tr>\
+                <th class="key">Type</th>\
+                <th class="prev">Previous</th>\
+                <th class="date">Date</th>\
+                <th class="next">Next</th>\
+                <th class="value">Value</th>\
+                <th class="source">Source</th>\
+                <th class="editButton">Edit</th>\
+            </tr>';
+            $(tableID).append(header);
+            //Creates HTML code for a property entry. Saves it in array. 
+            // --> first create empty entry, then fill it with this.setEntry.
+            for (i in properties){
+                $(tableID).append('<tr id="propEntry'+ i +'"/>');
+                putUneditableEntry(i);
+            }
         }
     }
 

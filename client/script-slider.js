@@ -57,5 +57,6 @@ SliderObject.setYear = function(y){
     // Move the slider to year y
     $( "#slider-ui" ).slider( "value", x);
     $( ".ui-slider-handle" ).html(x);
+    EntityObject.propertyManager.setDate(x);
     MapObject.setDate(x);
 }
