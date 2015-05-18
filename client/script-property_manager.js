@@ -234,14 +234,14 @@ function PropertyEntries(tableID){
     /**
       * Calculates start/end date of created/edited property and reloads map and editor if success.
       */
-    finalizeSave = function(entityID, propertyID){
+    finalizeSave = function(entityID, propertyTypeID){
         $.ajax({
             type: "GET",
             dataType: "json",
             url: settings_api_url,
             data: {'query'         : 'calculate_dates',
                    'entityID'      : entityID,
-                   'propertyID'    : propertyID},
+                   'propertyTypeID': propertyTypeID},
 
             success: function(data,textStatus,jqXHR){
                 console.log("Property Manager: Start and end dates of calculated.");
@@ -403,7 +403,7 @@ function PropertyEntries(tableID){
 
         var entityID   = Number(EntityObject.loadedEntity);
         var propertyID = properties[currEditable].property_id;
-        var type       = Number($("#propType option:selected").val());
+        var propertyTypeID = Number($("#propType option:selected").val());
         var value      = '';
         var year       = Number($("#valid-at").val());
         var isStart    = $("#startCheck").is(":checked")?'start':'default';
@@ -440,7 +440,7 @@ function PropertyEntries(tableID){
                 url: settings_api_url,
                 data: {'query'         : 'create_new_property',
                        'entityID'      : entityID,
-                       'propertyType'  : type,
+                       'propertyType'  : propertyTypeID,
                        'value'         : value,
                        'date'          : year,
                        'interpolation' : isStart,
@@ -448,7 +448,7 @@ function PropertyEntries(tableID){
 
                 success: function(data,textStatus,jqXHR){
                     console.log("Property Manager: Source '"+ source +"' created.");
-                    finalizeSave(entityID, propertyID)
+                    finalizeSave(entityID, propertyTypeID)
                 },
                 error: function( jqXHR, textStatus, errorThrown ){
                     console.log('Property Manager: Error saving new source!\n' + jqXHR.responseText);
@@ -470,7 +470,7 @@ function PropertyEntries(tableID){
 
                 success: function(data,textStatus,jqXHR){
                     console.log('Property Manager: Saved change of property #'+ propertyID);
-                    finalizeSave(entityID, propertyID)
+                    finalizeSave(entityID, propertyTypeID)
                 },
                 error: function( jqXHR, textStatus, errorThrown ){
                     console.log('Property Manager: Error saving changes!\n' + jqXHR.responseText);
@@ -552,29 +552,3 @@ function PropertyEntries(tableID){
         $("#valid-at").val(d);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
