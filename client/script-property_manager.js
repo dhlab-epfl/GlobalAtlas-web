@@ -234,14 +234,14 @@ function PropertyEntries(tableID){
     /**
       * Calculates start/end date of created/edited property and reloads map and editor if success.
       */
-    finalizeSave = function(entityID, propertyTypeID){
+    finalizeSave = function(entityID, propertyID){
         $.ajax({
             type: "GET",
             dataType: "json",
             url: settings_api_url,
             data: {'query'         : 'calculate_dates',
                    'entityID'      : entityID,
-                   'propertyTypeID': propertyTypeID},
+                   'propertyID': propertyID},
 
             success: function(data,textStatus,jqXHR){
                 console.log("Property Manager: Start and end dates of calculated.");
@@ -448,7 +448,8 @@ function PropertyEntries(tableID){
 
                 success: function(data,textStatus,jqXHR){
                     console.log("Property Manager: Source '"+ source +"' created.");
-                    finalizeSave(entityID, propertyTypeID)
+                    var propertyID = data[0].id;
+                    finalizeSave(entityID, propertyID);
                 },
                 error: function( jqXHR, textStatus, errorThrown ){
                     console.log('Property Manager: Error saving new source!\n' + jqXHR.responseText);
@@ -470,7 +471,7 @@ function PropertyEntries(tableID){
 
                 success: function(data,textStatus,jqXHR){
                     console.log('Property Manager: Saved change of property #'+ propertyID);
-                    finalizeSave(entityID, propertyTypeID)
+                    finalizeSave(entityID, propertyID);
                 },
                 error: function( jqXHR, textStatus, errorThrown ){
                     console.log('Property Manager: Error saving changes!\n' + jqXHR.responseText);
