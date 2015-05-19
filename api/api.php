@@ -66,6 +66,7 @@ switch ($query) {
 		$sql = <<<EOT
 SELECT 	prop.id,
 		prop.date,
+		vtm.fuzzyness(:date, prop.date, computed_date_start, computed_date_end, date_start_if_unknown, date_end_if_unknown) as fuzzyness,
 		ent.id as entity_id,
 		ent.name as entity_name,
 		type.name as entity_type_name,
@@ -80,9 +81,9 @@ LEFT JOIN vtm.entities as ent ON prop.entity_id=ent.id
 LEFT JOIN vtm.entity_types as type ON ent.type_id=type.id
 WHERE 	NOT (type.name = ANY (STRING_TO_ARRAY(:filtertype,',')) )
 		AND
-		(computed_date_start IS NULL OR computed_date_start<=:date) -- we only want properties that have started
+		(computed_date_start<=:date OR (computed_date_start IS NULL AND (date_start_if_unknown IS NULL OR date_start_if_unknown<=:date))) -- we only want properties that have started
 		AND
-		(computed_date_end IS NULL OR computed_date_end>:date) -- we only want properties that have not ended
+		(computed_date_end>:date OR (computed_date_end IS NULL AND (date_end_if_unknown IS NULL OR date_end_if_unknown>=:date))) -- we only want properties that have not ended
 		AND
 		(type.min_zoom IS NULL OR :zoom>=type.min_zoom) -- we only get features whose size makes sense at actual zoom level
 		AND

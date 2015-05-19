@@ -175,5 +175,9 @@ MapObject.styles = {
 };
 
 MapObject.featureStyle = function(feature) {
-	return MapObject.styles[feature.properties.entity_type_name];
+	var copiedStyle = jQuery.extend({}, MapObject.styles[feature.properties.entity_type_name]);
+	copiedStyle.opacity = feature.properties.fuzzyness * copiedStyle.opacity;
+	copiedStyle.fillOpacity = feature.properties.fuzzyness * copiedStyle.fillOpacity;
+	return copiedStyle;
+	//return MapObject.styles[feature.properties.entity_type_name];
 }
