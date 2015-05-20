@@ -230,6 +230,7 @@ INSERT INTO vtm.properties(entity_id,
 	     (SELECT id FROM sel
            UNION ALL
           SELECT id FROM ins))
+RETURNING id
 
 EOT;
 		echo query($sql, $_GET, $default_params);
@@ -328,7 +329,9 @@ EOT;
 			'entityID'    => 0,
             'propertyID'  => 0];
 
-		$sql = 'SELECT vtm.compute_date_for_property_of_entity(:entityID, :propertyID)';
+        $sql = <<<EOT
+SELECT vtm.compute_date_for_property_of_entity(:entityID, (SELECT property_type_id FROM vtm.properties WHERE id = :propertyID))
+EOT;
 
 		echo query($sql, $_GET, $default_params);
         break;
