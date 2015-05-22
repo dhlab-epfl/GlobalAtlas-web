@@ -355,6 +355,12 @@ EOT;
 		flush(); ob_flush();
 	break;
 
+    case 'delete_entity':
+        ini_set('display_errors', 'on');
+        $default_params = ['entityID' => 0];
+        $sql = 'DELETE FROM vtm.entities WHERE id = :entityID';
+        echo query($sql, $_GET, $default_params);
+        break;
 
 
 	/************************************************************/

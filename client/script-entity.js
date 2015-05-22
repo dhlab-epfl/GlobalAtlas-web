@@ -71,8 +71,7 @@ EntityObject.showInspector = function(){
     $('#inspector').show();
 }
 
-EntityObject.closeInspector = function(e){
-    e.stopPropagation();
+EntityObject.closeInspector = function(){
     EntityObject.propertyManager.reset();
     EntityObject.loadedEntity = null;
     $('#inspector').hide();
@@ -93,6 +92,9 @@ EntityObject.showEditableTitle = function() {
     editableTitle += '<h1>';
     editableTitle += '<input id="entity-name" type="text" value="'+ EntityObject.currName +'"/>';
     editableTitle += '<select id="entity-type"/>';
+    editableTitle += '<button onclick="EntityObject.deleteEntity();" title="Delete" class="entity-button">\
+                          <img src="icons/delete.png" width="16" height="16">\
+                      </button>';
     editableTitle += '<button onclick="EntityObject.toggleEditableTitle();" title="Cancel" class="entity-button">\
                           <img src="icons/cancel.png" width="16" height="16">\
                       </button>';
@@ -102,6 +104,23 @@ EntityObject.showEditableTitle = function() {
     editableTitle += '</h1>';
     $('#entity-title-container').html(editableTitle);
     EntityObject.showEntityTypesSelectMenu();
+}
+
+EntityObject.deleteEntity = function() {
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: settings_api_url,
+        data: {'query': 'delete_entity',
+                'entityID': EntityObject.loadedEntity },
+        success: function(types,textStatus,jqXHR){
+            EntityObject.closeInspector();
+            MapObject.reloadData();
+        },
+        error: function( jqXHR, textStatus, errorThrown ){
+            console.log('EntityObject: error deleting entity! \n'+jqXHR.responseText);
+        }
+    });
 }
 
 EntityObject.showEntityTypesSelectMenu = function() { // Populate the enity type select menu
