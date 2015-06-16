@@ -2,13 +2,16 @@
 
 MapObject.date = 2015;
 MapObject.map = null;
+MapObject.drawLayer = null;
+MapObject.drawControl = null;
 MapObject.jsonLayer = null;
 MapObject.featureTypes = [];
 MapObject.ignoreTypes = [];
 
 MapObject.init = function(){
 
-	MapObject.map = L.map('map').setView([45.44, 12.33], 13);
+	MapObject.map = L.map('map', {drawControl: false}).setView([45.44, 12.33], 13);
+
 
 	/* ADD BACKGROUND LAYER */
 
@@ -18,9 +21,29 @@ MapObject.init = function(){
 
     L.control.layers({'Mapbox':mapboxTiles,'Paper':paperBackground, 'Grid':gridBackground},{},{position: 'bottomleft'}).addTo(MapObject.map);
 
+
 	/* ADD LAYER */
 
-	MapObject.jsonLayer = L.geoJson([],{style: MapObject.featureStyle, onEachFeature: MapObject.onEachFeature}).addTo(MapObject.map);
+	MapObject.jsonLayer = L.geoJson([],{style: MapObject.featureStyle, onEachFeature: 	MapObject.onEachFeature}).addTo(MapObject.map);
+	
+
+	/* CREATE DRAW CONTROL AND DRAWLAYER*/
+
+	var guideLayers = [MapObject.jsonLayer]
+
+	MapObject.drawControl = new L.Control.Draw({
+    		draw : {
+			polygon   : {guideLayers: guideLayers, snapDistance: 100},
+			polyline  : {guideLayers: guideLayers, snapDistance: 100},
+			marker    : {guideLayers: guideLayers, snapDistance: 100},
+			rectangle : false,
+			circle    : false
+    		},
+    		edit : true
+	});
+
+	MapObject.drawLayer = new L.FeatureGroup();
+	MapObject.map.addLayer(MapObject.drawLayer);
 
 
 	/* GET THE HASH */
@@ -169,8 +192,9 @@ MapObject.styles = {
         color: '#945C5C'
     },
     'border':{
-        weight: 1,
+        weight: 2,
         opacity: 1.0,
+        //dashArray: [4,4],
         color: '#000'
     }
 };

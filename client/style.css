@@ -11,15 +11,13 @@ div#map{
 	background-color: #fff
 }
 
-
 #slider-min, #slider-max, #slider-container{
 	position: absolute;
 	left:10px;
 	width: 26px;
 }
 
-
-#slider-min, #slider-max, #slider-ui .ui-slider-handle, .ui-slider{
+#slider-min, #slider-max, #slider-ui .ui-slider-handle, .ui-slider, .ui-spinner{
 	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
 	background: #fff;
 	border: none;
@@ -33,15 +31,42 @@ div#map{
 	padding: 2px;
 	font-size: 12px;
 }
+
 #slider-max{
 	top:80px;
 }
+
 #slider-min{
-	bottom: 54px;
+	bottom: 82px;   /*54 before*/
 }
+
+#spinner-container{
+        position: absolute;
+	left: 7px;
+	height: 15px;
+	width: 46px;
+        bottom: 56px;
+}
+
+.ui-spinner{
+	margin: 0px 0px 2px 0px;
+	padding: 2px;
+	width: 46px;
+	height: 13px;
+}
+
+#spinner-ui{
+	font-size: 12px;
+	padding: 0px;
+	margin: 0px;
+	width: 30px;
+	height: 13px;
+	vertical-align: top;
+}
+
 #slider-container{
 	top: 112px;
-	bottom: 82px;
+	bottom: 110px;
 }
 
 #slider-ui{
@@ -58,12 +83,11 @@ div#map{
 	font-size: 12px;
 }
 
-
 #inspector{
 	position: absolute;
 	right: 0;
 	top: 0;
-	left: 66%;
+	left: 60%;
 	bottom: 0;
 	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
 	background: #fff;
@@ -72,49 +96,92 @@ div#map{
 	padding: 10px;
 }
 
-#hidebox{
+.drawRadioStyle {
+	background: #efefef;
+	font-size: 1em !important;
+	padding: 0.1em 0.6em !important;
+}
+
+.ui-button-text {
+	font-size: 1em;
+	padding: 0.05em 0em;
+}
+
+.ui-button-text-only {
+	font-size: 1em;
+	padding: 0.05em 0em;
+}
+
+.editing {
+	position: absolute;
+	right:10px;
+	top: 10px;
+	width: 30%;
+	min-width: 10px;
+	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+	background: #fff;
+	border: none;
+	border-radius: 4px;
+	padding: 2px;
+	font-size: 1em
+}
+
+#inspector #hidebox{
 	position: absolute;
 	top: 10px;
 	right: 10px;
 }
-
-
+#inspector #entity-title-container{
+	min-height: 44px;
+}
+#inspector #entity-title-container div{
+	margin: auto;
+	position: absolute;
+	top: 24px;
+}
 #inspector h1{
 	font-size: 1.6em;
-	font-weight: normal
+	font-weight: bold;
+	float: left;
 }
 #inspector h1 .type{
-	font-weight: lighter
+	font-weight: lighter;
+}
+#inspector #edit-entity-title-button, #inspector .entity-button{
+	position: relative;
+	right: -8px;
 }
 #inspector h2{
 	font-size: 1.6em;
 	font-weight: lighter;
 	font-style: italic;
 }
-
-
 #inspector table{
 	width: 100%;
 	border-collapse: collapse;
 }
-#inspector td{
+#inspector td, th{
 	padding: 4px;
 	border-bottom: solid 1px;
 	vertical-align: top;
+	text-align: left;
 }
-#inspector .key{
+#inspector .prev, #inspector .next{
+	min-width: 57px;
 }
-#inspector .date{
-}
-#inspector .value{
-    max-width: 240px;
+#inspector .value, #inspector .source{
+    max-width: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-#inspector .bounds{
-	color: #CCC;
+.leaflet-editing-icon.marker-snapped {
+	background-color: yellow;
 }
-#inspector .source{
-	text-align: right
+
+
+#create-button-container{
+	position: absolute;
+	top: 10px;
+	right: 10px;
 }

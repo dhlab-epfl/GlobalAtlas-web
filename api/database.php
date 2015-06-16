@@ -83,3 +83,20 @@ function query($sql, $http_params, $bindings){
 
 	return json_encode($json);
 }
+
+//for inserting new content into the DB...
+function insert($sql, $http_params, $bindigs){
+	global $pdo;
+
+	$statement = $pdo->prepare($sql);
+
+	$bound_args = [];
+	
+	//fill bound_args with the bound values or with a default value 
+        //(e.g. bound_args[':name'] = 'entityName')
+	foreach($bindings as $value){ $bound_args[':'.$value] = @$http_params[$value]; }
+
+	$statement->execute($bound_args);
+
+	return true;
+}

@@ -125,6 +125,7 @@ EOT;
 	/************************************************************/
 
 	case 'properties_for_entity':
+	ini_set('display_errors', 'on');
 
 		$default_params = [
 			'id' => 0, // entity_id
@@ -133,6 +134,8 @@ EOT;
 
 		$sql = <<<EOT
 SELECT 	date,
+                prop.id as property_id,
+                prop.interpolation,
 		value as value,
 		computed_date_start,
 		computed_date_end,
@@ -149,8 +152,278 @@ WHERE 	prop.entity_id=:id
 ORDER BY property_name
 EOT;
 		echo query($sql, $_GET, $default_params);
-		break;
-		
-}
+		flush(); ob_flush();
+	break;
 
+
+
+	/************************************************************/
+	/* CREATE_NEW_ENTITY                                        */
+	/* inserts a new entity                                     */
+	/************************************************************/
+	
+	case 'create_new_entity':
+	ini_set('display_errors', 'on');
+
+		$default_params = [
+			'name'        => '', 
+			'entity_type' => 1,
+		];
+
+		$sql = <<<EOT
+INSERT INTO
+  vtm.entities(name, type_id) 
+VALUES 
+  (:name, :entity_type)
+RETURNING id
+EOT;
+		echo query($sql, $_GET, $default_params);
+	
+		flush(); ob_flush();
+	break;
+
+
+
+	/************************************************************/
+	/* CREATE_NEW_PROPERTY                                      */
+	/* saves a new property for an existing entity.             */
+	/************************************************************/
+	
+	case 'create_new_property':
+		ini_set('display_errors', 'on');
+
+		$default_params = [
+                        'entityID'      => 0,
+                        'propertyType'  => 1,
+			'date'          => 0,
+			'interpolation' => 'default',
+			'value'         => '',
+			'source'        => 'no source'
+		];
+
+
+		$sql = <<<EOT
+WITH ins AS (
+     INSERT INTO vtm.sources (name)
+     SELECT :source
+      WHERE NOT EXISTS (
+                SELECT id 
+                  FROM vtm.sources
+                 WHERE name = :source)
+  RETURNING id),
+     sel AS (
+     SELECT id 
+       FROM vtm.sources
+      WHERE name = :source)
+         
+
+INSERT INTO vtm.properties(entity_id, 
+			   property_type_id, 
+			   date, 
+               interpolation,
+			   value, 
+			   source_id)
+     VALUES (:entityID, 
+	     :propertyType,
+	     :date,
+             :interpolation,
+	     :value, 
+	     (SELECT id FROM sel
+           UNION ALL
+          SELECT id FROM ins))
+RETURNING id
+
+EOT;
+		echo query($sql, $_GET, $default_params);
+		flush(); ob_flush();
+	break;
+
+
+    /************************************************************/
+    /* UPDATE_ENTITY                                            */
+    /* saves changes of an entity                               */
+    /************************************************************/
+
+    case 'update_entity':
+        ini_set('display_errors', 'on');
+
+        $default_params = [
+            'id'    => 0,
+            'name'  => 'default_name',
+            'type'  => '1',
+        ];
+
+        $sql = <<<EOT
+UPDATE
+  vtm.entities 
+SET
+  name          = :name,
+  type_id       = :type
+WHERE
+  id = :id
+EOT;
+
+
+        echo query($sql, $_GET, $default_params);
+
+        flush(); ob_flush();
+    break;
+
+
+	/************************************************************/
+	/* UPDATE_PROPERTY                                          */
+	/* saves changes of an entity (a property and it's assigned */
+	/* source                                                   */
+	/************************************************************/
+
+	case 'update_property':
+		ini_set('display_errors', 'on');
+
+		$default_params = [
+                        'propertyID'    => 0,
+			            'date'          => 0,
+			            'interpolation' => 'default',
+			            'value'         => '',
+			            'source'        => 'no source'
+		];
+
+		$sql = <<<EOT
+WITH ins AS (
+     INSERT INTO vtm.sources (name)
+     SELECT :source
+      WHERE NOT EXISTS (
+                SELECT id 
+                  FROM vtm.sources
+                 WHERE name = :source)
+  RETURNING id),
+     sel AS (
+     SELECT id 
+       FROM vtm.sources
+      WHERE name = :source)
+
+
+UPDATE vtm.properties
+   SET date          = :date,
+       value         = :value,
+       interpolation = :interpolation,
+       source_id     = (SELECT id FROM sel
+                         UNION ALL
+                        SELECT id FROM ins)
+ WHERE id = :propertyID
+EOT;
+
+
+		echo query($sql, $_GET, $default_params);
+
+		flush(); ob_flush();
+	break;
+
+
+
+	/************************************************************/
+	/* CALCULATE_DATES                                          */
+	/* Returns all possible types for properties                */
+	/************************************************************/
+
+	case 'calculate_dates':
+		$default_params = [
+			'entityID'    => 0,
+            'propertyID'  => 0];
+
+        $sql = <<<EOT
+SELECT vtm.compute_date_for_property_of_entity(:entityID, (SELECT property_type_id FROM vtm.properties WHERE id = :propertyID))
+EOT;
+
+		echo query($sql, $_GET, $default_params);
+        break;
+
+
+	/************************************************************/
+	/* DELETE_PROPERTY                                          */
+	/* saves changes of an entity (a property and it's assigned */
+	/* source                                                   */
+	/************************************************************/
+
+	case 'delete_property':
+		ini_set('display_errors', 'on');
+
+		$default_params = ['propertyID' => 0];
+
+		$sql = 'DELETE FROM vtm.properties WHERE id = :propertyID';
+
+		echo query($sql, $_GET, $default_params);
+
+		flush(); ob_flush();
+	break;
+
+    case 'delete_entity':
+        ini_set('display_errors', 'on');
+        $default_params = ['entityID' => 0];
+        $sql = 'DELETE FROM vtm.entities WHERE id = :entityID';
+        echo query($sql, $_GET, $default_params);
+        break;
+
+
+	/************************************************************/
+	/* GET_PROPERTY_TYPES                                       */
+	/* Returns all possible types for properties                */
+	/************************************************************/
+
+	case 'get_property_types':
+		ini_set('display_errors', 'on');
+		$default_params = [];
+		$sql = <<<EOT
+SELECT id, name, description, type
+  FROM vtm.properties_types
+EOT;
+		echo query($sql, $_GET, $default_params);
+
+        break;
+
+    /************************************************************/
+    /* GET_ENTITY_TYPES                                         */
+    /* Returns all possible types for entities                  */
+    /************************************************************/
+
+    case 'get_entity_types':
+        $default_params = [];
+        $sql = <<<EOT
+SELECT id, name, min_zoom, max_zoom, zindex
+  FROM vtm.entity_types
+EOT;
+        echo query($sql, $_GET, $default_params);
+
+        break;
+
+	/************************************************************/
+	/* NEXT_GEOMETRY_FOR_ENTITY                                 */
+	/* find the next set of geometries for the entity at hand   */
+	/************************************************************/
+
+	case 'next_geometry_for_entity':
+		$default_params = [
+			'id'        => 0, //entity_id
+			'date'      => 2015,
+			'direction' => 1, // either 1 (future) or -1 (to go into the past)
+			'type'      => 'geom'
+		];
+
+		$sql = <<<EOT
+SELECT
+  prop.date
+FROM
+  vtm.properties as prop   ,
+  vtm.properties_types as proptype
+WHERE
+  prop.entity_id = :id
+  AND  :direction * prop.date > :direction * :date
+  AND  proptype.name = :type
+  AND  proptype.id = prop.property_type_id
+ORDER BY
+  :direction * prop.date
+LIMIT 1
+EOT;
+		echo query($sql, $_GET, $default_params);
+		break;
+}
 
