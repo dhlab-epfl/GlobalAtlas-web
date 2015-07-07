@@ -166,6 +166,9 @@ div#map{
 	vertical-align: top;
 	text-align: left;
 }
+#inspector tr.editting td{
+	background-color: rgba(255,0,0,0.25);
+}
 #inspector .prev, #inspector .next{
 	min-width: 57px;
 }

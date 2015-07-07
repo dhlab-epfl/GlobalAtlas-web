@@ -64,27 +64,23 @@ function PropertyEntries(tableID){
         var source   =  property.source_name;
 
         var editableEntry = '\
-        <tr id="propEntry'+ index +'">\
-            <td colspan="7">\
-                <div class="editable-property-entry">\
-                    <ul>\
-                        <li>Type: <select id="propType"/></li>\
-                        <li>Edit: <div id="propValue" style="display:inline; width=400px;">'+ value +'</div></li>\
-                        <li>Valid at: <input id="valid-at" type="number" value="'+ date +'"/></li>\
-                        <li>Start of validity:<input id="startCheck" type="checkbox" /></li>\
-                        <li>Source: <input id="source" type="text" value="'+ source +'" /></li>\
-                    </ul>\
-                    <div style="float:right">\
-                        <button title="Delete Property" onclick="EntityObject.propertyManager.deleteProperty('+ index +');">\
-                            <img src="icons/delete.png" width="16" height="16">\
-                        </button>\
-                        <button title="Cancel Changes" onclick="EntityObject.cancelEdit();">\
-                            <img src="icons/cancel.png" width="16" height="16">\
-                        </button>\
-                        <button title="Save Changes" onclick="EntityObject.propertyManager.saveProperty('+ index +');">\
-                            <img src="icons/save.png" width="16" height="16">\
-                        </button>\
-                    </div>\
+        <tr id="propEntry'+ index +'" class="editting">\
+            <td><select id="propType"/></td>\
+            <td>S.<input id="startCheck" type="checkbox" /></td>\
+            <td><input id="valid-at" type="number" value="'+ date +'" style="width:45px"/></td>\
+            <td>E.<input id="startCheck" type="checkbox" /></td>\
+            <td><div id="propValue" style="display:inline; width=400px;">'+ value +'</div></td>\
+            <td><input id="source" type="text" value="'+ source +'" /></td>\
+            <td>\
+                    <button title="Delete Property" onclick="EntityObject.propertyManager.deleteProperty('+ index +');">\
+                        <img src="icons/delete.png" width="16" height="16">\
+                    </button>\
+                    <button title="Cancel Changes" onclick="EntityObject.cancelEdit();">\
+                        <img src="icons/cancel.png" width="16" height="16">\
+                    </button>\
+                    <button title="Save Changes" onclick="EntityObject.propertyManager.saveProperty('+ index +');">\
+                        <img src="icons/save.png" width="16" height="16">\
+                    </button>\
                 </div>\
             </td>\
         </tr>';
