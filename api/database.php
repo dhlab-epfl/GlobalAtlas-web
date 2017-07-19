@@ -6,9 +6,7 @@
 // connection to the postgis database
 //////////////////////////////////////////////////////////////
 
-require('config.php');
-
-$pdo = new PDO(sprintf('pgsql:host=%s;port=%s;dbname=%s;user=%s;password=%s',$settings_host,$settings_port,$settings_dbname,$settings_user,$settings_pass));
+$pdo = new PDO(getenv('DATABASE_URL'));
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 
