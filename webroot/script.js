@@ -4,7 +4,7 @@ var SliderObject  = {};
 var CreatorObject = {};
 var EditorObject  = {}
 
-var settings_api_url = '/api/api.php';
+var settings_api_url = 'api.php';
 
 var hash = {};
 

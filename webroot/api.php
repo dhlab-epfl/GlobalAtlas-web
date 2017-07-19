@@ -22,7 +22,7 @@ header('Content-Type: application/json');
 // define the geojson_query() function to query the postgis database
 //////////////////////////////////////////////////////////////
 
-require('database.php');
+require('../api/database.php');
 
 
 //////////////////////////////////////////////////////////////
