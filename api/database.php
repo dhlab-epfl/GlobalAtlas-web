@@ -6,7 +6,17 @@
 // connection to the postgis database
 //////////////////////////////////////////////////////////////
 
-$pdo = new PDO(getenv('DATABASE_URL'));
+// We get the DATABASE_URL from Heroku (or some default string)
+$database_url = getenv('DATABASE_URL');
+if(!$database_url){
+	$database_url = 'postgres://postgres:postgres@localhost:5432/globalatlas';
+}
+
+// We convert from psql connection string to PDO connection string
+preg_match("/postgres:\/\/(.*):(.*)@(.*):(.*)\/(.*)/", $database_url, $db_conf);
+$pdo_string = sprintf('pgsql:host=%s;port=%s;dbname=%s;user=%s;password=%s',$db_conf[3],$db_conf[4],$db_conf[5],$db_conf[1],$db_conf[2]);
+
+$pdo = new PDO($pdo_string);
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 
