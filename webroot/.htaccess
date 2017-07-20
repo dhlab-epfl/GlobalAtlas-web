@@ -1,3 +1,5 @@
+bug bug bidou
+
 AuthUserFile ../.htpasswd
 AuthType Basic
 AuthName "Restricted Access"
