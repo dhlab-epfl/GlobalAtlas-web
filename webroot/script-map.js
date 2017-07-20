@@ -15,12 +15,12 @@ MapObject.init = function(){
 
 	/* ADD BACKGROUND LAYER */
 
-	var mapboxTiles = L.tileLayer('https://{s}.tiles.mapbox.com/v3/mapbox.world-blank-bright/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoib2RhbGFuZyIsImEiOiJxbTlhYVZFIn0.HQNXXBx1A7BFrQVcQqTEDA', {attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>', maxNativeZoom: 11, maxZoom: 25});
-    var cartoTiles = L.tileLayer('https://cartodb-basemaps-1.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {attribution: '<a href="https://carto.com" target="_blank">CartoDB</a>', maxNativeZoom: 18, maxZoom: 25});
-    var paperBackground = L.tileLayer('seamless_white_background_texture.jpg', {maxZoom: 25});
-    var gridBackground = L.tileLayer('seamless_white_background_texture_grid.jpg', {maxZoom: 25}).addTo(MapObject.map);
+	// var mapboxTiles = L.tileLayer('https://{s}.tiles.mapbox.com/v3/mapbox.world-blank-bright/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoib2RhbGFuZyIsImEiOiJxbTlhYVZFIn0.HQNXXBx1A7BFrQVcQqTEDA', {attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>', maxNativeZoom: 11, maxZoom: 25});
+    var cartoTiles = L.tileLayer('https://cartodb-basemaps-1.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {attribution: '<a href="https://carto.com" target="_blank">CartoDB</a>', maxNativeZoom: 18, maxZoom: 25}).addTo(MapObject.map);
+    // var paperBackground = L.tileLayer('seamless_white_background_texture.jpg', {maxZoom: 25});
+    var gridBackground = L.tileLayer('seamless_white_background_texture_grid.jpg', {maxZoom: 25});
 
-    L.control.layers({'Mapbox':mapboxTiles,'CartoDB':cartoTiles,'Paper':paperBackground, 'Grid':gridBackground},{},{position: 'bottomleft'}).addTo(MapObject.map);
+    L.control.layers({/*'Mapbox':mapboxTiles,*/'CartoDB':cartoTiles,/*'Paper':paperBackground, */'Grid':gridBackground},{},{position: 'bottomleft'}).addTo(MapObject.map);
 
 
 	/* ADD LAYER */

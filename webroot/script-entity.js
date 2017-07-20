@@ -93,13 +93,13 @@ EntityObject.showEditableTitle = function() {
     editableTitle += '<input id="entity-name" type="text" value="'+ EntityObject.currName +'"/>';
     editableTitle += '<select id="entity-type"/>';
     editableTitle += '<button onclick="EntityObject.deleteEntity();" title="Delete" class="entity-button">\
-                          <img src="icons/delete.png" width="16" height="16">\
+                          <img src="images/delete.png" width="16" height="16">\
                       </button>';
     editableTitle += '<button onclick="EntityObject.toggleEditableTitle();" title="Cancel" class="entity-button">\
-                          <img src="icons/cancel.png" width="16" height="16">\
+                          <img src="images/cancel.png" width="16" height="16">\
                       </button>';
     editableTitle += '<button onclick="EntityObject.writeTitleToDB();" title="Save" class="entity-button">\
-                          <img src="icons/save.png" width="16" height="16">\
+                          <img src="images/save.png" width="16" height="16">\
                       </button>';
     editableTitle += '</h1>';
     $('#entity-title-container').html(editableTitle);
@@ -228,7 +228,7 @@ EntityObject.showInspectorTitle = function() {
                             onclick="EntityObject.toggleEditableTitle();"\
                             title="Edit Entity"\
                             class="entity-button">\
-                        <img src="icons/edit.png" width="16" height="16">\
+                        <img src="images/edit.png" width="16" height="16">\
                     </button>';
     entityTitle += '</h1>';
     $('#inspector #entity-title-container').html(entityTitle);

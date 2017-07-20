@@ -35,7 +35,7 @@ function PropertyEntries(tableID){
             <td class="source">['+ source +']</td>\
             <td>\
                 <button class="editButton" title="Edit Property" onclick="EntityObject.editProp('+ index +');">\
-                    <img src="icons/edit.png" width="16" height="16">\
+                    <img src="images/edit.png" width="16" height="16">\
                 </button>\
             </td>\
         </tr>';
@@ -73,13 +73,13 @@ function PropertyEntries(tableID){
             <td><input id="source" type="text" value="'+ source +'" /></td>\
             <td>\
                     <button title="Delete Property" onclick="EntityObject.propertyManager.deleteProperty('+ index +');">\
-                        <img src="icons/delete.png" width="16" height="16">\
+                        <img src="images/delete.png" width="16" height="16">\
                     </button>\
                     <button title="Cancel Changes" onclick="EntityObject.cancelEdit();">\
-                        <img src="icons/cancel.png" width="16" height="16">\
+                        <img src="images/cancel.png" width="16" height="16">\
                     </button>\
                     <button title="Save Changes" onclick="EntityObject.propertyManager.saveProperty('+ index +');">\
-                        <img src="icons/save.png" width="16" height="16">\
+                        <img src="images/save.png" width="16" height="16">\
                     </button>\
                 </div>\
             </td>\
